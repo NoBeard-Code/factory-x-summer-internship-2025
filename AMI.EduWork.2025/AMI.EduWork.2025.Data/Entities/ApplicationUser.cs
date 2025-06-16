@@ -9,7 +9,7 @@ namespace AMI.EduWork._2025.Data
     {
         public ICollection<Entities.Contract> Contracts { get; set; }
         public ICollection<SickLeave> SickLeaves { get; set; }
-        public ICollection<UsersOnVacation> UsersOnVacations { get; set; }
+        public ICollection<UserOnVacation> UsersOnVacations { get; set; }
         public ICollection<UserOnProject> UsersOnProjects { get; set; }
         public ICollection<WorkDay> WorkDays { get; set; }
 

@@ -20,7 +20,7 @@ namespace AMI.EduWork._2025.Data.Entities
         public int PlannedVacation { get; set; }
         [Required]
         public int AvailableVacation { get; set; }
-        ICollection<UsersOnVacation> UsersOnVacations { get; set; }
+        ICollection<UserOnVacation> UsersOnVacations { get; set; }
 
     }
 }

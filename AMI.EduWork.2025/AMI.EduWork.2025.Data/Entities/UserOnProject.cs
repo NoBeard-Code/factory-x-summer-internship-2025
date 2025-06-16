@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -8,14 +9,13 @@ using System.Threading.Tasks;
 
 namespace AMI.EduWork._2025.Data.Entities
 {
+    [PrimaryKey(nameof(UserId), nameof(ProjectId))]
     public class UserOnProject
     {
         [Required]
-        [Key]
         public string UserId { get; set; }
         public ApplicationUser User { get; set; }
         [Required]
-        [Key]
         public string ProjectId { get; set; }
         public Project Project{ get; set; }
         [Required]
