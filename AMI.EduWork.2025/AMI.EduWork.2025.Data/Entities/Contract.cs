@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AMI.EduWork._2025.Data.Entities.Abstraction;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,11 +9,8 @@ using System.Threading.Tasks;
 
 namespace AMI.EduWork._2025.Data.Entities
 {
-    public class Contract
+    public class Contract : EntityBase
     {
-        [Required]
-        [Key]
-        public  string Id { get; set; }
         [Required]
         public int WorkingHour { get; set; }
         [Required]
@@ -20,8 +18,8 @@ namespace AMI.EduWork._2025.Data.Entities
         [Required]
         public int HourlyRate { get; set; }
         [Required]
-        [ForeignKey("ApplicationUser")]
+        [ForeignKey(nameof(UserId))]
         public string UserId { get; set; }
-        public ApplicationUser User { get; set; }
+        public virtual ApplicationUser User { get; set; }
     }
 }

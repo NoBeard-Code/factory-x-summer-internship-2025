@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿using AMI.EduWork._2025.Data.Entities.Abstraction;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,19 +11,16 @@ using System.Threading.Tasks;
 
 namespace AMI.EduWork._2025.Data.Entities
 {
-    public class TimeSlice
+    public class TimeSlice : EntityBase
     {
         [Required]
-        [Key]
-        public string Id { get; set; }
-        [Required]
-        [ForeignKey("WorkDay")]
+        [ForeignKey(nameof(WorkDayId))]
         public string WorkDayId { get; set; }
-        public WorkDay WorkDay { get; set; }
+        public virtual WorkDay WorkDay { get; set; }
         [AllowNull]
-        [ForeignKey("Project")]
+        [ForeignKey(nameof(ProjectId))]
         public string ProjectId { get; set; }
-        public Project Project { get; set; }
+        public virtual Project Project { get; set; }
         [Required]
         public DateTime Start { get; set; }
         [Required]

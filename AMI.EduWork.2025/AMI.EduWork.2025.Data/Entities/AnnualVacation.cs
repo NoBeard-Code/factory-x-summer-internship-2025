@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AMI.EduWork._2025.Data.Entities.Abstraction;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -7,11 +8,8 @@ using System.Threading.Tasks;
 
 namespace AMI.EduWork._2025.Data.Entities
 {
-    public class AnnualVacation
+    public class AnnualVacation : EntityBase
     {
-        [Required]
-        [Key]
-        public string Id { get; set; }
         [Required]
         public int UsedVacation { get; set; }
         [Required]
@@ -20,7 +18,7 @@ namespace AMI.EduWork._2025.Data.Entities
         public int PlannedVacation { get; set; }
         [Required]
         public int AvailableVacation { get; set; }
-        ICollection<UserOnVacation> UsersOnVacations { get; set; }
+        public virtual ICollection<UserOnVacation> UsersOnVacations { get; set; }
 
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AMI.EduWork._2025.Data.Entities.Abstraction;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,11 +10,8 @@ using System.Threading.Tasks;
 
 namespace AMI.EduWork._2025.Data.Entities
 {
-    public class SickLeave
+    public class SickLeave : EntityBase
     {
-        [Required]
-        [Key]
-        public string Id { get; set; }
         [Required]
         public DateOnly StartDate{ get; set; }
         [Required]
@@ -21,9 +19,9 @@ namespace AMI.EduWork._2025.Data.Entities
         [Required]
         public int Year { get; set; }
         [Required]
-        [ForeignKey("ApplicationUser")]
+        [ForeignKey(nameof(UserId))]
         public string UserId { get; set; } 
-        public ApplicationUser User { get; set; }
+        public virtual ApplicationUser User { get; set; }
 
     }
 }
