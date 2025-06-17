@@ -106,7 +106,7 @@ namespace AMI.EduWork._2025.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AnnualVacations");
+                    b.ToTable("AnnualVacations", (string)null);
                 });
 
             modelBuilder.Entity("AMI.EduWork._2025.Data.Entities.Contract", b =>
@@ -131,7 +131,7 @@ namespace AMI.EduWork._2025.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Contracts");
+                    b.ToTable("Contracts", (string)null);
                 });
 
             modelBuilder.Entity("AMI.EduWork._2025.Data.Entities.Project", b =>
@@ -152,7 +152,7 @@ namespace AMI.EduWork._2025.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Projects");
+                    b.ToTable("Projects", (string)null);
                 });
 
             modelBuilder.Entity("AMI.EduWork._2025.Data.Entities.SickLeave", b =>
@@ -177,7 +177,7 @@ namespace AMI.EduWork._2025.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("SickLeaves");
+                    b.ToTable("SickLeaves", (string)null);
                 });
 
             modelBuilder.Entity("AMI.EduWork._2025.Data.Entities.TimeSlice", b =>
@@ -208,7 +208,7 @@ namespace AMI.EduWork._2025.Migrations
 
                     b.HasIndex("WorkDayId");
 
-                    b.ToTable("TimeSlices");
+                    b.ToTable("TimeSlices", (string)null);
                 });
 
             modelBuilder.Entity("AMI.EduWork._2025.Data.Entities.UserOnProject", b =>
@@ -240,7 +240,7 @@ namespace AMI.EduWork._2025.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UsersOnProjects");
+                    b.ToTable("UsersOnProjects", (string)null);
                 });
 
             modelBuilder.Entity("AMI.EduWork._2025.Data.Entities.UserOnVacation", b =>
@@ -268,7 +268,7 @@ namespace AMI.EduWork._2025.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UsersOnVacations");
+                    b.ToTable("UsersOnVacations", (string)null);
                 });
 
             modelBuilder.Entity("AMI.EduWork._2025.Data.Entities.WorkDay", b =>
@@ -281,7 +281,7 @@ namespace AMI.EduWork._2025.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("WorkDays");
+                    b.ToTable("WorkDays", (string)null);
                 });
 
             modelBuilder.Entity("ApplicationUserWorkDay", b =>
@@ -296,7 +296,7 @@ namespace AMI.EduWork._2025.Migrations
 
                     b.HasIndex("WorkDaysId");
 
-                    b.ToTable("ApplicationUserWorkDay");
+                    b.ToTable("ApplicationUserWorkDay", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

@@ -62,6 +62,19 @@ namespace AMI.EduWork._2025
             }
 
             using var scope = app.Services.CreateScope();
+
+            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            var pendingMigrations = context.Database.GetPendingMigrations();
+            if (pendingMigrations.Any())
+            {
+                Console.WriteLine("Applying pending migration");
+                context.Database.Migrate();
+            }
+            else
+            {
+                Console.WriteLine("No pending migration");
+            }
+
             var dataSeeder = scope.ServiceProvider.GetRequiredService<DataSeeder>();
             dataSeeder.SeedData();
 
