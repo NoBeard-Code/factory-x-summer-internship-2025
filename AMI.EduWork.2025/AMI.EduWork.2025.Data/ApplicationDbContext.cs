@@ -8,6 +8,7 @@ namespace AMI.EduWork._2025.Data
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) :base(options)
         {
+
         }
 
         public DbSet<AnnualVacation> AnnualVacations { get; set; }
