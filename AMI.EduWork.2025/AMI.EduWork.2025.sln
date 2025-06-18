@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AMI.EduWork.2025.Client", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AMI.EduWork.2025.Data", "AMI.EduWork.2025.Data\AMI.EduWork.2025.Data.csproj", "{5975D5E1-EEAD-4FAC-9C31-CC9FC721C1FC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AMI.EduWork.2025.Domain", "AMI.EduWork.2025.Domain\AMI.EduWork.2025.Domain.csproj", "{79DF495A-D7C1-426D-9BCB-49187DA7E746}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{5975D5E1-EEAD-4FAC-9C31-CC9FC721C1FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5975D5E1-EEAD-4FAC-9C31-CC9FC721C1FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5975D5E1-EEAD-4FAC-9C31-CC9FC721C1FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79DF495A-D7C1-426D-9BCB-49187DA7E746}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79DF495A-D7C1-426D-9BCB-49187DA7E746}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79DF495A-D7C1-426D-9BCB-49187DA7E746}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79DF495A-D7C1-426D-9BCB-49187DA7E746}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
