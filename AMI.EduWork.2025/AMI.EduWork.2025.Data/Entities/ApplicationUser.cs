@@ -6,6 +6,7 @@ namespace AMI.EduWork._2025.Data
     // Add profile data for application users by adding properties to the ApplicationUser class
     public class ApplicationUser : IdentityUser
     {
+        public virtual byte Role { get; set; }
         public virtual ICollection<Contract> Contracts { get; set; }
         public virtual ICollection<SickLeave> SickLeaves { get; set; }
         public virtual ICollection<UserOnVacation> UsersOnVacations { get; set; }
