@@ -2,6 +2,7 @@ using AMI.EduWork._2025.Client.Pages;
 using AMI.EduWork._2025.Components;
 using AMI.EduWork._2025.Components.Account;
 using AMI.EduWork._2025.Data;
+using AMI.EduWork._2025.Data.Migrations;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -44,6 +45,7 @@ namespace AMI.EduWork._2025
 
             builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
+            builder.Services.AddTransient<DataSeeder>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -58,6 +60,23 @@ namespace AMI.EduWork._2025
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            using var scope = app.Services.CreateScope();
+
+            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            var pendingMigrations = context.Database.GetPendingMigrations();
+            if (pendingMigrations.Any())
+            {
+                Console.WriteLine("Applying pending migration");
+                context.Database.Migrate();
+            }
+            else
+            {
+                Console.WriteLine("No pending migration");
+            }
+
+            var dataSeeder = scope.ServiceProvider.GetRequiredService<DataSeeder>();
+            dataSeeder.SeedData();
 
             app.UseHttpsRedirection();
 

@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36203.30 d17.14
+VisualStudioVersion = 17.14.36203.30
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AMI.EduWork.2025", "AMI.EduWork.2025\AMI.EduWork.2025.csproj", "{2D3EB3B8-5881-44D4-8350-DBDD290A8E89}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AMI.EduWork.2025.Client", "AMI.EduWork.2025.Client\AMI.EduWork.2025.Client.csproj", "{CE21C70C-43AB-44E7-82E8-D680CCA717CD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AMI.EduWork.2025.Data", "AMI.EduWork.2025.Data\AMI.EduWork.2025.Data.csproj", "{5975D5E1-EEAD-4FAC-9C31-CC9FC721C1FC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{CE21C70C-43AB-44E7-82E8-D680CCA717CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CE21C70C-43AB-44E7-82E8-D680CCA717CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CE21C70C-43AB-44E7-82E8-D680CCA717CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5975D5E1-EEAD-4FAC-9C31-CC9FC721C1FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5975D5E1-EEAD-4FAC-9C31-CC9FC721C1FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5975D5E1-EEAD-4FAC-9C31-CC9FC721C1FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5975D5E1-EEAD-4FAC-9C31-CC9FC721C1FC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
