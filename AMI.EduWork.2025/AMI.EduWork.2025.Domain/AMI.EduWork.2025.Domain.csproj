@@ -8,7 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Services\" />
+    <Reference Include="AMI.EduWork.2025.Data">
+      <HintPath>..\AMI.EduWork.2025.Data\bin\Debug\net9.0\AMI.EduWork.2025.Data.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
