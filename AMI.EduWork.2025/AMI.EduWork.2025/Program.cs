@@ -3,6 +3,12 @@ using AMI.EduWork._2025.Components;
 using AMI.EduWork._2025.Components.Account;
 using AMI.EduWork._2025.Data;
 using AMI.EduWork._2025.Data.Migrations;
+using AMI.EduWork._2025.Data.Repository;
+using AMI.EduWork._2025.Domain;
+using AMI.EduWork._2025.Domain.Interfaces.Repository;
+using AMI.EduWork._2025.Domain.Interfaces.Service;
+using AMI.EduWork._2025.Domain.IRepository.Repository;
+using AMI.EduWork._2025.Domain.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -46,6 +52,13 @@ namespace AMI.EduWork._2025
             builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
             builder.Services.AddTransient<DataSeeder>();
+
+            //Repositories
+            builder.Services.AddScoped<IWorkDayRepository, WorkDayRepository>();
+
+            //Services
+            builder.Services.AddScoped<IWorkDayService, WorkDayService>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

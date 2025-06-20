@@ -12,6 +12,7 @@
   <ItemGroup>
     <ProjectReference Include="..\AMI.EduWork.2025.Client\AMI.EduWork.2025.Client.csproj" />
     <ProjectReference Include="..\AMI.EduWork.2025.Data\AMI.EduWork.2025.Data.csproj" />
+    <ProjectReference Include="..\AMI.EduWork.2025.Domain\AMI.EduWork.2025.Domain.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="9.0.6" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="9.0.6" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.6" />
