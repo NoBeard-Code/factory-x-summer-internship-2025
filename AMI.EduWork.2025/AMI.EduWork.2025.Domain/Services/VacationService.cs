@@ -1,14 +1,15 @@
 ﻿using AMI.EduWork._2025.Domain.Entities;
 using AMI.EduWork._2025.Domain.Interfaces.Repository;
+using AMI.EduWork._2025.Domain.Interfaces.Service;
 using AMI.EduWork._2025.Domain.Models.VacationModel;
 using System.Threading.Tasks;
 
 namespace AMI.EduWork._2025.Domain.Services;
 
-public class VacationService
+public class VacationService : IVacationService
 {
-    private readonly IAnnualVacationRepository _repository;
-    public VacationService(IAnnualVacationRepository repository) 
+    private readonly IVacationRepository _repository;
+    public VacationService(IVacationRepository repository) 
     { 
         _repository = repository;
     }
@@ -69,7 +70,7 @@ public class VacationService
 
     public async Task<bool> Delete(string id)
     {
-        if(_repository.GetById(id) is not null) _repository.Delete(id);
+        if(_repository.GetById(id) is not null) await _repository.Delete(id);
         return await _repository.SaveChangesAsync();
     }
     

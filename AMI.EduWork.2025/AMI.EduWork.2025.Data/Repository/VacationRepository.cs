@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace AMI.EduWork._2025.Data.Repository
 {
-    public class AnnualVacationRepository : Repository<AnnualVacation>, IAnnualVacationRepository
+    public class VacationRepository : Repository<AnnualVacation>, IVacationRepository
     {
-        public AnnualVacationRepository(ApplicationDbContext contex) :base(contex) { }
+        public VacationRepository(ApplicationDbContext contex) :base(contex) { }
 
     }
 }
