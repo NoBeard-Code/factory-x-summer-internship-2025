@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AMI.EduWork._2025.Data.Entities.Abstraction
+namespace AMI.EduWork._2025.Domain.Entities.Abstraction
 {
     public abstract class EntityBase
     {

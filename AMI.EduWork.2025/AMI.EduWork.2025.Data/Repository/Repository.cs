@@ -1,4 +1,4 @@
-﻿using AMI.EduWork._2025.Domain.IRepository;
+﻿using AMI.EduWork._2025.Domain.IRepository.Repository;
 using Microsoft.EntityFrameworkCore;
 
 namespace AMI.EduWork._2025.Data.Repository;
@@ -12,12 +12,12 @@ public abstract class Repository<T> : IRepository<T> where T : class
         _dbSet = context.Set<T>(); 
     }
 
-    public async virtual void Create(T entity)
+    public async virtual Task Create(T entity)
     {
         await _dbSet.AddAsync(entity);
     }
 
-    public async virtual void Delete(string id)
+    public async virtual Task Delete(string id)
     {
         T? entity =  await _dbSet.FindAsync(id);
         if (entity != null) _dbSet.Remove(entity);
@@ -33,7 +33,12 @@ public abstract class Repository<T> : IRepository<T> where T : class
         return await _dbSet.FindAsync(id);
     }
 
-    public async virtual void Update(T entity)
+    public async virtual Task SaveChangesAsync()
+    {
+       await _context.SaveChangesAsync();
+    }
+
+    public async virtual Task Update(T entity)
     {
         _dbSet.Update(entity);
     }

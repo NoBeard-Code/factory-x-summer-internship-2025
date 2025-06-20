@@ -1,5 +1,5 @@
 using System.Security.Claims;
-using AMI.EduWork._2025.Data;
+using AMI.EduWork._2025.Domain;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server;
 using Microsoft.AspNetCore.Identity;

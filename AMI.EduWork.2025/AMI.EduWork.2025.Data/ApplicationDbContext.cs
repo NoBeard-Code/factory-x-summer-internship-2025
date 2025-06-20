@@ -1,4 +1,6 @@
-using AMI.EduWork._2025.Data.Entities;
+using AMI.EduWork._2025.Data.Configs;
+using AMI.EduWork._2025.Domain;
+using AMI.EduWork._2025.Domain.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,6 +11,21 @@ namespace AMI.EduWork._2025.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) :base(options)
         {
 
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.ApplyConfiguration(new AnnualVacationConfig());
+            modelBuilder.ApplyConfiguration(new ApplicationUserConfig());
+            modelBuilder.ApplyConfiguration(new ContractConfig());
+            modelBuilder.ApplyConfiguration(new ProjectConfig());
+            modelBuilder.ApplyConfiguration(new SickLeaveConfig());
+            modelBuilder.ApplyConfiguration(new TimeSliceConfig());
+            modelBuilder.ApplyConfiguration(new UserOnProjectConfig());
+            modelBuilder.ApplyConfiguration(new UserOnVacationConfig());
+            modelBuilder.ApplyConfiguration(new WorkDayConfig());
         }
 
         public DbSet<AnnualVacation> AnnualVacations { get; set; }
