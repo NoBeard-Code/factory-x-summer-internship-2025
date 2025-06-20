@@ -15,6 +15,8 @@ namespace AMI.EduWork._2025.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.ApplyConfiguration(new AnnualVacationConfig());
             modelBuilder.ApplyConfiguration(new ApplicationUserConfig());
             modelBuilder.ApplyConfiguration(new ContractConfig());

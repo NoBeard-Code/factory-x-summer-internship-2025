@@ -13,11 +13,11 @@ namespace AMI.EduWork._2025.Domain.Services;
 public class WorkDayService : IWorkDayService
 {
     private readonly IWorkDayRepository _repository;
-    private readonly ILogger _logger;
-    public WorkDayService(IWorkDayRepository repository, ILogger logger)
+    //private readonly ILogger _logger;
+    public WorkDayService(IWorkDayRepository repository/*, ILogger logger*/)
     {
         _repository = repository;
-        _logger = logger;
+        //_logger = logger;
     }
 
     public Task Create(WorkDayModel entity)

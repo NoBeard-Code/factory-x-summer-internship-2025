@@ -59,7 +59,7 @@ namespace AMI.EduWork._2025.Data.Migrations
                 Start = DateTime.Now,
                 End = DateTime.Now.AddMinutes(10),
                 TypeOfSlice = 1,
-
+                UserId = user.Id,
             });
 
             _context.Add(new UserOnProject()
