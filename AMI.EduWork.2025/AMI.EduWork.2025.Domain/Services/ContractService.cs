@@ -1,6 +1,7 @@
 ﻿using AMI.EduWork._2025.Domain.Interfaces.Repository;
 using AMI.EduWork._2025.Domain.Interfaces.Service;
 using AMI.EduWork._2025.Domain.Models.ContractModel;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 
 namespace AMI.EduWork._2025.Domain.Services
@@ -8,12 +9,15 @@ namespace AMI.EduWork._2025.Domain.Services
     public class ContractService : IContractService
     {
         private readonly IContractRepository _repository;
-        public ContractService(IContractRepository repository)
+        private readonly ILogger<ContractService> _logger;
+        public ContractService(IContractRepository repository, ILogger<ContractService> logger)
         {
+            _logger = logger;
             _repository = repository;
         }
-        public async Task<bool> Create(ContractCreateModel contractCreateModel)
+        public async Task<bool> Create(ContractCreateModel? contractCreateModel)
         {
+            if (contractCreateModel is null) return false;
             Entities.Contract contract = new Entities.Contract {
                 Id = Guid.NewGuid().ToString(),
                 HourlyRate = contractCreateModel.HourlyRate,
@@ -102,8 +106,9 @@ namespace AMI.EduWork._2025.Domain.Services
             return contractGetByIdModel;
         }
 
-        public async Task<bool> Update(ContractUpdateModel contractUpdateModel)
+        public async Task<bool> Update(ContractUpdateModel? contractUpdateModel)
         {
+            if (contractUpdateModel is null) return false;
             Entities.Contract contract = new Entities.Contract {
                 Id= contractUpdateModel.Id,
                 HourlyRate = contractUpdateModel.HourlyRate,
