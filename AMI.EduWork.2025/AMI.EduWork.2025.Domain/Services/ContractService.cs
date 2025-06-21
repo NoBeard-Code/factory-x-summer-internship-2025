@@ -58,6 +58,50 @@ namespace AMI.EduWork._2025.Domain.Services
             return contractGetByIdModel;
         }
 
+        public async Task<IEnumerable<ContractGetByIdModel>> GetByHourlyRate(int hourlyRate)
+        {
+            IEnumerable<Entities.Contract> contract = await _repository.GetAll();
+            List<ContractGetByIdModel> contractGetByIdModel = contract.
+                Where(x => x.HourlyRate.Equals(hourlyRate)).
+                Select(x => new ContractGetByIdModel
+                {
+                    Id = x.Id,
+                    HourlyRate = x.HourlyRate,
+                    IsActive = x.IsActive,
+                    WorkingHour = x.WorkingHour
+                }).ToList();
+
+            return contractGetByIdModel;
+        }
+        public async Task<IEnumerable<ContractGetByIdModel>> GetByWorkingHour(int workingHour)
+        {
+            IEnumerable<Entities.Contract> contract = await _repository.GetAll();
+            List<ContractGetByIdModel> contractGetByIdModel = contract.
+                Where(x => x.WorkingHour.Equals(workingHour)).
+                Select(x => new ContractGetByIdModel
+                {
+                    Id = x.Id,
+                    HourlyRate = x.HourlyRate,
+                    IsActive = x.IsActive,
+                    WorkingHour = x.WorkingHour
+                }).ToList();
+
+            return contractGetByIdModel;
+        }
+        public async Task<IEnumerable<ContractGetByIdModel>> GetAll()
+        {
+            IEnumerable<Entities.Contract> contract = await _repository.GetAll();
+            List<ContractGetByIdModel> contractGetByIdModel = contract.Select(x => new ContractGetByIdModel
+                {
+                    Id = x.Id,
+                    HourlyRate = x.HourlyRate,
+                    IsActive = x.IsActive,
+                    WorkingHour = x.WorkingHour
+                }).ToList();
+
+            return contractGetByIdModel;
+        }
+
         public async Task<bool> Update(ContractUpdateModel contractUpdateModel)
         {
             Entities.Contract contract = new Entities.Contract {

@@ -13,5 +13,8 @@ namespace AMI.EduWork._2025.Domain.Interfaces.Service
         Task<bool> Delete(string id);
         Task<bool> Update(ContractUpdateModel contractUpdateModel);
         Task<ContractGetByIdModel> GetById(string id);
+        Task<IEnumerable<ContractGetByIdModel>> GetAll();
+        Task<IEnumerable<ContractGetByIdModel>> GetByHourlyRate(int hourlyRate);
+        Task<IEnumerable<ContractGetByIdModel>> GetByIsActive();
     }
 }
