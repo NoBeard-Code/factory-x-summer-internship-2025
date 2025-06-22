@@ -27,8 +27,8 @@ public class TimeSlice : EntityBase
     public DateTime End { get; set; }
     [Required]
     public byte TypeOfSlice {  get; set; }
-    [Required]
+    [AllowNull]
     [ForeignKey(nameof(UserId))]
-    public string UserId { get; set; }
-    public virtual ApplicationUser User { get; set; }
+    public string? UserId { get; set; }
+    public virtual ApplicationUser? User { get; set; }
 }
