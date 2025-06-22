@@ -20,7 +20,7 @@ public class WorkDayService : IWorkDayService
     {
         if (entity is null)
         {
-            _logger.LogWarning("Attempted to creat WokrDay with null entity");
+            _logger.LogWarning("Attempted to create WokrDay with null entity");
             return false;
         }
         if (await _repository.DayExists(entity.Date))
@@ -32,12 +32,13 @@ public class WorkDayService : IWorkDayService
         {
             WorkDay workday = new WorkDay
             {
+                Id = Guid.NewGuid().ToString(),
                 Date = entity.Date,
             };
             await _repository.Create(workday);
             bool result = await _repository.SaveChangesAsync();
             if(result) _logger.LogInformation("Successfully created WorkDay for date {Date}.", workday.Date);
-            else _logger.LogWarning("No changes saved when creating WokrDay with date {Date}", workday.Date);
+            else _logger.LogWarning("No changes saved when creating WorkDay with date {Date}", workday.Date);
 
             return result;
         }
