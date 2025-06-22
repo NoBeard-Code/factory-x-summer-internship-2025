@@ -11,6 +11,6 @@ namespace AMI.EduWork._2025.Domain.Interfaces.Service
     {
         Task<GetWorkDayModel> GetByDate(DateTime date);
         Task<IEnumerable<GetWorkDayModel>> GetAll();
-        Task Create(WorkDayModel entity);
+        Task<bool> Create(WorkDayModel entity);
     }
 }

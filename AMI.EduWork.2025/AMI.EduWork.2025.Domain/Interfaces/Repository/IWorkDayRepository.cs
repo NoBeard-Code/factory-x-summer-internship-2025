@@ -10,4 +10,6 @@ namespace AMI.EduWork._2025.Domain.Interfaces.Repository;
 
 public interface IWorkDayRepository : IRepository<WorkDay>
 {
+    Task<WorkDay> GetByDate(DateTime date);
+    Task<bool> DayExists(DateTime date);
 }

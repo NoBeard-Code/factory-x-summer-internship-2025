@@ -8,7 +8,7 @@ namespace AMI.EduWork._2025.Domain.Models.WorkDay;
 
 public class WorkDayModel
 {
-    public DateTime date { get; set; }
+    public DateTime Date { get; set; }
 }
 
 public class GetWorkDayModel : WorkDayModel

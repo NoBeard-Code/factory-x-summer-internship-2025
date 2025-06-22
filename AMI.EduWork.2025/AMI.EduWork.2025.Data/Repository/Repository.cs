@@ -33,9 +33,9 @@ public abstract class Repository<T> : IRepository<T> where T : class
         return await _dbSet.FindAsync(id);
     }
 
-    public async virtual Task SaveChangesAsync()
+    public async virtual Task<bool> SaveChangesAsync()
     {
-       await _context.SaveChangesAsync();
+       return await _context.SaveChangesAsync() > 0;
     }
 
     public async virtual Task Update(T entity)

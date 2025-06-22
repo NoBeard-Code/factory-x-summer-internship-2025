@@ -1,37 +1,74 @@
-﻿using AMI.EduWork._2025.Domain.Interfaces.Repository;
+﻿using AMI.EduWork._2025.Domain.Entities;
+using AMI.EduWork._2025.Domain.Interfaces.Repository;
 using AMI.EduWork._2025.Domain.Interfaces.Service;
 using AMI.EduWork._2025.Domain.Models.WorkDay;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AMI.EduWork._2025.Domain.Services;
 
 public class WorkDayService : IWorkDayService
 {
     private readonly IWorkDayRepository _repository;
-    //private readonly ILogger _logger;
-    public WorkDayService(IWorkDayRepository repository/*, ILogger logger*/)
+    private readonly ILogger<WorkDayService> _logger;
+    public WorkDayService(IWorkDayRepository repository, ILogger<WorkDayService> logger)
     {
         _repository = repository;
-        //_logger = logger;
+        _logger = logger;
     }
 
-    public Task Create(WorkDayModel entity)
+    public async Task<bool> Create(WorkDayModel entity)
     {
-        throw new NotImplementedException();
+        if (entity is null)
+        {
+            _logger.LogWarning("Attempted to creat WokrDay with null entity");
+            return false;
+        }
+        if (await _repository.DayExists(entity.Date))
+        {
+            _logger.LogInformation("WorkDay for date {Date} exists.", entity.Date);
+            return true;
+        }
+        try
+        {
+            WorkDay workday = new WorkDay
+            {
+                Date = entity.Date,
+            };
+            await _repository.Create(workday);
+            bool result = await _repository.SaveChangesAsync();
+            if(result) _logger.LogInformation("Successfully created WorkDay for date {Date}.", workday.Date);
+            else _logger.LogWarning("No changes saved when creating WokrDay with date {Date}", workday.Date);
+
+            return result;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error occurred while creating WorkDay for date {Date}.", entity.Date);
+            throw;
+        }
+       
     }
 
-    public Task<IEnumerable<GetWorkDayModel>> GetAll()
+    public async Task<IEnumerable<GetWorkDayModel>> GetAll()
     {
-        throw new NotImplementedException();
+        IEnumerable<WorkDay> entity = await _repository.GetAll();
+        List<GetWorkDayModel> workday = entity.Select(x => new GetWorkDayModel
+        {
+            Id = x.Id,
+            Date = x.Date,
+        }).ToList();
+        return workday;
     }
 
-    public Task<GetWorkDayModel> GetByDate(DateTime date)
+    public async Task<GetWorkDayModel> GetByDate(DateTime date)
     {
-        throw new NotImplementedException();
+        WorkDay entity = await _repository.GetByDate(date);
+        if (entity is null) return null;
+        GetWorkDayModel workday = new GetWorkDayModel
+        {
+            Id = entity.Id,
+            Date = entity.Date,
+        };
+        return workday;
     }
 }

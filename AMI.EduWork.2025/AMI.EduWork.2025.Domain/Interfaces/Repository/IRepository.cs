@@ -13,6 +13,6 @@ namespace AMI.EduWork._2025.Domain.IRepository.Repository
         Task<T> GetById(string id);
         Task Update(T entity);
         Task<IEnumerable<T>> GetAll();
-        Task SaveChangesAsync();
+        Task<bool> SaveChangesAsync();
     }
 }
