@@ -2,6 +2,7 @@
 using AMI.EduWork._2025.Domain.Interfaces.Repository;
 using AMI.EduWork._2025.Domain.Interfaces.Service;
 using AMI.EduWork._2025.Domain.Models.VacationModel;
+using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 
 namespace AMI.EduWork._2025.Domain.Services;
@@ -9,9 +10,11 @@ namespace AMI.EduWork._2025.Domain.Services;
 public class VacationService : IVacationService
 {
     private readonly IVacationRepository _repository;
-    public VacationService(IVacationRepository repository) 
+    private readonly ILogger<VacationService> _logger; 
+    public VacationService(IVacationRepository repository, ILogger<VacationService> logger) 
     { 
         _repository = repository;
+        _logger = logger;
     }
     
     public async Task<VacationGetModel> GetById(string id)
@@ -31,6 +34,37 @@ public class VacationService : IVacationService
         
         await _repository.SaveChangesAsync();
         return vacationGetModel;
+    }
+
+    public async Task<IEnumerable<VacationGetModel>> GetByYear(int year)
+    {
+        IEnumerable<AnnualVacation> annualVacations = await _repository.GetAll();
+        List<VacationGetModel> vacationGetModels = annualVacations.
+            Where(x => x.Year.Equals(year)).
+            Select(x=> new VacationGetModel{
+                Id=x.Id,
+                AvailableVacation=x.AvailableVacation,
+                PlannedVacation=x.PlannedVacation,
+                UsedVacation=x.UsedVacation,
+                Year=x.Year
+        }).ToList();
+
+        return vacationGetModels;
+    }
+
+    public async Task<IEnumerable<VacationGetModel>> GetAll()
+    {
+        IEnumerable<AnnualVacation> annualVacations = await _repository.GetAll();
+        List<VacationGetModel> vacationGetModels = annualVacations.Select(x => new VacationGetModel
+            {
+                Id = x.Id,
+                AvailableVacation = x.AvailableVacation,
+                PlannedVacation = x.PlannedVacation,
+                UsedVacation = x.UsedVacation,
+                Year = x.Year
+            }).ToList();
+
+        return vacationGetModels;
     }
 
     public async Task<bool> Create(VacationCreateModel? vacationCreateModel)
