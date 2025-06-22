@@ -11,8 +11,8 @@ public class TimeSliceService : ITimeSliceService
 {
     private readonly ITimeSliceRepository _repository;
     private readonly IUserRepository _userRepository;
-    private readonly Logger<TimeSliceService> _logger;
-    public TimeSliceService(ITimeSliceRepository repository,IUserRepository userRepository, Logger<TimeSliceService> logger)
+    private readonly ILogger<TimeSliceService> _logger;
+    public TimeSliceService(ITimeSliceRepository repository,IUserRepository userRepository, ILogger<TimeSliceService> logger)
     {
         _repository = repository;
         _userRepository = userRepository;
