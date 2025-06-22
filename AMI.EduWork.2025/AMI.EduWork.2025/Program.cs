@@ -56,9 +56,11 @@ namespace AMI.EduWork._2025
             //Repositories
             builder.Services.AddScoped<IWorkDayRepository, WorkDayRepository>();
             builder.Services.AddScoped<ITimeSliceRepository, TimeSliceRepository>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
 
             //Services
             builder.Services.AddScoped<IWorkDayService, WorkDayService>();
+            builder.Services.AddScoped<ITimeSliceService, TimeSliceService>();
 
             var app = builder.Build();
 
