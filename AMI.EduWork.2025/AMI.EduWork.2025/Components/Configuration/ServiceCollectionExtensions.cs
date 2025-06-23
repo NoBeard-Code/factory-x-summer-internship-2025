@@ -52,11 +52,15 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IVacationRepository, VacationRepository>();
         services.AddScoped<IUserOnVacationRepository, UserOnVacationRepository>();
         services.AddScoped<IContractRepository, ContractRepository>();
+        services.AddScoped<ITimeSliceRepository, TimeSliceRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
+
 
         //Services
         services.AddScoped<IWorkDayService, WorkDayService>();
         services.AddScoped<IVacationService, VacationService>();
         services.AddScoped<IContractService, ContractService>();
+        services.AddScoped<ITimeSliceService, TimeSliceService>();
 
         return services;
     }
