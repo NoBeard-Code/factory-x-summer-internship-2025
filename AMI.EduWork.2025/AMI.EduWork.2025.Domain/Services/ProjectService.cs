@@ -1,111 +1,209 @@
 ﻿using AMI.EduWork._2025.Domain.Entities;
 using AMI.EduWork._2025.Domain.Interfaces.Repository;
 using AMI.EduWork._2025.Domain.Interfaces.Service;
+using AMI.EduWork._2025.Domain.Models;
+using AMI.EduWork._2025.Domain.Models.Project;
+using AMI.EduWork._2025.Domain.Models.TimeSlice;
+using AMI.EduWork._2025.Domain.Models.User;
+using AMI.EduWork._2025.Domain.Models.UserOnProject;
+using AMI.EduWork._2025.Domain.Models.WorkDay;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AMI.EduWork._2025.Domain.Services {
     public class ProjectService : IProjectService {
-
         private readonly IProjectRepository _repository;
-        private readonly ILogger<ContractService> _logger;
+        private readonly ILogger<ProjectService> _logger;
 
-        public ProjectService(IProjectRepository repository, ILogger<ContractService> logger) {
+        public ProjectService(IProjectRepository repository, ILogger<ProjectService> logger) {
             _repository = repository;
             _logger = logger;
         }
-        public Task Create(Project project) {
-            var existingProject = _repository.GetProjectByName(project.Name);
-            if (existingProject != null) {
-                _logger.LogError($"Project with name '{project.Name}' already exists.");
-                throw new InvalidOperationException($"Project with name '{project.Name}' already exists.");
-            }
-            Project project1 = new Project {
-                Id = Guid.NewGuid().ToString(),
-                Name = project.Name,
-                TypeOfProject = project.TypeOfProject,
-                Description = project.Description,
-                TimeSlices = project.TimeSlices,
-                UsersOnProjects = project.UsersOnProjects
-            };
-            _repository.Create(project1);
-            return _repository.SaveChangesAsync();
 
+        public async Task Create(ProjectModel model) {
+            if (model == null) {
+                _logger.LogError("Project model cannot be null.");
+                throw new ArgumentNullException(nameof(model));
+            }
+
+            var existing = await _repository.GetProjectByName(model.Name);
+            if (existing != null) {
+                _logger.LogError($"Project with name '{model.Name}' already exists.");
+                throw new InvalidOperationException($"Project with name '{model.Name}' already exists.");
+            }
+
+            var project = new Project {
+                Id = Guid.NewGuid().ToString(),
+                Name = model.Name,
+                TypeOfProject = model.TypeOfProject,
+                Description = model.Description
+            };
+
+            await _repository.Create(project);
+            await _repository.SaveChangesAsync();
         }
 
-        public Task Delete(string projectId) {
-            var project = _repository.GetById(projectId);
+        public async Task Update(string projectId, ProjectModel model) {
+            if (model == null) {
+                _logger.LogError("Project model cannot be null.");
+                throw new ArgumentNullException(nameof(model));
+            }
+
+            var project = await _repository.GetById(projectId);
             if (project == null) {
                 _logger.LogError($"Project with ID '{projectId}' does not exist.");
                 throw new KeyNotFoundException($"Project with ID '{projectId}' does not exist.");
             }
-            _repository.Delete(projectId);
-            return _repository.SaveChangesAsync();
+
+            project.Name = model.Name;
+            project.TypeOfProject = model.TypeOfProject;
+            project.Description = model.Description;
+
+            await _repository.Update(project);
+            await _repository.SaveChangesAsync();
         }
 
-        public Task<IEnumerable<Project>> GetAllProjectsByUserId(string userId) {
-            var projects = _repository.GetAllProjectsByUserId(userId);
+        public async Task Delete(string projectId) {
+            if (string.IsNullOrWhiteSpace(projectId)) {
+                _logger.LogError("Project ID cannot be null or empty.");
+                throw new ArgumentException("Project ID cannot be null or empty.", nameof(projectId));
+            }
+
+            var project = await _repository.GetById(projectId);
+            if (project == null) {
+                _logger.LogError($"Project with ID '{projectId}' does not exist.");
+                throw new KeyNotFoundException($"Project with ID '{projectId}' does not exist.");
+            }
+
+            await _repository.Delete(projectId);
+            await _repository.SaveChangesAsync();
+        }
+
+        public async Task<GetProjectModel> GetById(string projectId) {
+            if (string.IsNullOrWhiteSpace(projectId)) {
+                _logger.LogError("Project ID cannot be null or empty.");
+                throw new ArgumentException("Project ID cannot be null or empty.", nameof(projectId));
+            }
+
+            var project = await _repository.GetById(projectId);
+            if (project == null) {
+                _logger.LogError($"Project with ID '{projectId}' does not exist.");
+                throw new KeyNotFoundException($"Project with ID '{projectId}' does not exist.");
+            }
+
+            return MapToGetModel(project);
+        }
+
+        public async Task<GetProjectModel> GetProjectByName(string name) {
+            if (string.IsNullOrWhiteSpace(name)) {
+                _logger.LogError("Project name cannot be null or empty.");
+                throw new ArgumentException("Project name cannot be null or empty.", nameof(name));
+            }
+
+            var project = await _repository.GetProjectByName(name);
+            if (project == null) {
+                _logger.LogError($"Project with name '{name}' not found.");
+                throw new KeyNotFoundException($"Project with name '{name}' not found.");
+            }
+
+            return MapToGetModel(project);
+        }
+
+        public async Task<IEnumerable<GetProjectModel>> GetAllProjectsByUserId(string userId) {
+            if (string.IsNullOrWhiteSpace(userId)) {
+                _logger.LogError("User ID cannot be null or empty.");
+                throw new ArgumentException("User ID cannot be null or empty.", nameof(userId));
+            }
+
+            var projects = await _repository.GetAllProjectsByUserId(userId);
             if (projects == null || !projects.Any()) {
                 _logger.LogWarning($"No projects found for user ID '{userId}'.");
                 throw new KeyNotFoundException($"No projects found for user ID '{userId}'.");
             }
-            return projects;
+
+            return projects.Select(MapToGetModel);
         }
 
-        public Task<Project> GetById(string projectId) {
-            var projects = _repository.GetById(projectId);
-            if(projects == null) {
-                _logger.LogError($"Project with ID '{projectId}' does not exist.");
-                throw new KeyNotFoundException($"Project with ID '{projectId}' does not exist.");
+        public async Task<IEnumerable<GetProjectModel>> GetProjectsByDateRange(DateTime startDate, DateTime endDate) {
+            if (startDate == default || endDate == default) {
+                _logger.LogError("Invalid date range.");
+                throw new ArgumentException("Start or end date cannot be default.");
             }
-            return projects;
-        }
 
-        public Task<Project> GetProjectByName(string name) {
-            var projects = _repository.GetProjectByName(name);
-            if (projects == null) {
-                _logger.LogError($"Project with name '{name}' not found.");
-                throw new KeyNotFoundException($"Project with name '{name}' not found.");
+            if (startDate > endDate) {
+                _logger.LogError("Start date is after end date.");
+                throw new ArgumentException("Start date must be before or equal to end date.");
             }
-            return projects;
-        }
 
-        public  Task<IEnumerable<Project>> GetProjectsByDateRange(DateTime startDate, DateTime endDate) {
-            var projects = _repository.GetProjectsByDateRange(startDate, endDate);
-            if (projects == null) {
-                _logger.LogWarning($"No projects found in the date range from '{startDate}' to '{endDate}'.");
-                throw new KeyNotFoundException($"No projects found in the date range from '{startDate}' to '{endDate}'.");
+            var projects = await _repository.GetProjectsByDateRange(startDate, endDate);
+            if (projects == null || !projects.Any()) {
+                _logger.LogWarning($"No projects found between {startDate} and {endDate}.");
+                throw new KeyNotFoundException("No projects found in the specified date range.");
             }
-            return projects;
+
+            return projects.Select(MapToGetModel);
         }
 
-        public Task<bool> ProjectExists(string name) {
-            var exists = _repository.ProjectExists(name);
-            return exists;
-        }
-
-        public Task Update(Project project) {
-            var projectToUpdate = _repository.GetById(project.Id);
-            if (projectToUpdate == null) {
-                _logger.LogError($"Project with ID '{project.Id}' does not exist.");
-                throw new KeyNotFoundException($"Project with ID '{project.Id}' does not exist.");
+        public async Task<bool> ProjectExists(string name) {
+            if (string.IsNullOrWhiteSpace(name)) {
+                _logger.LogError("Project name cannot be null or empty.");
+                throw new ArgumentException("Project name cannot be null or empty.", nameof(name));
             }
-            Project project1 = new Project {
+
+            return await _repository.ProjectExists(name);
+        }
+
+
+        private GetProjectModel MapToGetModel(Project project)
+        {
+            return new GetProjectModel
+            {
                 Id = project.Id,
                 Name = project.Name,
                 TypeOfProject = project.TypeOfProject,
                 Description = project.Description,
-                TimeSlices = project.TimeSlices,
-                UsersOnProjects = project.UsersOnProjects
-            };
-            _repository.Update(project1);
-            return _repository.SaveChangesAsync();
-        }
 
-       
-    }
+                TimeSlices = project.TimeSlices?.Select(ts => new GetTimeSliceModel
+                {
+                    Id = ts.Id,
+                    Start = ts.Start,
+                    End = ts.End,
+                    TypeOfSlice = ts.TypeOfSlice,
+                    ProjectId = ts.ProjectId,
+                    WorkDayId = ts.WorkDayId,
+                    UserId = ts.UserId ?? string.Empty,
+                    WorkDay = ts.WorkDay != null ? new GetWorkDayModel
+                    {
+                        Id = ts.WorkDay.Id,
+                        Date = ts.WorkDay.Date
+                    }:throw new InvalidOperationException("WorkDay is required but was null."),
+                        User = ts.User != null ? new GetUserModel
+                        {
+                            Id = ts.User.Id,
+                            UserName = ts.User.UserName
+                        }
+                        :
+                        throw new InvalidOperationException("User is required but was null.")}).ToList(),
+
+                        UsersOnProjects = project.UsersOnProjects?.Select(uop => new GetUserOnProjectModel {
+                        Id = uop.Id,
+                        UserId = uop.UserId,
+                        ProjectId = uop.ProjectId,
+                        ProjectRole = uop.ProjectRole,
+                        RoleStartDate = uop.RoleStartDate,
+                        RoleEndDate = uop.RoleEndDate,
+                        User = new GetUserModel {
+                        Id = uop.User.Id,
+                        UserName = uop.User.UserName
+                        },
+                        Project = new GetProjectModel {
+                        Id = uop.Project.Id,
+                        Name = uop.Project.Name,
+                        TypeOfProject = uop.Project.TypeOfProject,
+                        Description = uop.Project.Description
+                        }}).ToList()
+
+                        };
+                }   
+
+        }
 }

@@ -1,4 +1,5 @@
 ﻿using AMI.EduWork._2025.Domain.Entities;
+using AMI.EduWork._2025.Domain.Models.Project;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,14 +8,16 @@ using System.Threading.Tasks;
 
 namespace AMI.EduWork._2025.Domain.Interfaces.Service {
     public interface IProjectService {
-
-        Task Create(Project project);
-        Task Update(Project project);
+        Task Create(ProjectModel model);
+        Task Update(string projectId, ProjectModel model);
         Task Delete(string projectId);
-        Task<Project> GetById(string projectId);
-        Task<IEnumerable<Project>> GetAllProjectsByUserId(string userId);
-        Task<Project> GetProjectByName(string name);
+
+        Task<GetProjectModel> GetById(string projectId);
+        Task<GetProjectModel> GetProjectByName(string name);
+        Task<IEnumerable<GetProjectModel>> GetAllProjectsByUserId(string userId);
+        Task<IEnumerable<GetProjectModel>> GetProjectsByDateRange(DateTime startDate, DateTime endDate);
+
         Task<bool> ProjectExists(string name);
-        Task<IEnumerable<Project>> GetProjectsByDateRange(DateTime startDate, DateTime endDate);
     }
+
 }

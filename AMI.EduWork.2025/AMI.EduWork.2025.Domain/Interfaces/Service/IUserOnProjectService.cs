@@ -1,4 +1,5 @@
 ﻿using AMI.EduWork._2025.Domain.Entities;
+using AMI.EduWork._2025.Domain.Models.UserOnProject;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,21 +8,20 @@ using System.Threading.Tasks;
 
 namespace AMI.EduWork._2025.Domain.Interfaces.Service {
     public interface IUserOnProjectService {
-
-        Task Create(UserOnProject userOnProject);
-
-        Task Update(UserOnProject userOnProject);
+        Task Create(UserOnProjectModel model);
+        Task Update(string id, UserOnProjectModel model);
 
         Task DeleteByUser(string userOnProjectId);
-
         Task DeleteByProject(string userOnProjectId);
 
-        Task<UserOnProject> GetById(string userOnProjectId);
+        Task<GetUserOnProjectModel> GetById(string userOnProjectId);
 
-        Task<IEnumerable<UserOnProject>> GetUsersByProjectId(string projectId);
-        Task<IEnumerable<UserOnProject>> GetProjectsByUserId(string userId);
-        Task<UserOnProject> GetUserOnProjectAsync(string userId, string projectId);
-        Task<IEnumerable<UserOnProject>> GetProjectsForUserForIntervalDateTime(string userId, DateTime startDate, DateTime endDate);
-        Task<IEnumerable<UserOnProject>> GetProjectForUsersForIntervalDateTime(string projectId, DateTime startDate, DateTime endDate);
+        Task<IEnumerable<GetUserOnProjectModel>> GetUsersByProjectId(string projectId);
+        Task<IEnumerable<GetUserOnProjectModel>> GetProjectsByUserId(string userId);
+        Task<GetUserOnProjectModel> GetUserOnProjectAsync(string userId, string projectId);
+
+        Task<IEnumerable<GetUserOnProjectModel>> GetProjectsForUserForIntervalDateTime(string userId, DateTime startDate, DateTime endDate);
+        Task<IEnumerable<GetUserOnProjectModel>> GetProjectForUsersForIntervalDateTime(string projectId, DateTime startDate, DateTime endDate);
     }
+
 }
