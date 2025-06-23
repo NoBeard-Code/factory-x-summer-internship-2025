@@ -11,7 +11,7 @@ public class ApplicationUser : IdentityUser
     public virtual ICollection<SickLeave> SickLeaves { get; set; }
     public virtual ICollection<UserOnVacation> UsersOnVacations { get; set; }
     public virtual ICollection<UserOnProject> UsersOnProjects { get; set; }
-    public virtual ICollection<TimeSlice> TimeSlices { get; set; }
+    public virtual ICollection<TimeSlice>? TimeSlices { get; set; }
 
 
 }

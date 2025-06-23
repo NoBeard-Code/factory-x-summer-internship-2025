@@ -9,6 +9,7 @@ using AMI.EduWork._2025.Domain.Interfaces.Repository;
 using AMI.EduWork._2025.Domain.Interfaces.Service;
 using AMI.EduWork._2025.Domain.IRepository.Repository;
 using AMI.EduWork._2025.Domain.Services;
+using AMI.EduWork.Configuration;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -22,46 +23,7 @@ namespace AMI.EduWork._2025
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddRazorComponents()
-                .AddInteractiveServerComponents()
-                .AddInteractiveWebAssemblyComponents()
-                .AddAuthenticationStateSerialization();
-
-            builder.Services.AddCascadingAuthenticationState();
-            builder.Services.AddScoped<IdentityUserAccessor>();
-            builder.Services.AddScoped<IdentityRedirectManager>();
-            builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
-
-            builder.Services.AddAuthentication(options =>
-                {
-                    options.DefaultScheme = IdentityConstants.ApplicationScheme;
-                    options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
-                })
-                .AddIdentityCookies();
-
-            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-            builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(connectionString));
-            builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
-            builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddSignInManager()
-                .AddDefaultTokenProviders();
-
-            builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
-
-            builder.Services.AddTransient<DataSeeder>();
-
-            //Repositories
-            builder.Services.AddScoped<IWorkDayRepository, WorkDayRepository>();
-            builder.Services.AddScoped<ITimeSliceRepository, TimeSliceRepository>();
-            builder.Services.AddScoped<IUserRepository, UserRepository>();
-
-            //Services
-            builder.Services.AddScoped<IWorkDayService, WorkDayService>();
-            builder.Services.AddScoped<ITimeSliceService, TimeSliceService>();
-
+            builder.Services.ConfigureServices(builder.Configuration); 
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

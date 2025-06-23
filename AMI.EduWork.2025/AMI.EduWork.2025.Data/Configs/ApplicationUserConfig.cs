@@ -37,6 +37,7 @@ public class ApplicationUserConfig : IEntityTypeConfiguration<ApplicationUser>
         builder.HasMany(au => au.TimeSlices)
             .WithOne(ts => ts.User)
             .HasForeignKey(ts => ts.UserId)
+            .IsRequired(false)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

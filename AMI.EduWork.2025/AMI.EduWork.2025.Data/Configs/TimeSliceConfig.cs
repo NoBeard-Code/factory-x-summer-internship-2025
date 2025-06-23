@@ -16,7 +16,6 @@ public class TimeSliceConfig : IEntityTypeConfiguration<TimeSlice>
         builder.Property(ts => ts.Start).IsRequired();
         builder.Property(ts => ts.End).IsRequired();
         builder.Property(ts => ts.TypeOfSlice).IsRequired();
-        builder.Property(ts => ts.UserId).IsRequired();
 
         builder.HasOne(ts => ts.WorkDay)
             .WithMany(wd => wd.TimeSlices)
@@ -32,6 +31,7 @@ public class TimeSliceConfig : IEntityTypeConfiguration<TimeSlice>
         builder.HasOne(ts => ts.User)
             .WithMany(u => u.TimeSlices)
             .HasForeignKey(ts => ts.UserId)
+            .IsRequired(false)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }
