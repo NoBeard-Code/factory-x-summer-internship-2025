@@ -16,6 +16,7 @@ public class TimeSliceRepository : Repository<TimeSlice>, ITimeSliceRepository
     public async override Task<TimeSlice> GetById(string id)
     {
         return await _dbSet.Include(ts => ts.WorkDay)
+            .Include(ts => ts.User)
             .SingleOrDefaultAsync(ts => ts.Id == id);
     }
 }

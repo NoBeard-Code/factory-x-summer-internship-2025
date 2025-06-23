@@ -61,6 +61,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IVacationService, VacationService>();
         services.AddScoped<IContractService, ContractService>();
         services.AddScoped<ITimeSliceService, TimeSliceService>();
+        services.AddScoped<IUserService, UserService>();
 
         return services;
     }

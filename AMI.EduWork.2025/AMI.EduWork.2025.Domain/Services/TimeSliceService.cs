@@ -2,6 +2,7 @@
 using AMI.EduWork._2025.Domain.Interfaces.Repository;
 using AMI.EduWork._2025.Domain.Interfaces.Service;
 using AMI.EduWork._2025.Domain.Models.TimeSlice;
+using AMI.EduWork._2025.Domain.Models.User;
 using AMI.EduWork._2025.Domain.Models.WorkDay;
 using Microsoft.Extensions.Logging;
 
@@ -31,8 +32,8 @@ public class TimeSliceService : ITimeSliceService
             TimeSlice timeSlice = new TimeSlice
             {
                 Id = Guid.NewGuid().ToString(),
-                Start = entity.Start,
-                End = entity.End,
+                Start = entity.Start.Value,
+                End = entity.End.Value,
                 TypeOfSlice = entity.TypeOfSlice,
                 WorkDayId = entity.WorkDayId,
                 ProjectId = entity.ProjectId,
@@ -103,6 +104,22 @@ public class TimeSliceService : ITimeSliceService
             },
             ProjectId = ts.ProjectId,
             UserId = ts.UserId,
+            User = new GetUserModel
+            {
+                Id = ts.Id,
+                UserName = ts.User.UserName,
+                NormalizedUserName = ts.User.NormalizedUserName,
+                Email = ts.User.Email,
+                NormalizedEmail = ts.User.NormalizedEmail,
+                EmailConfirmed = ts.User.EmailConfirmed,
+                PhoneNumber = ts.User.PhoneNumber,
+                PhoneNumberConfirmed = ts.User.PhoneNumberConfirmed,
+                TwoFactorEnabled = ts.User.TwoFactorEnabled,
+                LockoutEnd = ts.User.LockoutEnd,
+                LockoutEnabled = ts.User.LockoutEnabled,
+                AccessFailedCount = ts.User.AccessFailedCount,
+                Role = ts.User.Role
+            }
         }).ToList();
         return timeSlice;
     }
@@ -134,6 +151,22 @@ public class TimeSliceService : ITimeSliceService
             },
             ProjectId = entity.ProjectId,
             UserId = entity.UserId,
+            User = new GetUserModel
+            {
+                Id = entity.Id,
+                UserName = entity.User.UserName,
+                NormalizedUserName = entity.User.NormalizedUserName,
+                Email = entity.User.Email,
+                NormalizedEmail = entity.User.NormalizedEmail,
+                EmailConfirmed = entity.User.EmailConfirmed,
+                PhoneNumber = entity.User.PhoneNumber,
+                PhoneNumberConfirmed = entity.User.PhoneNumberConfirmed,
+                TwoFactorEnabled = entity.User.TwoFactorEnabled,
+                LockoutEnd = entity.User.LockoutEnd,
+                LockoutEnabled = entity.User.LockoutEnabled,
+                AccessFailedCount = entity.User.AccessFailedCount,
+                Role = entity.User.Role
+            }
         };
         return timeSlice;
     }
@@ -155,14 +188,22 @@ public class TimeSliceService : ITimeSliceService
                 return false;
             }
 
-            existing.Start = entity.Start;
-            existing.End = entity.End;
-            existing.TypeOfSlice = entity.TypeOfSlice;
-            existing.WorkDayId = entity.WorkDayId;
-            existing.ProjectId = entity.ProjectId;
-            existing.UserId = entity.UserId;
+            if (entity.Start != null)
+                existing.Start = entity.Start.Value;
 
-            _repository.Update(existing);
+            if (entity.End != null)
+                existing.End = entity.End.Value;
+
+            if (entity.TypeOfSlice != existing.TypeOfSlice)
+                existing.TypeOfSlice = entity.TypeOfSlice;
+
+            if (entity.WorkDayId != null)
+                existing.WorkDayId = entity.WorkDayId;
+
+            if (entity.ProjectId != null)
+                existing.ProjectId = entity.ProjectId;
+
+            await _repository.Update(existing);
 
             bool result = await _repository.SaveChangesAsync();
             if (result)
