@@ -1,17 +1,7 @@
-using AMI.EduWork._2025.Client.Pages;
 using AMI.EduWork._2025.Components;
-using AMI.EduWork._2025.Components.Account;
+using AMI.EduWork._2025.Configuration;
 using AMI.EduWork._2025.Data;
 using AMI.EduWork._2025.Data.Migrations;
-using AMI.EduWork._2025.Data.Repository;
-using AMI.EduWork._2025.Domain;
-using AMI.EduWork._2025.Domain.Interfaces.Repository;
-using AMI.EduWork._2025.Domain.Interfaces.Service;
-using AMI.EduWork._2025.Domain.IRepository.Repository;
-using AMI.EduWork._2025.Domain.Services;
-using AMI.EduWork.Configuration;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace AMI.EduWork._2025
