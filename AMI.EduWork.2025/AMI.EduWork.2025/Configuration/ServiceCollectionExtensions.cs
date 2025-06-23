@@ -1,17 +1,12 @@
 ﻿using AMI.EduWork._2025.Components.Account;
 using AMI.EduWork._2025.Data;
 using AMI.EduWork._2025.Data.Migrations;
-using AMI.EduWork._2025.Data.Repository;
 using AMI.EduWork._2025.Domain;
-using AMI.EduWork._2025.Domain.Interfaces.Repository;
-using AMI.EduWork._2025.Domain.Interfaces.Service;
-using AMI.EduWork._2025.Domain.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace AMI.EduWork.Configuration;
-
+namespace AMI.EduWork._2025.Configuration;
 public static class ServiceCollectionExtensions
 {
     public static IServiceCollection ConfigureServices(this IServiceCollection services, IConfiguration configuration)
@@ -47,23 +42,8 @@ public static class ServiceCollectionExtensions
 
         services.AddTransient<DataSeeder>();
 
-        //Repositories
-        services.AddScoped<IWorkDayRepository, WorkDayRepository>();
-        services.AddScoped<IVacationRepository, VacationRepository>();
-        services.AddScoped<IUserOnVacationRepository, UserOnVacationRepository>();
-        services.AddScoped<IContractRepository, ContractRepository>();
-        services.AddScoped<ITimeSliceRepository, TimeSliceRepository>();
-        services.AddScoped<IUserRepository, UserRepository>();
-
-
-        //Services
-        services.AddScoped<IWorkDayService, WorkDayService>();
-        services.AddScoped<IVacationService, VacationService>();
-        services.AddScoped<IContractService, ContractService>();
-        services.AddScoped<ITimeSliceService, TimeSliceService>();
-        services.AddScoped<IUserService, UserService>();
+        services.AddProjectDependencies();
 
         return services;
     }
 }
-
