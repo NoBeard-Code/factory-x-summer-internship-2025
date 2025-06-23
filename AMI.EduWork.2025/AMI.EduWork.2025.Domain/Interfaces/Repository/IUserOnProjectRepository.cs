@@ -13,5 +13,8 @@ namespace AMI.EduWork._2025.Domain.Interfaces.Repository {
 
         public Task<UserOnProject> GetUserOnProject(string userId, string projectId);
 
+        public Task<IEnumerable<UserOnProject>> GetProjectsForUserForIntervalDateTime(string userId, DateTime startDate, DateTime endDate);
+        public Task<IEnumerable<UserOnProject>> GetProjectForUsersForIntervalDateTime(string projectId, DateTime startDate, DateTime endDate);
+
     }
 }
