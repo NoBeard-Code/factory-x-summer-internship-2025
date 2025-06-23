@@ -108,20 +108,6 @@ namespace AMI.EduWork._2025.Domain.Services {
             return MapToGetModel(project);
         }
 
-        public async Task<IEnumerable<GetProjectModel>> GetAllProjectsByUserId(string userId) {
-            if (string.IsNullOrWhiteSpace(userId)) {
-                _logger.LogError("User ID cannot be null or empty.");
-                throw new ArgumentException("User ID cannot be null or empty.", nameof(userId));
-            }
-
-            var projects = await _repository.GetAllProjectsByUserId(userId);
-            if (projects == null || !projects.Any()) {
-                _logger.LogWarning($"No projects found for user ID '{userId}'.");
-                throw new KeyNotFoundException($"No projects found for user ID '{userId}'.");
-            }
-
-            return projects.Select(MapToGetModel);
-        }
 
         public async Task<IEnumerable<GetProjectModel>> GetProjectsByDateRange(DateTime startDate, DateTime endDate) {
             if (startDate == default || endDate == default) {

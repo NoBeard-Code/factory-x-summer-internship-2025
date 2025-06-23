@@ -16,17 +16,7 @@ using Microsoft.EntityFrameworkCore;
 public class ProjectRepository : Repository<Project>, IProjectRepository {
     public ProjectRepository(ApplicationDbContext context) : base(context) { }
 
-    public async Task<IEnumerable<Project>> GetAllProjectsByUserId(string userId) {
-        return await _dbSet
-            .Include(p => p.UsersOnProjects)
-                .ThenInclude(uop => uop.User)
-            .Include(p => p.TimeSlices)
-                .ThenInclude(ts => ts.User)
-            .Include(p => p.TimeSlices)
-                .ThenInclude(ts => ts.WorkDay)
-            .Where(p => p.UsersOnProjects.Any(up => up.UserId == userId))
-            .ToListAsync();
-    }
+
 
     public async Task<Project> GetProjectByName(string name) {
         var project = await _dbSet
