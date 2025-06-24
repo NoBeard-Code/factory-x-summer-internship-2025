@@ -15,6 +15,9 @@ public static class DIExtensions
         services.AddScoped<IContractRepository, ContractRepository>();
         services.AddScoped<ITimeSliceRepository, TimeSliceRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IProjectRepository, ProjectRepository>();
+        services.AddScoped<IUserOnProjectRepository, UserOnProjectRepository>();
+        services.AddScoped<ISickLeaveRepository, ISickLeaveRepository>();
 
         // Services
         services.AddScoped<IWorkDayService, WorkDayService>();
@@ -22,6 +25,9 @@ public static class DIExtensions
         services.AddScoped<IContractService, ContractService>();
         services.AddScoped<ITimeSliceService, TimeSliceService>();
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IProjectService, ProjectService>();
+        services.AddScoped<IUserOnProjectService, UserOnProjectService>();
+        services.AddScoped<ISickLeaveService, SickLeaveService>();
 
         return services;
     }
