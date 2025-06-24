@@ -13,8 +13,8 @@ public static class ServiceCollectionExtensions
     {
         services.AddRazorComponents()
                 .AddInteractiveServerComponents()
-                .AddInteractiveWebAssemblyComponents()
                 .AddAuthenticationStateSerialization();
+                //.AddInteractiveWebAssemblyComponents();
 
         services.AddCascadingAuthenticationState();
         services.AddScoped<IdentityUserAccessor>();

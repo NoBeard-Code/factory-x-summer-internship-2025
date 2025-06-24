@@ -1,0 +1,59 @@
+﻿@page "/"
+@using AMI.EduWork._2025.Domain.Interfaces.Service
+@using AMI.EduWork._2025.Domain.Models.ContractModel
+@rendermode InteractiveServer
+@inject NavigationManager NavigationManager
+
+<PageTitle>Contracts</PageTitle>
+
+<h1>Weather</h1>
+
+<p>This component demonstrates showing data.</p>
+
+@if (_contractGetByIdModel == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>IsActive</th>
+                <th>HourlyRate</th>
+                <th>WorkingHour</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var model in _contractGetByIdModel)
+            {
+                <tr>
+                    <td>@model.Id</td>
+                    <td>@model.IsActive</td>
+                    <td>@model.HourlyRate</td>
+                    <td>@model.WorkingHour</td>
+                    <input type="submit" value="Delete" class="btn btn-danger" @onclick="(async () => await DeleteContract(model.Id))"/>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+@inject IContractService icontractService
+@code {
+    private List<ContractGetByIdModel>? _contractGetByIdModel;
+
+    protected override async Task OnInitializedAsync()
+    {
+        IEnumerable<ContractGetByIdModel>? contractGetByIdModel = await icontractService.GetAll();
+        _contractGetByIdModel = contractGetByIdModel.ToList();
+
+    }
+
+    private async Task DeleteContract(string id)
+    {
+        await icontractService.Delete(id);
+        NavigationManager.NavigateTo("/", true);
+    }
+}
