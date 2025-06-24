@@ -17,7 +17,7 @@ public static class DIExtensions
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IProjectRepository, ProjectRepository>();
         services.AddScoped<IUserOnProjectRepository, UserOnProjectRepository>();
-        services.AddScoped<ISickLeaveRepository, ISickLeaveRepository>();
+        services.AddScoped<ISickLeaveRepository, SickLeaveRepository>();
 
         // Services
         services.AddScoped<IWorkDayService, WorkDayService>();
