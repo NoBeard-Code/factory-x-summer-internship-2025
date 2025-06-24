@@ -22,7 +22,7 @@ namespace AMI.EduWork._2025.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("AMI.EduWork._2025.Data.ApplicationUser", b =>
+            modelBuilder.Entity("AMI.EduWork._2025.Domain.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -64,6 +64,9 @@ namespace AMI.EduWork._2025.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<byte>("Role")
+                        .HasColumnType("tinyint");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -87,7 +90,7 @@ namespace AMI.EduWork._2025.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("AMI.EduWork._2025.Data.Entities.AnnualVacation", b =>
+            modelBuilder.Entity("AMI.EduWork._2025.Domain.Entities.AnnualVacation", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -106,10 +109,10 @@ namespace AMI.EduWork._2025.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AnnualVacations", (string)null);
+                    b.ToTable("AnnualVacations");
                 });
 
-            modelBuilder.Entity("AMI.EduWork._2025.Data.Entities.Contract", b =>
+            modelBuilder.Entity("AMI.EduWork._2025.Domain.Entities.Contract", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -131,10 +134,10 @@ namespace AMI.EduWork._2025.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Contracts", (string)null);
+                    b.ToTable("Contracts");
                 });
 
-            modelBuilder.Entity("AMI.EduWork._2025.Data.Entities.Project", b =>
+            modelBuilder.Entity("AMI.EduWork._2025.Domain.Entities.Project", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -152,10 +155,10 @@ namespace AMI.EduWork._2025.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Projects", (string)null);
+                    b.ToTable("Projects");
                 });
 
-            modelBuilder.Entity("AMI.EduWork._2025.Data.Entities.SickLeave", b =>
+            modelBuilder.Entity("AMI.EduWork._2025.Domain.Entities.SickLeave", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -177,10 +180,10 @@ namespace AMI.EduWork._2025.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("SickLeaves", (string)null);
+                    b.ToTable("SickLeaves");
                 });
 
-            modelBuilder.Entity("AMI.EduWork._2025.Data.Entities.TimeSlice", b =>
+            modelBuilder.Entity("AMI.EduWork._2025.Domain.Entities.TimeSlice", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -189,7 +192,6 @@ namespace AMI.EduWork._2025.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ProjectId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("Start")
@@ -197,6 +199,9 @@ namespace AMI.EduWork._2025.Migrations
 
                     b.Property<byte>("TypeOfSlice")
                         .HasColumnType("tinyint");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("WorkDayId")
                         .IsRequired()
@@ -206,12 +211,14 @@ namespace AMI.EduWork._2025.Migrations
 
                     b.HasIndex("ProjectId");
 
+                    b.HasIndex("UserId");
+
                     b.HasIndex("WorkDayId");
 
-                    b.ToTable("TimeSlices", (string)null);
+                    b.ToTable("TimeSlices");
                 });
 
-            modelBuilder.Entity("AMI.EduWork._2025.Data.Entities.UserOnProject", b =>
+            modelBuilder.Entity("AMI.EduWork._2025.Domain.Entities.UserOnProject", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -240,10 +247,10 @@ namespace AMI.EduWork._2025.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UsersOnProjects", (string)null);
+                    b.ToTable("UsersOnProjects");
                 });
 
-            modelBuilder.Entity("AMI.EduWork._2025.Data.Entities.UserOnVacation", b =>
+            modelBuilder.Entity("AMI.EduWork._2025.Domain.Entities.UserOnVacation", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -268,10 +275,10 @@ namespace AMI.EduWork._2025.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UsersOnVacations", (string)null);
+                    b.ToTable("UsersOnVacations");
                 });
 
-            modelBuilder.Entity("AMI.EduWork._2025.Data.Entities.WorkDay", b =>
+            modelBuilder.Entity("AMI.EduWork._2025.Domain.Entities.WorkDay", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -281,22 +288,7 @@ namespace AMI.EduWork._2025.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("WorkDays", (string)null);
-                });
-
-            modelBuilder.Entity("ApplicationUserWorkDay", b =>
-                {
-                    b.Property<string>("UsersId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("WorkDaysId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("UsersId", "WorkDaysId");
-
-                    b.HasIndex("WorkDaysId");
-
-                    b.ToTable("ApplicationUserWorkDay", (string)null);
+                    b.ToTable("WorkDays");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -432,9 +424,9 @@ namespace AMI.EduWork._2025.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("AMI.EduWork._2025.Data.Entities.Contract", b =>
+            modelBuilder.Entity("AMI.EduWork._2025.Domain.Entities.Contract", b =>
                 {
-                    b.HasOne("AMI.EduWork._2025.Data.ApplicationUser", "User")
+                    b.HasOne("AMI.EduWork._2025.Domain.ApplicationUser", "User")
                         .WithMany("Contracts")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -443,9 +435,9 @@ namespace AMI.EduWork._2025.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("AMI.EduWork._2025.Data.Entities.SickLeave", b =>
+            modelBuilder.Entity("AMI.EduWork._2025.Domain.Entities.SickLeave", b =>
                 {
-                    b.HasOne("AMI.EduWork._2025.Data.ApplicationUser", "User")
+                    b.HasOne("AMI.EduWork._2025.Domain.ApplicationUser", "User")
                         .WithMany("SickLeaves")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -454,15 +446,19 @@ namespace AMI.EduWork._2025.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("AMI.EduWork._2025.Data.Entities.TimeSlice", b =>
+            modelBuilder.Entity("AMI.EduWork._2025.Domain.Entities.TimeSlice", b =>
                 {
-                    b.HasOne("AMI.EduWork._2025.Data.Entities.Project", "Project")
+                    b.HasOne("AMI.EduWork._2025.Domain.Entities.Project", "Project")
                         .WithMany("TimeSlices")
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("AMI.EduWork._2025.Data.Entities.WorkDay", "WorkDay")
+                    b.HasOne("AMI.EduWork._2025.Domain.ApplicationUser", "User")
+                        .WithMany("TimeSlices")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("AMI.EduWork._2025.Domain.Entities.WorkDay", "WorkDay")
                         .WithMany("TimeSlices")
                         .HasForeignKey("WorkDayId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -470,18 +466,20 @@ namespace AMI.EduWork._2025.Migrations
 
                     b.Navigation("Project");
 
+                    b.Navigation("User");
+
                     b.Navigation("WorkDay");
                 });
 
-            modelBuilder.Entity("AMI.EduWork._2025.Data.Entities.UserOnProject", b =>
+            modelBuilder.Entity("AMI.EduWork._2025.Domain.Entities.UserOnProject", b =>
                 {
-                    b.HasOne("AMI.EduWork._2025.Data.Entities.Project", "Project")
+                    b.HasOne("AMI.EduWork._2025.Domain.Entities.Project", "Project")
                         .WithMany("UsersOnProjects")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AMI.EduWork._2025.Data.ApplicationUser", "User")
+                    b.HasOne("AMI.EduWork._2025.Domain.ApplicationUser", "User")
                         .WithMany("UsersOnProjects")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -492,15 +490,14 @@ namespace AMI.EduWork._2025.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("AMI.EduWork._2025.Data.Entities.UserOnVacation", b =>
+            modelBuilder.Entity("AMI.EduWork._2025.Domain.Entities.UserOnVacation", b =>
                 {
-                    b.HasOne("AMI.EduWork._2025.Data.Entities.AnnualVacation", "AnnualVacation")
+                    b.HasOne("AMI.EduWork._2025.Domain.Entities.AnnualVacation", "AnnualVacation")
                         .WithMany("UsersOnVacations")
                         .HasForeignKey("AnnualVacationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("AMI.EduWork._2025.Data.ApplicationUser", "User")
+                    b.HasOne("AMI.EduWork._2025.Domain.ApplicationUser", "User")
                         .WithMany("UsersOnVacations")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -509,21 +506,6 @@ namespace AMI.EduWork._2025.Migrations
                     b.Navigation("AnnualVacation");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("ApplicationUserWorkDay", b =>
-                {
-                    b.HasOne("AMI.EduWork._2025.Data.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AMI.EduWork._2025.Data.Entities.WorkDay", null)
-                        .WithMany()
-                        .HasForeignKey("WorkDaysId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -537,7 +519,7 @@ namespace AMI.EduWork._2025.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("AMI.EduWork._2025.Data.ApplicationUser", null)
+                    b.HasOne("AMI.EduWork._2025.Domain.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -546,7 +528,7 @@ namespace AMI.EduWork._2025.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("AMI.EduWork._2025.Data.ApplicationUser", null)
+                    b.HasOne("AMI.EduWork._2025.Domain.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -561,7 +543,7 @@ namespace AMI.EduWork._2025.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AMI.EduWork._2025.Data.ApplicationUser", null)
+                    b.HasOne("AMI.EduWork._2025.Domain.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -570,37 +552,39 @@ namespace AMI.EduWork._2025.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("AMI.EduWork._2025.Data.ApplicationUser", null)
+                    b.HasOne("AMI.EduWork._2025.Domain.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("AMI.EduWork._2025.Data.ApplicationUser", b =>
+            modelBuilder.Entity("AMI.EduWork._2025.Domain.ApplicationUser", b =>
                 {
                     b.Navigation("Contracts");
 
                     b.Navigation("SickLeaves");
+
+                    b.Navigation("TimeSlices");
 
                     b.Navigation("UsersOnProjects");
 
                     b.Navigation("UsersOnVacations");
                 });
 
-            modelBuilder.Entity("AMI.EduWork._2025.Data.Entities.AnnualVacation", b =>
+            modelBuilder.Entity("AMI.EduWork._2025.Domain.Entities.AnnualVacation", b =>
                 {
                     b.Navigation("UsersOnVacations");
                 });
 
-            modelBuilder.Entity("AMI.EduWork._2025.Data.Entities.Project", b =>
+            modelBuilder.Entity("AMI.EduWork._2025.Domain.Entities.Project", b =>
                 {
                     b.Navigation("TimeSlices");
 
                     b.Navigation("UsersOnProjects");
                 });
 
-            modelBuilder.Entity("AMI.EduWork._2025.Data.Entities.WorkDay", b =>
+            modelBuilder.Entity("AMI.EduWork._2025.Domain.Entities.WorkDay", b =>
                 {
                     b.Navigation("TimeSlices");
                 });

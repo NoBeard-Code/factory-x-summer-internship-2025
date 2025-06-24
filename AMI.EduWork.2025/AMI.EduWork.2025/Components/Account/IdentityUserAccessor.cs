@@ -1,4 +1,4 @@
-using AMI.EduWork._2025.Data;
+using AMI.EduWork._2025.Domain;
 using Microsoft.AspNetCore.Identity;
 
 namespace AMI.EduWork._2025.Components.Account

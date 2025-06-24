@@ -2,7 +2,7 @@ using System.Security.Claims;
 using System.Text.Json;
 using AMI.EduWork._2025.Components.Account.Pages;
 using AMI.EduWork._2025.Components.Account.Pages.Manage;
-using AMI.EduWork._2025.Data;
+using AMI.EduWork._2025.Domain;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
