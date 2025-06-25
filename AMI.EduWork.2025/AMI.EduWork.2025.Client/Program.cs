@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
 namespace AMI.EduWork._2025.Client
 {
-    internal class Program
+    public class Program
     {
         static async Task Main(string[] args)
         {
