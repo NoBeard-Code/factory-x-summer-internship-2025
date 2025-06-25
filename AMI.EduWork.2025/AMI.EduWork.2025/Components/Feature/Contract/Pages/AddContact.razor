@@ -1,0 +1,39 @@
+﻿@using AMI.EduWork._2025.Domain.Models.ContractModel
+<h3>AddContact</h3>
+@if (IsVisible)
+{
+    <div class="modal-content">
+        <EditForm Model="@_contractCreateModel" OnValidSubmit="Create">
+            <label>Working Hour</label>
+            <InputNumber class="col-form-label" DisplayName="WorkingHour" @bind-Value="_contractCreateModel.WorkingHour" />
+            <label>Hourly Rate</label>
+            <InputNumber class="col-form-label" DisplayName="HourlyRate" @bind-Value="_contractCreateModel.HourlyRate" />
+            <label>Is active</label>
+            <InputCheckbox class="darker-border-checkbox" DisplayName="IsActive" @bind-Value="_contractCreateModel.IsActive" />
+            <button type="submit" @onclick="Create" class="btn btn-primary">Create</button>
+            <button class="btn btn-light" @onclick="Cancel">Cancel</button>
+        </EditForm>
+    </div>
+}
+@code{
+    [Parameter]
+    public bool IsVisible { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> IsVisibleChanged { get; set; }
+
+    [Parameter] 
+    public EventCallback<ContractCreateModel> OnSubmit { get; set; }
+
+    private ContractCreateModel _contractCreateModel = new();
+
+    private async Task Create()
+    {
+        await OnSubmit.InvokeAsync(_contractCreateModel);
+        await Cancel();
+    }
+    private async Task Cancel()
+    {
+        await IsVisibleChanged.InvokeAsync(false);
+    }
+}

@@ -1,0 +1,74 @@
+﻿@page "/"
+@using AMI.EduWork._2025.Domain.Interfaces.Service
+@using AMI.EduWork._2025.Domain.Models.ContractModel
+@rendermode InteractiveServer
+@inject NavigationManager NavigationManager
+
+<PageTitle>Contracts</PageTitle>
+
+<h1>Contracts</h1>
+
+<p>CRUD operations on contracts</p>
+
+@if (_contractGetByIdModel == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <button class="btn btn-success" @onclick="() => ShowForm = true">Add</button>
+    <AddContact @bind-IsVisible="ShowForm" OnSubmit="Create" />
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>IsActive</th>
+                <th>HourlyRate</th>
+                <th>WorkingHour</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var model in _contractGetByIdModel)
+            {
+                <tr>
+                    <td>@model.Id</td>
+                    <td>@model.IsActive</td>
+                    <td>@model.HourlyRate</td>
+                    <td>@model.WorkingHour</td>
+                    <input type="submit" value="Delete" class="btn btn-danger" @onclick="(async () => await DeleteContract(model.Id))"/>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+@inject IContractService icontractService
+@code {
+    private bool ShowForm = false;
+    private List<ContractGetByIdModel>? _contractGetByIdModel;
+
+    protected override async Task OnInitializedAsync()
+    {
+        IEnumerable<ContractGetByIdModel>? contractGetByIdModel = await icontractService.GetAll();
+        _contractGetByIdModel = contractGetByIdModel.ToList();
+
+    }
+
+    private async Task DeleteContract(string id)
+    {
+        await icontractService.Delete(id);
+        NavigationManager.NavigateTo("/", true);
+    }
+
+
+    private async Task Create(ContractCreateModel model)
+    {
+        await icontractService.Create(model);
+    }
+    private Task OnModalVisibility(bool value)
+    {
+        ShowForm = value;
+        return Task.CompletedTask;
+    }
+}
