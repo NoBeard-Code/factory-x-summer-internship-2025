@@ -1,0 +1,104 @@
+﻿@page "/projects"
+@using AMI.EduWork._2025.Components.Feature.Project.Components
+@using AMI.EduWork._2025.Domain.Interfaces.Service
+@using AMI.EduWork._2025.Domain.Models.Project
+@using AMI.EduWork._2025.Domain.Models.TimeSlice
+@inject IProjectService ProjectService
+@inject IUserOnProjectService UserOnProjectService
+@inject ITimeSliceService TimeSliceService
+@inject AuthenticationStateProvider AuthStateProvider
+@rendermode InteractiveServer
+
+
+<MudPaper Class="pa-4">
+    <MudText Typo="Typo.h5">Moji Projekti</MudText>
+ <ProjectList Projects="userProjects" OnDetailsClicked="ShowDetails" />
+
+
+    @if (selectedProject != null)
+    {
+        <MudPaper Class="pa-4 mt-4">
+            <MudText Typo="Typo.h6">Detalji projekta: @selectedProject.Name</MudText>
+            <MudText Typo="Typo.body1">Opis: @selectedProject.Description</MudText>
+            <MudText Typo="Typo.body2">Ukupno vremenskih odsječaka: @selectedProject.TimeSlices?.Count</MudText>
+            <MudText Typo="Typo.body2">Sudionici: @UsersOnProjectCount()</MudText>
+        </MudPaper>
+    }
+
+    <MudDivider Class="my-4" />
+    <ProjectCreateComponent OnProjectCreated="LoadUserProjects" />
+</MudPaper>
+
+@code {
+    private List<GetProjectModel>? userProjects;
+    private GetProjectModel? selectedProject;
+    private TimeSliceModel? selectedTimeslice;
+
+    private string? userId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity?.IsAuthenticated ?? false)
+        {
+            userId = user.FindFirst("sub")?.Value 
+                  ?? user.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        }
+
+        await LoadUserProjects();
+    }
+
+
+    private async Task LoadUserProjects()
+{
+    if (userId != null)
+    {
+        var userOnProjects = await UserOnProjectService.GetProjectsByUserId(userId);
+        var timeSlices = await TimeSliceService.GetAllUserTimeSlices(userId);
+
+        var projectIds = userOnProjects.Select(uop => uop.Project.Id).Distinct().ToList();
+        userProjects = new List<GetProjectModel>();
+
+        foreach (var projectId in projectIds)
+        {
+            var project = await ProjectService.GetById(projectId);
+            if (project != null)
+            {
+                var projectTimeSlices = timeSlices
+                    .Where(ts => ts.ProjectId == projectId)
+                    .ToList();
+
+                project.TimeSlices = projectTimeSlices;
+                userProjects.Add(project);
+            }
+        }
+    }
+}
+
+    private int UsersOnProjectCount()
+    {
+        if(selectedProject == null)
+        {
+            return 0;
+        }
+        return selectedProject.UsersOnProjects?.Count != null ? selectedProject.UsersOnProjects.Count : 1;
+    }
+
+    private void ShowDetails(GetProjectModel project)
+    {
+        selectedProject = project;
+    }
+
+    private string GetProjectTypeName(byte type)
+    {
+        return type switch
+        {
+            0 => "Privatni",
+            1 => "Poslovni",
+            2 => "Edukacijski",
+            _ => "Nepoznat"
+        };
+    }
+}

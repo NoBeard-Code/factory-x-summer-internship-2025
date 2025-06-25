@@ -79,7 +79,7 @@ public class TimeSliceService : ITimeSliceService
 
     public async Task<IEnumerable<GetTimeSliceModel>> GetAllUserTimeSlices(string userId)
     {
-        if (!string.IsNullOrEmpty(userId))
+        if (string.IsNullOrEmpty(userId))
         {
             _logger.LogWarning("Attempted to retrieve all TimeSlices for null user");
             return null;

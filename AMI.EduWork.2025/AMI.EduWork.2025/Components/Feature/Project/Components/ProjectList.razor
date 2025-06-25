@@ -1,0 +1,34 @@
+@using AMI.EduWork._2025.Domain.Models.Project
+
+<MudList T="GetProjectModel" Dense="true">
+    @if (Projects != null)
+    {
+        @foreach (var project in Projects)
+        {
+            <MudListItem T="GetProjectModel" Value="project">
+                <MudText Typo="Typo.subtitle1">@project.Name</MudText>
+                <MudText Typo="Typo.body2">@project.Description</MudText>
+                <MudText Typo="Typo.caption">Tip: @(GetProjectTypeName(project.TypeOfProject))</MudText>
+                <MudButton OnClick="() => OnDetailsClicked.InvokeAsync(project)">Detalji</MudButton>
+            </MudListItem>
+        }
+    }
+    else
+    {
+        <MudProgressCircular Indeterminate />
+    }
+</MudList>
+
+@code {
+    [Parameter] public List<GetProjectModel>? Projects { get; set; }
+
+    [Parameter] public EventCallback<GetProjectModel> OnDetailsClicked { get; set; }
+
+    private string GetProjectTypeName(byte type) => type switch
+    {
+        0 => "Privatni",
+        1 => "Poslovni",
+        2 => "Edukacijski",
+        _ => "Nepoznat"
+    };
+}

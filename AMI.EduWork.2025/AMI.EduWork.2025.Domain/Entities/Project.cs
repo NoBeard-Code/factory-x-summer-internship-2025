@@ -16,7 +16,7 @@ public class Project : EntityBase
     public byte TypeOfProject { get; set; }
     [Required]
     public string Description { get; set; }
-    public virtual ICollection<TimeSlice> TimeSlices { get; set; }
-    public virtual ICollection<UserOnProject> UsersOnProjects { get; set; }
+    public virtual ICollection<TimeSlice> TimeSlices { get; set; } = new List<TimeSlice>();
+    public virtual ICollection<UserOnProject> UsersOnProjects { get; set; } = new List<UserOnProject>();
 
 }
