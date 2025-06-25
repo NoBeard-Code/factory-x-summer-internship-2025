@@ -39,7 +39,7 @@ public class VacationService : IVacationService
     public async Task<IEnumerable<VacationGetModel>> GetByYear(int year)
     {
         IEnumerable<AnnualVacation> annualVacations = await _repository.GetAll();
-        List<VacationGetModel> vacationGetModels = annualVacations.
+        IEnumerable<VacationGetModel> vacationGetModels = annualVacations.
             Where(x => x.Year.Equals(year)).
             Select(x=> new VacationGetModel{
                 Id=x.Id,
@@ -47,7 +47,7 @@ public class VacationService : IVacationService
                 PlannedVacation=x.PlannedVacation,
                 UsedVacation=x.UsedVacation,
                 Year=x.Year
-        }).ToList();
+        });
 
         return vacationGetModels;
     }
@@ -55,14 +55,14 @@ public class VacationService : IVacationService
     public async Task<IEnumerable<VacationGetModel>> GetAll()
     {
         IEnumerable<AnnualVacation> annualVacations = await _repository.GetAll();
-        List<VacationGetModel> vacationGetModels = annualVacations.Select(x => new VacationGetModel
+        IEnumerable<VacationGetModel> vacationGetModels = annualVacations.Select(x => new VacationGetModel
             {
                 Id = x.Id,
                 AvailableVacation = x.AvailableVacation,
                 PlannedVacation = x.PlannedVacation,
                 UsedVacation = x.UsedVacation,
                 Year = x.Year
-            }).ToList();
+            });
 
         return vacationGetModels;
     }
@@ -104,7 +104,7 @@ public class VacationService : IVacationService
 
     public async Task<bool> Delete(string id)
     {
-        if(_repository.GetById(id) is not null) await _repository.Delete(id);
+        await _repository.Delete(id);
         return await _repository.SaveChangesAsync();
     }
     
