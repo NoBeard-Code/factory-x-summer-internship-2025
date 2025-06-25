@@ -7,6 +7,7 @@
 @inject IUserOnProjectService UserOnProjectService
 @inject ITimeSliceService TimeSliceService
 @inject AuthenticationStateProvider AuthStateProvider
+@inject IDialogService DialogService
 @rendermode InteractiveServer
 
 
@@ -26,6 +27,10 @@
     }
 
     <MudDivider Class="my-4" />
+    <MudButton OnClick="OpenDialogAsync" Color="Color.Primary" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add">
+        Novi Projekt
+    </MudButton>
+
     <ProjectCreateComponent OnProjectCreated="LoadUserProjects" />
 </MudPaper>
 
@@ -90,6 +95,23 @@
     {
         selectedProject = project;
     }
+    
+
+     private Task OpenDialogAsync()
+    {
+        var options = new DialogOptions
+{
+    CloseOnEscapeKey = true,
+    MaxWidth = MaxWidth.Small,
+    FullWidth = true,
+    Position = DialogPosition.Center
+};
+
+
+        return DialogService.ShowAsync<ProjectCreateDialog>("Styling Example Dialog", options);
+    }
+
+
 
     private string GetProjectTypeName(byte type)
     {
