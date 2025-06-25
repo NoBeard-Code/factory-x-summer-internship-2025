@@ -38,6 +38,7 @@ public class TimeSliceService : ITimeSliceService
                 WorkDayId = entity.WorkDayId,
                 ProjectId = entity.ProjectId,
                 UserId = entity.UserId,
+                Description = entity.Description,
             };
             await _repository.Create(timeSlice);
             bool result = await _repository.SaveChangesAsync();
@@ -96,6 +97,7 @@ public class TimeSliceService : ITimeSliceService
             Start = ts.Start,
             End = ts.End,
             TypeOfSlice = ts.TypeOfSlice,
+            Description = ts.Description,
             WorkDayId = ts.WorkDayId,
             WorkDay = new GetWorkDayModel
             {
@@ -143,6 +145,7 @@ public class TimeSliceService : ITimeSliceService
             Start = entity.Start,
             End = entity.End,
             TypeOfSlice = entity.TypeOfSlice,
+            Description = entity.Description,
             WorkDayId = entity.WorkDayId,
             WorkDay = new GetWorkDayModel
             {
@@ -202,6 +205,9 @@ public class TimeSliceService : ITimeSliceService
 
             if (entity.ProjectId != null)
                 existing.ProjectId = entity.ProjectId;
+
+            if (entity.Description != null)
+                existing.Description = entity.Description;
 
             await _repository.Update(existing);
 

@@ -18,6 +18,7 @@ public class TimeSliceModel
     public required string WorkDayId { get; set; }
     public string? ProjectId { get; set; }
     public required string UserId { get; set; }
+    public string? Description { get; set; }
 
 }
 
