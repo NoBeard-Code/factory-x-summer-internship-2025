@@ -46,11 +46,11 @@ else
 @inject IContractService icontractService
 @code {
     private bool ShowForm = false;
-    private List<ContractGetByIdModel>? _contractGetByIdModel;
+    private List<ContractGetModel>? _contractGetByIdModel;
 
     protected override async Task OnInitializedAsync()
     {
-        IEnumerable<ContractGetByIdModel>? contractGetByIdModel = await icontractService.GetAll();
+        IEnumerable<ContractGetModel>? contractGetByIdModel = await icontractService.GetAll();
         _contractGetByIdModel = contractGetByIdModel.ToList();
 
     }

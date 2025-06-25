@@ -13,6 +13,6 @@ namespace AMI.EduWork._2025.Domain.Models.ContractModel
         public int WorkingHour { get; set; }
         public bool IsActive { get; set; }
         public int HourlyRate { get; set; }
-        //public UserGetByIdModel userGetByIdModel { get; set; }
+        public string UserId{ get; set; }
     }
 }
