@@ -1,39 +1,64 @@
-﻿@using AMI.EduWork._2025.Domain.Models.ContractModel
-<h3>AddContact</h3>
-@if (IsVisible)
-{
-    <div class="modal-content">
-        <EditForm Model="@_contractCreateModel" OnValidSubmit="Create">
-            <label>Working Hour</label>
-            <InputNumber class="col-form-label" DisplayName="WorkingHour" @bind-Value="_contractCreateModel.WorkingHour" />
-            <label>Hourly Rate</label>
-            <InputNumber class="col-form-label" DisplayName="HourlyRate" @bind-Value="_contractCreateModel.HourlyRate" />
-            <label>Is active</label>
-            <InputCheckbox class="darker-border-checkbox" DisplayName="IsActive" @bind-Value="_contractCreateModel.IsActive" />
-            <button type="submit" @onclick="Create" class="btn btn-primary">Create</button>
-            <button class="btn btn-light" @onclick="Cancel">Cancel</button>
-        </EditForm>
-    </div>
-}
-@code{
-    [Parameter]
-    public bool IsVisible { get; set; }
+﻿@page "/contracts/add"
+@using AMI.EduWork._2025.Domain.Interfaces.Service
+@using AMI.EduWork._2025.Domain.Models.ContractModel
+@using AMI.EduWork._2025.Domain.Models.User
+@rendermode InteractiveServer
+@inject IContractService icontractService
+@inject IUserService iuserService
+@inject NavigationManager Navigation
 
-    [Parameter]
-    public EventCallback<bool> IsVisibleChanged { get; set; }
+<h3>Add New Contract</h3>
 
-    [Parameter] 
-    public EventCallback<ContractCreateModel> OnSubmit { get; set; }
+<div class="col-md-4">
+    <EditForm method="post" Model="contractCreateModel" OnValidSubmit="CreateContract" FormName="Create" Enhance>
+        <div class="mb-3">
+            <labe1 for="WorkingHour" class="form-label">Working hour</labe1>
+            <InputNumber id="WorkingHour" @bind-Value="contractCreateModel.WorkingHour" class="form-control"/>
+        </div>
+        <div class="mb-3">
+            <labe1 for="HourlyRate" class="form-label">Hourly rate</labe1>
+            <InputNumber id="HourlyRate" @bind-Value="contractCreateModel.HourlyRate" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <labe1 for="IsActive" class="form-label">Is active</labe1>
+            <InputCheckbox id="IsActive" @bind-Value="contractCreateModel.IsActive" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label for="user">Select user:</label>
+            <select id="user" class="form-select" @bind="contractCreateModel.UserId">
+            <option value="">-- Choose --</option>
+                @foreach (var user in getUserModel)
+                {
+                    <option id="@user.Id" value="@user.Id">@user.UserName</option>
+                }
+            </select>
+        </div>
+    
+        <button class="btn btn-primary" type="submit">Create</button>
+        <button class="btn btn-secondary" @onclick="Cancel">Cancel</button>
 
-    private ContractCreateModel _contractCreateModel = new();
+    </EditForm>
+</div>
 
-    private async Task Create()
+
+@code {
+    [SupplyParameterFromForm]
+    private ContractCreateModel contractCreateModel { get; set; } = new();
+    private List<GetUserModel> getUserModel { get; set; } = new();
+    protected override async Task OnInitializedAsync()
     {
-        await OnSubmit.InvokeAsync(_contractCreateModel);
-        await Cancel();
+        IEnumerable<GetUserModel> _getUserModel = await iuserService.GetAll();
+        getUserModel = _getUserModel.ToList();
     }
-    private async Task Cancel()
+
+    private async Task CreateContract()
     {
-        await IsVisibleChanged.InvokeAsync(false);
+        await icontractService.Create(contractCreateModel);
+        Navigation.NavigateTo("/");
+    }
+
+    private void Cancel()
+    {
+        Navigation.NavigateTo("/");
     }
 }

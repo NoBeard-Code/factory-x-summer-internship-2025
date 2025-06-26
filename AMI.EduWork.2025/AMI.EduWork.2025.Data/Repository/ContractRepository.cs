@@ -11,5 +11,6 @@ namespace AMI.EduWork._2025.Data.Repository
     public class ContractRepository : Repository<Contract>, IContractRepository
     {
         public ContractRepository(ApplicationDbContext context) :base(context) { }
+
     }
 }
