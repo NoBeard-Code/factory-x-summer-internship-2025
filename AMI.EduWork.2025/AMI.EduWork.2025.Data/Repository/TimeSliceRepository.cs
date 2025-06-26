@@ -11,12 +11,22 @@ public class TimeSliceRepository : Repository<TimeSlice>, ITimeSliceRepository
     public async Task<IEnumerable<TimeSlice>> GetAllUserTimeSlices(string userId)
     {
         return await _dbSet.Where(ts => ts.UserId == userId)
+            .Include(ts => ts.WorkDay)
+            .Include(ts => ts.User).ToListAsync();
+    }
+
+    public async Task<IEnumerable<TimeSlice>> GetAllUserTimeSlicesByDate(string userId, DateTime date)
+    {
+        return await _dbSet.Where(ts => ts.UserId == userId)
+            .Where(ts => ts.WorkDay.Equals(date))
             .Include(ts => ts.WorkDay).ToListAsync();
     }
+
     public async override Task<TimeSlice> GetById(string id)
     {
         return await _dbSet.Include(ts => ts.WorkDay)
             .Include(ts => ts.User)
             .SingleOrDefaultAsync(ts => ts.Id == id);
     }
+
 }

@@ -12,12 +12,14 @@ public class TimeSliceService : ITimeSliceService
 {
     private readonly ITimeSliceRepository _repository;
     private readonly IUserRepository _userRepository;
+    private readonly IWorkDayRepository _workDayRepository;
     private readonly ILogger<TimeSliceService> _logger;
-    public TimeSliceService(ITimeSliceRepository repository,IUserRepository userRepository, ILogger<TimeSliceService> logger)
+    public TimeSliceService(ITimeSliceRepository repository,IUserRepository userRepository, ILogger<TimeSliceService> logger, IWorkDayRepository workDayRepository)
     {
         _repository = repository;
         _userRepository = userRepository;
         _logger = logger;
+        _workDayRepository = workDayRepository;
     }
 
     public async Task<bool> Create(TimeSliceModel entity)
@@ -29,13 +31,20 @@ public class TimeSliceService : ITimeSliceService
         }
         try
         {
+            if (!entity.Start.HasValue)
+            {
+                _logger.LogWarning("Attempted to create TimeSlice without Start date/time");
+                return false;
+            }
+            DateTime startTime = new DateTime(entity.Start.Value.Year, entity.Start.Value.Month, entity.Start.Value.Day, 0, 0, 0);
+            WorkDay workDay = await _workDayRepository.GetByDate(startTime);
             TimeSlice timeSlice = new TimeSlice
             {
                 Id = Guid.NewGuid().ToString(),
                 Start = entity.Start.Value,
                 End = entity.End.Value,
                 TypeOfSlice = entity.TypeOfSlice,
-                WorkDayId = entity.WorkDayId,
+                WorkDayId = workDay.Id,
                 ProjectId = entity.ProjectId,
                 UserId = entity.UserId,
                 Description = entity.Description,
@@ -80,7 +89,7 @@ public class TimeSliceService : ITimeSliceService
 
     public async Task<IEnumerable<GetTimeSliceModel>> GetAllUserTimeSlices(string userId)
     {
-        if (!string.IsNullOrEmpty(userId))
+        if (string.IsNullOrEmpty(userId))
         {
             _logger.LogWarning("Attempted to retrieve all TimeSlices for null user");
             return null;
@@ -126,9 +135,58 @@ public class TimeSliceService : ITimeSliceService
         return timeSlice;
     }
 
+    public async Task<IEnumerable<GetTimeSliceModel>> GetAllUserTimeSlicesByDate(string userId, DateTime date)
+    {
+        if (string.IsNullOrEmpty(userId))
+        {
+            _logger.LogWarning("Attempted to retrieve all TimeSlices for null user");
+            return null;
+        }
+        if (!await _userRepository.UserExists(userId))
+        {
+            _logger.LogWarning("Attempted to retrieve all TimeSlices for non exisiting user");
+            return null;
+        }
+
+        IEnumerable<TimeSlice> entity = await _repository.GetAllUserTimeSlices(userId);
+        List<GetTimeSliceModel> timeSlice = entity.Select(ts => new GetTimeSliceModel
+        {
+            Id = ts.Id,
+            Start = ts.Start,
+            End = ts.End,
+            TypeOfSlice = ts.TypeOfSlice,
+            Description = ts.Description,
+            WorkDayId = ts.WorkDayId,
+            WorkDay = new GetWorkDayModel
+            {
+                Id = ts.WorkDayId,
+                Date = ts.WorkDay.Date,
+            },
+            ProjectId = ts.ProjectId,
+            UserId = ts.UserId,
+            User = new GetUserModel
+            {
+                Id = ts.Id,
+                UserName = ts.User.UserName,
+                NormalizedUserName = ts.User.NormalizedUserName,
+                Email = ts.User.Email,
+                NormalizedEmail = ts.User.NormalizedEmail,
+                EmailConfirmed = ts.User.EmailConfirmed,
+                PhoneNumber = ts.User.PhoneNumber,
+                PhoneNumberConfirmed = ts.User.PhoneNumberConfirmed,
+                TwoFactorEnabled = ts.User.TwoFactorEnabled,
+                LockoutEnd = ts.User.LockoutEnd,
+                LockoutEnabled = ts.User.LockoutEnabled,
+                AccessFailedCount = ts.User.AccessFailedCount,
+                Role = ts.User.Role
+            }
+        }).ToList();
+        return timeSlice;
+    }
+
     public async Task<GetTimeSliceModel> GetById(string id)
     {
-        if (!string.IsNullOrEmpty(id))
+        if (string.IsNullOrEmpty(id))
         {
             _logger.LogWarning("Attempted to retrieve TimeSlice with null Id");
             return null;

@@ -33,7 +33,7 @@ public class WorkDayService : IWorkDayService
             WorkDay workday = new WorkDay
             {
                 Id = Guid.NewGuid().ToString(),
-                Date = entity.Date,
+                Date = entity.Date.Date,
             };
             await _repository.Create(workday);
             bool result = await _repository.SaveChangesAsync();
@@ -63,7 +63,7 @@ public class WorkDayService : IWorkDayService
 
     public async Task<GetWorkDayModel> GetByDate(DateTime date)
     {
-        WorkDay entity = await _repository.GetByDate(date);
+        WorkDay entity = await _repository.GetByDate(date.Date);
         if (entity is null) return null;
         GetWorkDayModel workday = new GetWorkDayModel
         {
