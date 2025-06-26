@@ -8,7 +8,17 @@
             <MudListItem T="GetProjectModel" Value="project">
                 <MudText Typo="Typo.subtitle1">@project.Name</MudText>
                 <MudText Typo="Typo.body2">@project.Description</MudText>
-                <MudText Typo="Typo.caption">Tip: @(GetProjectTypeName(project.TypeOfProject))</MudText>
+                @if(project.TypeOfProject == 0)
+                {
+                    <MudChip Text="black" Color="Color.Dark" Value="@Color.Dark">@GetProjectTypeName(project.TypeOfProject)</MudChip>
+                }else if(project.TypeOfProject == 1)
+                {
+                    <MudChip Text="white" Color="Color.Primary" Value="@Color.Primary">@GetProjectTypeName(project.TypeOfProject)</MudChip>
+                }
+                else if(project.TypeOfProject == 2)
+                {
+                    <MudChip Text="black" Color="Color.Info" Value="@Color.Info">@GetProjectTypeName(project.TypeOfProject)</MudChip>
+                }
                 <MudButton OnClick="() => OnDetailsClicked.InvokeAsync(project)">Detalji</MudButton>
             </MudListItem>
         }

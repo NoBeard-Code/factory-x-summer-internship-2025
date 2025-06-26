@@ -16,17 +16,6 @@
     <MudText Typo="Typo.h5">Moji Projekti</MudText>
  <ProjectList Projects="userProjects" OnDetailsClicked="ShowDetails" />
 
-
-    @if (selectedProject != null)
-    {
-        <MudPaper Class="pa-4 mt-4">
-            <MudText Typo="Typo.h6">Detalji projekta: @selectedProject.Name</MudText>
-            <MudText Typo="Typo.body1">Opis: @selectedProject.Description</MudText>
-            <MudText Typo="Typo.body2">Ukupno vremenskih odsječaka: @selectedProject.TimeSlices?.Count</MudText>
-            <MudText Typo="Typo.body2">Sudionici: @UsersOnProjectCount()</MudText>
-        </MudPaper>
-    }
-
     <MudDivider Class="my-4" />
     <MudButton OnClick="OpenDialogAsync" Color="Color.Primary" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add">
         Novi Projekt
@@ -138,10 +127,29 @@
         return selectedProject.UsersOnProjects?.Count != null ? selectedProject.UsersOnProjects.Count : 1;
     }
 
-    private void ShowDetails(GetProjectModel project)
+   private Task ShowDetails(GetProjectModel project)
+{
+    selectedProject = project; 
+
+    var dialogParameters = new DialogParameters
     {
-        selectedProject = project;
-    }
+        { "Project", selectedProject } 
+    };
+
+    var options = new DialogOptions
+{
+    MaxWidth = MaxWidth.False, 
+    FullWidth = true,
+    
+    FullScreen = false,
+    CloseOnEscapeKey = true,
+    Position = DialogPosition.Center
+};
+
+
+    return DialogService.ShowAsync<ProjectDetailsDialog>("Detalji projekta", dialogParameters, options);
+}
+
     
 
      private Task OpenDialogAsync()

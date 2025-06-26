@@ -1,0 +1,119 @@
+﻿@using AMI.EduWork._2025.Domain.Models.Project
+@using AMI.EduWork._2025.Domain.Models.TimeSlice
+@using MudBlazor
+
+<MudDialog MaxWidth="MaxWidth.Large" FullWidth="true" MaxHeight="MaxHeight.Large">
+
+
+
+    <TitleContent>
+        <MudText Typo="Typo.h5">@Project.Name</MudText>
+    </TitleContent>
+
+    <DialogContent>
+    <MudPaper Class="pa-4">
+        <MudText Typo="Typo.subtitle1">Opis:</MudText>
+        <MudText Typo="Typo.body2">@Project.Description</MudText>
+
+        <MudText Typo="Typo.subtitle1" Class="mt-4">Vrsta projekta:</MudText>
+        <MudChip T="string" Value="@GetProjectTypeName(Project.TypeOfProject)" Color="@GetChipColor(Project.TypeOfProject)">
+            @GetProjectTypeName(Project.TypeOfProject)
+        </MudChip>
+
+        <MudText Typo="Typo.h6" Class="mt-4">Radno vrijeme po danima:</MudText>
+        <MudDatePicker Label="Date Format" @bind-Date="_date" DateFormat="dd.MM.yyyy" />
+        
+       <MudTimeline TimelineOrientation="TimelineOrientation.Horizontal"
+              TimelinePosition="TimelinePosition.Alternate"
+              Reverse="false">
+
+    @foreach (var slice in Project.TimeSlices.Where(iterator=> iterator.Start?.Date == _date!.Value.Date))
+    {
+        <MudTimelineItem Color="Color.Primary" Variant="Variant.Filled">
+            <ItemContent>
+                <div style="display: flex; flex-direction: column; align-items: center; padding: 12px;">
+                    <MudText Typo="Typo.subtitle2">
+                        @slice.Start?.ToString("HH:mm") - @slice.End?.ToString("HH:mm")
+                    </MudText>
+                    <MudText Typo="Typo.caption">
+                        Trajanje: @GetDurationText(slice.Start, slice.End)
+                    </MudText>
+                </div>
+            </ItemContent>
+
+            <ItemOpposite>
+                <MudText Typo="Typo.caption" Align="Align.Center">
+                    @slice.Start?.ToString("dd.MM")
+                </MudText>
+            </ItemOpposite>
+        </MudTimelineItem>
+    }
+</MudTimeline>
+
+
+
+    </MudPaper>
+</DialogContent>
+
+
+    <DialogActions>
+        <MudButton OnClick="Cancel" Variant="Variant.Text">Zatvori</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = default!;
+
+    [Parameter] public required GetProjectModel Project { get; set; }
+
+    private List<DateTime?> dateTimes = new List<DateTime?>();
+    private DateTime? _date = DateTime.Today;
+
+    protected override void OnInitialized()
+    {
+        if(Project != null)
+        {
+            foreach(var slice in Project.TimeSlices ?? new List<GetTimeSliceModel>())
+            {
+                if (slice.Start.HasValue && slice.End.HasValue)
+                {
+                    dateTimes.Add(slice.Start.Value);
+                }
+            }
+        }
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+
+    private Color GetChipColor(byte type) => type switch
+    {
+        0 => Color.Dark,
+        1 => Color.Primary,
+        2 => Color.Info,
+        _ => Color.Default
+    };
+
+    private string GetProjectTypeName(byte type) => type switch
+    {
+        0 => "Privatni",
+        1 => "Poslovni",
+        2 => "Edukacijski",
+        _ => "Nepoznat"
+    };
+
+    private string GetDurationText(DateTime? start, DateTime? end)
+    {
+        if (start.HasValue && end.HasValue)
+        {
+            var duration = end.Value - start.Value;
+            return duration.TotalMinutes < 1
+                ? "Manje od 1 min"
+                : duration.TotalHours >= 1
+                    ? $"{duration.TotalHours:0.#} h"
+                    : $"{duration.TotalMinutes:0} min";
+        }
+        return "Nepoznato";
+    }
+}
+
+}

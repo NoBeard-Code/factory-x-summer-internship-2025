@@ -78,6 +78,33 @@ namespace AMI.EduWork._2025.Data.Migrations
                 TypeOfSlice = 1,
                 UserId = user.Id,
             });
+            _context.Add(new TimeSlice() {
+                Id = Guid.NewGuid().ToString(),
+                WorkDayId = workDay.Id,
+                ProjectId = project.Id,
+                Start = DateTime.Now.AddMinutes(30),
+                End = DateTime.Now.AddMinutes(60),
+                TypeOfSlice = 1,
+                UserId = user.Id,
+            });
+            _context.Add(new TimeSlice() {
+                Id = Guid.NewGuid().ToString(),
+                WorkDayId = workDay.Id,
+                ProjectId = project.Id,
+                Start = DateTime.Now.AddMinutes(60),
+                End = DateTime.Now.AddMinutes(160),
+                TypeOfSlice = 1,
+                UserId = user.Id,
+            });
+            _context.Add(new TimeSlice() {
+                Id = Guid.NewGuid().ToString(),
+                WorkDayId = workDay.Id,
+                ProjectId = project.Id,
+                Start = DateTime.Now.AddMinutes(160),
+                End = DateTime.Now.AddMinutes(240),
+                TypeOfSlice = 1,
+                UserId = user.Id,
+            });
 
             _context.Add(new UserOnProject()
             {
@@ -86,7 +113,7 @@ namespace AMI.EduWork._2025.Data.Migrations
                 ProjectId = project.Id,
                 ProjectRole = "tester",
                 RoleStartDate = DateTime.Now,
-                RoleEndDate = DateTime.Now.AddMinutes(10),
+                RoleEndDate = DateTime.Now.AddMinutes(60),
 
             });
 
