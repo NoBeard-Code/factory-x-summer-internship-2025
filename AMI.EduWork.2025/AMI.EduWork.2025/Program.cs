@@ -3,7 +3,7 @@ using AMI.EduWork._2025.Configuration;
 using AMI.EduWork._2025.Data;
 using AMI.EduWork._2025.Data.Migrations;
 using Microsoft.EntityFrameworkCore;
-
+using MudBlazor.Services;
 namespace AMI.EduWork._2025
 {
     public class Program
@@ -13,7 +13,8 @@ namespace AMI.EduWork._2025
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.ConfigureServices(builder.Configuration); 
+            builder.Services.ConfigureServices(builder.Configuration);
+            builder.Services.AddMudServices();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -55,7 +56,7 @@ namespace AMI.EduWork._2025
                 .AddInteractiveServerRenderMode()
                 .AddAdditionalAssemblies(typeof(Client._Imports).Assembly);
             //.AddInteractiveWebAssemblyRenderMode()
-
+            app.MapStaticAssets();
             // Add additional endpoints required by the Identity /Account Razor components.
             app.MapAdditionalIdentityEndpoints();
 
