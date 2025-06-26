@@ -16,7 +16,7 @@
 
                 <MudTextField @bind-Value="model.Description" Label="Opis" Required="true" Lines="3" TextArea="true" />
 
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SubmitAsync" Disabled="@isSubmitting">
+                <MudButton  Variant="Variant.Filled" Color="Color.Primary" OnClick="SubmitAsync" Disabled="@isSubmitting">
                     <MudProgressCircular Indeterminate="true" Size="Size.Medium" Style="margin-right:10px;" Color="Color.Inherit" Class="@(!isSubmitting ? "d-none" : "")" />
                     Spremi
                 </MudButton>

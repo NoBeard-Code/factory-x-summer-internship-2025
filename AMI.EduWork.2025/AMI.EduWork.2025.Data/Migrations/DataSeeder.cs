@@ -1,5 +1,6 @@
 ﻿using AMI.EduWork._2025.Domain;
 using AMI.EduWork._2025.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,21 +12,37 @@ namespace AMI.EduWork._2025.Data.Migrations
     public class DataSeeder
     {
         private readonly ApplicationDbContext _context;
-        public DataSeeder(ApplicationDbContext context) {
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public DataSeeder(ApplicationDbContext context, UserManager<ApplicationUser> userManager) {
             _context = context;
+            _userManager = userManager;
         }
 
-        public void SeedData()
+        public async Task SeedDataAsync()
         {
-            var user = new ApplicationUser()
-            {
-                Email = "test1@gamail.com",
-                UserName = "test1",
-                EmailConfirmed = false,
-                PhoneNumberConfirmed = true,
-                PhoneNumber = "1111111"
-            };
-            _context.Add(user);
+            var existingUser = await _userManager.FindByEmailAsync("test21@gmail.com");
+            ApplicationUser user;
+
+            if (existingUser == null) {
+                user = new ApplicationUser {
+                    UserName = "test1",
+                    Email = "test1@gmail.com",
+                    PhoneNumber = "1111111",
+                    EmailConfirmed = true,
+                    PhoneNumberConfirmed = true
+                };
+
+                var result = await _userManager.CreateAsync(user, "Ja123456!"); 
+                if (!result.Succeeded) {
+                    Console.WriteLine("User creation failed:");
+                    foreach (var error in result.Errors)
+                        Console.WriteLine($" - {error.Description}");
+                    return;
+                }
+            } else {
+                user = existingUser;
+            }
 
             _context.Add(new Contract()
             {

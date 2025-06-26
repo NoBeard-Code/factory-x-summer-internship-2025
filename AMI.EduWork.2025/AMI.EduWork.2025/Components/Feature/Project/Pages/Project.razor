@@ -3,6 +3,7 @@
 @using AMI.EduWork._2025.Domain.Interfaces.Service
 @using AMI.EduWork._2025.Domain.Models.Project
 @using AMI.EduWork._2025.Domain.Models.TimeSlice
+@using AMI.EduWork._2025.Domain.Models.UserOnProject
 @inject IProjectService ProjectService
 @inject IUserOnProjectService UserOnProjectService
 @inject ITimeSliceService TimeSliceService
@@ -32,12 +33,24 @@
     </MudButton>
 
     <ProjectCreateComponent OnProjectCreated="LoadUserProjects" />
+    <MudChart Class="pa-8 mt-8" ChartType="ChartType.Donut" Width="300px" Height="300px" InputData="@data" InputLabels="@labels">
+        <CustomGraphics>
+            <text class="donut-inner-text" x="50%" y="35%" dominant-baseline="middle" text-anchor="middle" fill="black" font-family="Helvetica" font-size="20">Total</text>
+            <text class="donut-inner-text" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="black" font-family="Helvetica" font-size="50">@data.Sum().ToString() sati</text>
+        </CustomGraphics>
+    </MudChart>
 </MudPaper>
 
 @code {
     private List<GetProjectModel>? userProjects;
     private GetProjectModel? selectedProject;
     private TimeSliceModel? selectedTimeslice;
+    private Dictionary<string, List<float>> timeSlicesByProject = new();
+
+    public double[] data = { };
+
+    public string[] labels = { };
+
 
     private string? userId;
 
@@ -65,6 +78,7 @@
 
         var projectIds = userOnProjects.Select(uop => uop.Project.Id).Distinct().ToList();
         userProjects = new List<GetProjectModel>();
+        timeSlicesByProject.Clear();
 
         foreach (var projectId in projectIds)
         {
@@ -72,15 +86,48 @@
             if (project != null)
             {
                 var projectTimeSlices = timeSlices
-                    .Where(ts => ts.ProjectId == projectId)
+                    .Where(ts => ts.ProjectId == projectId && ts.Start.HasValue && ts.End.HasValue)
                     .ToList();
+
+               
+                var durations = projectTimeSlices
+                    .Select(ts => (float)(ts.End.Value - ts.Start.Value).TotalHours)
+                    .ToList();
+
+                timeSlicesByProject[project.Name] = durations;
 
                 project.TimeSlices = projectTimeSlices;
                 userProjects.Add(project);
             }
         }
+
+        
+        data = timeSlicesByProject.Values
+            .Select(list => Math.Round(list.Sum(), 2))
+            .ToArray();
+
+        labels = timeSlicesByProject.Keys.ToArray();
     }
 }
+
+
+    private async Task CreateUserProjects(ProjectModel project)
+    {
+        if(userId == null)
+        {
+            return;
+        }
+         await ProjectService.Create(project);
+         var createdProject = await ProjectService.GetProjectByName(project.Name);
+         await UserOnProjectService.Create(new UserOnProjectModel
+         {
+             UserId = userId,
+             ProjectId = createdProject.Id,
+             ProjectRole = project.TypeOfProject.ToString()
+         });
+         await LoadUserProjects();
+
+    }
 
     private int UsersOnProjectCount()
     {
@@ -99,16 +146,21 @@
 
      private Task OpenDialogAsync()
     {
+        var dialogParameters = new DialogParameters
+        {
+            { "OnProjectCreated", EventCallback.Factory.Create<ProjectModel>(this, CreateUserProjects) }
+        };
         var options = new DialogOptions
-{
-    CloseOnEscapeKey = true,
-    MaxWidth = MaxWidth.Small,
-    FullWidth = true,
-    Position = DialogPosition.Center
-};
+     {
+        CloseOnEscapeKey = true,
+        MaxWidth = MaxWidth.Small,
+        FullWidth = true,
+        Position = DialogPosition.Center,
+
+      }  ;
 
 
-        return DialogService.ShowAsync<ProjectCreateDialog>("Styling Example Dialog", options);
+        return DialogService.ShowAsync<ProjectCreateDialog>("Styling Example Dialog", dialogParameters, options);
     }
 
 
