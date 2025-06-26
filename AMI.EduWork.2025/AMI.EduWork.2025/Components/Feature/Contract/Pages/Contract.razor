@@ -1,4 +1,4 @@
-﻿@page "/"
+﻿@page "/contracts"
 @using AMI.EduWork._2025.Domain.Interfaces.Service
 @using AMI.EduWork._2025.Domain.Models.ContractModel
 @rendermode InteractiveServer
@@ -28,14 +28,15 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var model in _contractGetByIdModel)
+            @foreach (var model in _contractGetByIdModel) 
             {
                 <tr>
                     <td>@model.Id</td>
                     <td>@model.IsActive</td>
                     <td>@model.HourlyRate</td>
                     <td>@model.WorkingHour</td>
-                    <input type="submit" value="Delete" class="btn btn-danger" @onclick="(async () => await DeleteContract(model.Id))"/>
+                    <input type="button" value="Delete" class="btn btn-danger" @onclick="(async () => await DeleteContract(model.Id))" />
+                    <input type="button" value="Update" class="btn btn-info" @onclick="(async () => await UpdateContract(model.Id))" />
 
                 </tr>
             }
@@ -56,7 +57,11 @@ else
     private async Task DeleteContract(string id)
     {
         await icontractService.Delete(id);
-        NavigationManager.NavigateTo("/", true);
+        ContractGetModel? contractGetByIdModel = _contractGetByIdModel?.FirstOrDefault(x => x.Id==id);
+        if (contractGetByIdModel is not null) _contractGetByIdModel!.Remove(contractGetByIdModel);
     }
-
+    private async Task UpdateContract(string contractId)
+    {
+        NavigationManager.NavigateTo($"/contracts/update/{contractId}");
+    }
 }

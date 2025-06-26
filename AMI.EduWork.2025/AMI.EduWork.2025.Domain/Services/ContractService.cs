@@ -192,13 +192,12 @@ namespace AMI.EduWork._2025.Domain.Services
         public async Task<bool> Update(ContractUpdateModel? contractUpdateModel)
         {
             if (contractUpdateModel is null) return false;
-            Entities.Contract contract = new Entities.Contract {
-                Id= contractUpdateModel.Id,
-                HourlyRate = contractUpdateModel.HourlyRate,
-                IsActive = contractUpdateModel.IsActive,
-                UserId = contractUpdateModel.UserId,
-                WorkingHour = contractUpdateModel.WorkingHour
-            };
+
+            Entities.Contract contract = await _repository.GetById(contractUpdateModel.Id);
+            contract.HourlyRate = contractUpdateModel.HourlyRate;
+            contract.IsActive = contractUpdateModel.IsActive;
+            contract.UserId = contractUpdateModel.UserId;
+            contract.WorkingHour = contractUpdateModel.WorkingHour;
 
             await _repository.Update(contract);
             return await _repository.SaveChangesAsync();
