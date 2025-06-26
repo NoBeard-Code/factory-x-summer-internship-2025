@@ -1,11 +1,12 @@
 @using AMI.EduWork._2025.Domain.Models.Project
 @using MudBlazor
 
-<MudTextField @bind-Value="_searchText"
+<MudTextField  @bind-Value="_searchText"
               Label="Search projects..."
               Variant="Variant.Outlined"
               Adornment="Adornment.Start"
               AdornmentIcon="@Icons.Material.Filled.Search"
+              Immediate="true"
               Class="mb-4" />
 
 <MudSelect T="byte?" @bind-Value="_selectedType" Label="Filter by project type" Variant="Variant.Outlined" Class="mb-4">
@@ -41,8 +42,14 @@
                     <MudButton OnClick="() => OnDetailsClicked.InvokeAsync(project)"
                                Variant="Variant.Outlined"
                                Color="Color.Primary"
-                               Class="mt-2">
+                               Class="m-2">
                         Details
+                    </MudButton>
+                    <MudButton 
+                               Variant="Variant.Filled"
+                               Color="Color.Tertiary"
+                               Class="m-2">
+                         Project time entry
                     </MudButton>
                 </MudListItem>
             }
