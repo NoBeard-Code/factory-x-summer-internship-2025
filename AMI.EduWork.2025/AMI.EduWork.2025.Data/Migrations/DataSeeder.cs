@@ -18,6 +18,16 @@ namespace AMI.EduWork._2025.Data.Migrations
             _context = context;
             _userManager = userManager;
         }
+        Random random = new Random();
+        string[] projectNames = new[] { "Apollo", "Orion", "Zenith", "Nova", "Quantum", "Atlas" };
+        string[] descriptions = new[] {
+        "Optimizing system performance.",
+        "Developing next-gen features.",
+        "Research and innovation phase.",
+        "Team collaboration ongoing.",
+        "Bug fixing and patching.",
+        "Client delivery preparations."
+        };
 
         public async Task SeedDataAsync()
         {
@@ -52,12 +62,11 @@ namespace AMI.EduWork._2025.Data.Migrations
                 IsActive = true,
                 HourlyRate = 10,
             });
-            var project = new Project()
-            {
+            var project = new Project {
                 Id = Guid.NewGuid().ToString(),
-                Name = "Test",
-                TypeOfProject = 1,
-                Description = "Test Test Test Test Test ",
+                Name = projectNames[random.Next(projectNames.Length)],
+                TypeOfProject = (byte)random.Next(0, 3), // 0 = Private, 1 = Business, 2 = Educational
+                Description = descriptions[random.Next(descriptions.Length)]
             };
             _context.Add(project);
 

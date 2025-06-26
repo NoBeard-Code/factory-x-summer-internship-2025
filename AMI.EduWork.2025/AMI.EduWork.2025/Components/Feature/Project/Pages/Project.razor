@@ -4,44 +4,80 @@
 @using AMI.EduWork._2025.Domain.Models.Project
 @using AMI.EduWork._2025.Domain.Models.TimeSlice
 @using AMI.EduWork._2025.Domain.Models.UserOnProject
+@using Microsoft.AspNetCore.Authorization
 @inject IProjectService ProjectService
 @inject IUserOnProjectService UserOnProjectService
 @inject ITimeSliceService TimeSliceService
 @inject AuthenticationStateProvider AuthStateProvider
 @inject IDialogService DialogService
 @rendermode InteractiveServer
-
-
+@attribute [Authorize]
 <MudPaper Class="pa-4">
-    <MudText Typo="Typo.h5">Moji Projekti</MudText>
- <ProjectList Projects="userProjects" OnDetailsClicked="ShowDetails" />
+    <MudText Typo="Typo.h5">My projects</MudText>
+    <ProjectList Projects="userProjects" OnDetailsClicked="ShowDetails" />
 
     <MudDivider Class="my-4" />
+
     <MudButton OnClick="OpenDialogAsync" Color="Color.Primary" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add">
         Novi Projekt
     </MudButton>
 
     <ProjectCreateComponent OnProjectCreated="LoadUserProjects" />
-    <MudChart Class="pa-8 mt-8" ChartType="ChartType.Donut" Width="300px" Height="300px" InputData="@data" InputLabels="@labels">
-        <CustomGraphics>
-            <text class="donut-inner-text" x="50%" y="35%" dominant-baseline="middle" text-anchor="middle" fill="black" font-family="Helvetica" font-size="20">Total</text>
-            <text class="donut-inner-text" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="black" font-family="Helvetica" font-size="50">@data.Sum().ToString() sati</text>
-        </CustomGraphics>
-    </MudChart>
+
+    <MudGrid Class="mt-4">
+        <MudItem xs="12" md="6">
+            <MudText Typo="Typo.h4">All Time Project Time</MudText>
+            <MudChart Class="pa-8 mt-4" ChartType="ChartType.Donut"
+                      Width="400px" Height="400px"
+                      InputData="@allTimeData"
+                      InputLabels="@allTimeLabels">
+                <CustomGraphics>
+                    <text x="50%" y="35%" dominant-baseline="middle" text-anchor="middle" fill="black" font-size="20">Total</text>
+                    <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="black" font-size="40">
+                        @allTimeData.Sum().ToString("0.##") hours
+                    </text>
+                </CustomGraphics>
+            </MudChart>
+        </MudItem>
+
+        <MudItem xs="12" md="6">
+            <MudDatePicker Date="_selectedMonth"
+               DateChanged="OnMonthChanged"
+               PickerVariant="PickerVariant.Inline"
+               Label="Odaberi mjesec"
+               Margin="Margin.Dense"
+               Class="mb-2" />
+
+
+            <MudChart Class="pa-8 mt-4" ChartType="ChartType.Donut"
+                      Width="400px" Height="400px"
+                      InputData="@monthlyData"
+                      InputLabels="@monthlyLabels">
+                <CustomGraphics>
+                    <text x="50%" y="35%" dominant-baseline="middle" text-anchor="middle" fill="black" font-size="20">Total</text>
+                    <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="black" font-size="40">
+                        @monthlyData.Sum().ToString("0.##") hours
+                    </text>
+                </CustomGraphics>
+            </MudChart>
+        </MudItem>
+    </MudGrid>
 </MudPaper>
 
 @code {
     private List<GetProjectModel>? userProjects;
     private GetProjectModel? selectedProject;
-    private TimeSliceModel? selectedTimeslice;
+    private string? userId;
+
     private Dictionary<string, List<float>> timeSlicesByProject = new();
 
-    public double[] data = { };
+    private double[] allTimeData = Array.Empty<double>();
+    private string[] allTimeLabels = Array.Empty<string>();
 
-    public string[] labels = { };
+    private double[] monthlyData = Array.Empty<double>();
+    private string[] monthlyLabels = Array.Empty<string>();
 
-
-    private string? userId;
+    private DateTime _selectedMonth = DateTime.Today;
 
     protected override async Task OnInitializedAsync()
     {
@@ -55,132 +91,178 @@
         }
 
         await LoadUserProjects();
+        await SetupChartData();
     }
 
-
     private async Task LoadUserProjects()
-{
-    if (userId != null)
     {
-        var userOnProjects = await UserOnProjectService.GetProjectsByUserId(userId);
-        var timeSlices = await TimeSliceService.GetAllUserTimeSlices(userId);
-
-        var projectIds = userOnProjects.Select(uop => uop.Project.Id).Distinct().ToList();
-        userProjects = new List<GetProjectModel>();
-        timeSlicesByProject.Clear();
-
-        foreach (var projectId in projectIds)
+        if (userId != null)
         {
-            var project = await ProjectService.GetById(projectId);
-            if (project != null)
+            var userOnProjects = await UserOnProjectService.GetProjectsByUserId(userId);
+            var timeSlices = await TimeSliceService.GetAllUserTimeSlices(userId);
+
+            var projectIds = userOnProjects.Select(uop => uop.Project.Id).Distinct().ToList();
+            userProjects = new List<GetProjectModel>();
+            timeSlicesByProject.Clear();
+
+            foreach (var projectId in projectIds)
             {
-                var projectTimeSlices = timeSlices
-                    .Where(ts => ts.ProjectId == projectId && ts.Start.HasValue && ts.End.HasValue)
-                    .ToList();
+                var project = await ProjectService.GetById(projectId);
+                if (project != null)
+                {
+                    var projectTimeSlices = timeSlices
+                        .Where(ts => ts.ProjectId == projectId && ts.Start.HasValue && ts.End.HasValue)
+                        .ToList();
 
-               
-                var durations = projectTimeSlices
-                    .Select(ts => (float)(ts.End.Value - ts.Start.Value).TotalHours)
-                    .ToList();
+                    var durations = projectTimeSlices
+                        .Select(ts => (float)(ts.End.Value - ts.Start.Value).TotalHours)
+                        .ToList();
 
-                timeSlicesByProject[project.Name] = durations;
+                    var key = $"{project.Name}-({GetProjectTypeName(project.TypeOfProject)})-{project.Id}";
+                    timeSlicesByProject[key] = durations;
 
-                project.TimeSlices = projectTimeSlices;
-                userProjects.Add(project);
+                    project.TimeSlices = projectTimeSlices;
+                    userProjects.Add(project);
+                }
             }
         }
+    }
 
-        
-        data = timeSlicesByProject.Values
+    private async Task SetupChartData()
+    {
+        // All-time data
+        allTimeLabels = timeSlicesByProject.Keys
+            .Select(key => key.Split("-(")[0])
+            .ToArray();
+
+        allTimeData = timeSlicesByProject.Values
             .Select(list => Math.Round(list.Sum(), 2))
             .ToArray();
 
-        labels = timeSlicesByProject.Keys.ToArray();
-    }
-}
+        // Monthly data
+        var selectedMonth = _selectedMonth.Month;
+        var selectedYear = _selectedMonth.Year;
 
+        var monthlyDurations = new Dictionary<string, double>();
 
-    private async Task CreateUserProjects(ProjectModel project)
-    {
-        if(userId == null)
+        foreach (var project in userProjects ?? new())
         {
-            return;
-        }
-         await ProjectService.Create(project);
-         var createdProject = await ProjectService.GetProjectByName(project.Name);
-         await UserOnProjectService.Create(new UserOnProjectModel
-         {
-             UserId = userId,
-             ProjectId = createdProject.Id,
-             ProjectRole = project.TypeOfProject.ToString()
-         });
-         await LoadUserProjects();
+            var key = $"{project.Name}-({GetProjectTypeName(project.TypeOfProject)})-{project.Id}";
 
+            var monthTotal = (project.TimeSlices ?? new())
+                .Where(ts => ts.Start.HasValue && ts.End.HasValue &&
+                             ts.Start.Value.Month == selectedMonth &&
+                             ts.Start.Value.Year == selectedYear)
+                .Sum(ts => (ts.End!.Value - ts.Start!.Value).TotalHours);
+
+            if (monthTotal > 0)
+                monthlyDurations[key] = Math.Round(monthTotal, 2);
+        }
+
+        monthlyLabels = monthlyDurations.Keys
+            .Select(key => key.Split("-(")[0])
+            .ToArray();
+
+        monthlyData = monthlyDurations.Values.ToArray();
     }
 
-    private int UsersOnProjectCount()
+    private async Task OnMonthChanged(DateTime? date)
     {
-        if(selectedProject == null)
+        if (date is not null)
         {
-            return 0;
+            _selectedMonth = date.Value;
+            await SetupChartData();
+            StateHasChanged();
         }
-        return selectedProject.UsersOnProjects?.Count != null ? selectedProject.UsersOnProjects.Count : 1;
     }
 
-   private Task ShowDetails(GetProjectModel project)
-{
-    selectedProject = project; 
-
-    var dialogParameters = new DialogParameters
+    private Task ShowDetails(GetProjectModel project)
     {
-        { "Project", selectedProject } 
-    };
+        selectedProject = project;
 
-    var options = new DialogOptions
-{
-    MaxWidth = MaxWidth.False, 
-    FullWidth = true,
-    
-    FullScreen = false,
-    CloseOnEscapeKey = true,
-    Position = DialogPosition.Center
-};
+        var dialogParameters = new DialogParameters
+        {
+            { "Project", selectedProject }
+        };
 
+        var options = new DialogOptions
+        {
+            MaxWidth = MaxWidth.False,
+            FullWidth = true,
+            FullScreen = false,
+            CloseOnEscapeKey = true,
+            Position = DialogPosition.Center
+        };
 
-    return DialogService.ShowAsync<ProjectDetailsDialog>("Detalji projekta", dialogParameters, options);
-}
+        return DialogService.ShowAsync<ProjectDetailsDialog>("Project Details", dialogParameters, options);
+    }
 
-    
-
-     private Task OpenDialogAsync()
+    private Task OpenDialogAsync()
     {
         var dialogParameters = new DialogParameters
         {
             { "OnProjectCreated", EventCallback.Factory.Create<ProjectModel>(this, CreateUserProjects) }
         };
+
         var options = new DialogOptions
-     {
-        CloseOnEscapeKey = true,
-        MaxWidth = MaxWidth.Small,
-        FullWidth = true,
-        Position = DialogPosition.Center,
-
-      }  ;
-
-
-        return DialogService.ShowAsync<ProjectCreateDialog>("Styling Example Dialog", dialogParameters, options);
-    }
-
-
-
-    private string GetProjectTypeName(byte type)
-    {
-        return type switch
         {
-            0 => "Privatni",
-            1 => "Poslovni",
-            2 => "Edukacijski",
-            _ => "Nepoznat"
+            CloseOnEscapeKey = true,
+            MaxWidth = MaxWidth.Small,
+            FullWidth = true,
+            Position = DialogPosition.Center,
         };
+
+        return DialogService.ShowAsync<ProjectCreateDialog>("Dodaj Projekt", dialogParameters, options);
     }
+
+    private Task ErrorDialogAsync(String message)
+    {
+        var dialogParameters = new DialogParameters
+        {
+            { "Message", message}
+        };
+
+        var options = new DialogOptions
+        {
+            CloseOnEscapeKey = true,
+            MaxWidth = MaxWidth.Small,
+            FullWidth = true,
+            Position = DialogPosition.Center,
+        };
+
+        return DialogService.ShowAsync<ErrorDialog>("Dodaj Projekt", dialogParameters, options);
+    }
+
+    private async Task CreateUserProjects(ProjectModel project)
+    {
+        if (userId == null)
+            return;
+        try
+        {
+            await ProjectService.Create(project);
+        }catch(Exception e)
+        {
+            await ErrorDialogAsync(e.Message);
+            return;
+        }
+        
+        var createdProject = await ProjectService.GetProjectByName(project.Name);
+        await UserOnProjectService.Create(new UserOnProjectModel
+        {
+            UserId = userId,
+            ProjectId = createdProject.Id,
+            ProjectRole = project.TypeOfProject.ToString()
+        });
+
+        await LoadUserProjects();
+        await SetupChartData();
+    }
+
+    private string GetProjectTypeName(byte type) => type switch
+    {
+        0 => "Privatni",
+        1 => "Poslovni",
+        2 => "Edukacijski",
+        _ => "Nepoznat"
+    };
 }

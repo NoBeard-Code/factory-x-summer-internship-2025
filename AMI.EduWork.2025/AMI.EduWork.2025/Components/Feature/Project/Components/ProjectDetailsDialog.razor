@@ -12,22 +12,25 @@
 
     <DialogContent>
     <MudPaper Class="pa-4">
-        <MudText Typo="Typo.subtitle1">Opis:</MudText>
+        <MudText Typo="Typo.subtitle1">Description:</MudText>
         <MudText Typo="Typo.body2">@Project.Description</MudText>
 
-        <MudText Typo="Typo.subtitle1" Class="mt-4">Vrsta projekta:</MudText>
+        <MudText Typo="Typo.subtitle1" Class="mt-4">Project type:</MudText>
         <MudChip T="string" Value="@GetProjectTypeName(Project.TypeOfProject)" Color="@GetChipColor(Project.TypeOfProject)">
             @GetProjectTypeName(Project.TypeOfProject)
         </MudChip>
 
-        <MudText Typo="Typo.h6" Class="mt-4">Radno vrijeme po danima:</MudText>
-        <MudDatePicker Label="Date Format" @bind-Date="_date" DateFormat="dd.MM.yyyy" />
+        <MudText Typo="Typo.h6" Class="mt-4">Working hours for date:</MudText>
+        <MudDatePicker Class="mt-4" Label="Date Format" @bind-Date="_date" DateFormat="dd.MM.yyyy" />
         
-       <MudTimeline TimelineOrientation="TimelineOrientation.Horizontal"
+       <MudTimeline Class="mt-4" TimelineOrientation="TimelineOrientation.Horizontal"
               TimelinePosition="TimelinePosition.Alternate"
               Reverse="false">
-
-    @foreach (var slice in Project.TimeSlices.Where(iterator=> iterator.Start?.Date == _date!.Value.Date))
+                @if(!Project.TimeSlices.Any(iterator=> iterator.Start?.Date == _date!.Value.Date))
+                {
+                    <MudText Class="mb-16" Typo="Typo.h3">No time spent on the project. 😔</MudText>
+                } 
+                @foreach (var slice in Project.TimeSlices.Where(iterator=> iterator.Start?.Date == _date!.Value.Date))
     {
         <MudTimelineItem Color="Color.Primary" Variant="Variant.Filled">
             <ItemContent>
@@ -36,7 +39,7 @@
                         @slice.Start?.ToString("HH:mm") - @slice.End?.ToString("HH:mm")
                     </MudText>
                     <MudText Typo="Typo.caption">
-                        Trajanje: @GetDurationText(slice.Start, slice.End)
+                        Duration: @GetDurationText(slice.Start, slice.End)
                     </MudText>
                 </div>
             </ItemContent>
@@ -48,16 +51,16 @@
             </ItemOpposite>
         </MudTimelineItem>
     }
-</MudTimeline>
+    </MudTimeline>
 
 
 
     </MudPaper>
-</DialogContent>
+    </DialogContent>
 
 
     <DialogActions>
-        <MudButton OnClick="Cancel" Variant="Variant.Text">Zatvori</MudButton>
+        <MudButton OnClick="Cancel" Variant="Variant.Text">Close</MudButton>
     </DialogActions>
 </MudDialog>
 
@@ -95,10 +98,10 @@
 
     private string GetProjectTypeName(byte type) => type switch
     {
-        0 => "Privatni",
-        1 => "Poslovni",
-        2 => "Edukacijski",
-        _ => "Nepoznat"
+        0 => "Private",
+        1 => "Buissness",
+        2 => "Educational",
+        _ => "Unknown"
     };
 
     private string GetDurationText(DateTime? start, DateTime? end)
@@ -107,7 +110,7 @@
         {
             var duration = end.Value - start.Value;
             return duration.TotalMinutes < 1
-                ? "Manje od 1 min"
+                ? "Less than a minute"
                 : duration.TotalHours >= 1
                     ? $"{duration.TotalHours:0.#} h"
                     : $"{duration.TotalMinutes:0} min";

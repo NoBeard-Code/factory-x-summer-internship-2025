@@ -1,26 +1,56 @@
 @using AMI.EduWork._2025.Domain.Models.Project
+@using MudBlazor
+
+<MudTextField @bind-Value="_searchText"
+              Label="Search projects..."
+              Variant="Variant.Outlined"
+              Adornment="Adornment.Start"
+              AdornmentIcon="@Icons.Material.Filled.Search"
+              Class="mb-4" />
+
+<MudSelect T="byte?" @bind-Value="_selectedType" Label="Filter by project type" Variant="Variant.Outlined" Class="mb-4">
+    <MudSelectItem T="byte?" Value="null">All types</MudSelectItem>
+    <MudSelectItem T="byte?" Value="(byte)0">Private</MudSelectItem>
+    <MudSelectItem T="byte?" Value="(byte)1">Business</MudSelectItem>
+    <MudSelectItem T="byte?" Value="(byte)2">Educational</MudSelectItem>
+</MudSelect>
+
 
 <MudList T="GetProjectModel" Dense="true">
     @if (Projects != null)
     {
-        @foreach (var project in Projects)
+        var filtered = Projects
+            .Where(p =>
+                (string.IsNullOrWhiteSpace(_searchText) ||
+                 p.Name.Contains(_searchText, StringComparison.OrdinalIgnoreCase) ||
+                 p.Description.Contains(_searchText, StringComparison.OrdinalIgnoreCase)) &&
+                (!_selectedType.HasValue || p.TypeOfProject == _selectedType.Value))
+            .ToList();
+
+        if (filtered.Any())
         {
-            <MudListItem T="GetProjectModel" Value="project">
-                <MudText Typo="Typo.subtitle1">@project.Name</MudText>
-                <MudText Typo="Typo.body2">@project.Description</MudText>
-                @if(project.TypeOfProject == 0)
-                {
-                    <MudChip Text="black" Color="Color.Dark" Value="@Color.Dark">@GetProjectTypeName(project.TypeOfProject)</MudChip>
-                }else if(project.TypeOfProject == 1)
-                {
-                    <MudChip Text="white" Color="Color.Primary" Value="@Color.Primary">@GetProjectTypeName(project.TypeOfProject)</MudChip>
-                }
-                else if(project.TypeOfProject == 2)
-                {
-                    <MudChip Text="black" Color="Color.Info" Value="@Color.Info">@GetProjectTypeName(project.TypeOfProject)</MudChip>
-                }
-                <MudButton OnClick="() => OnDetailsClicked.InvokeAsync(project)">Detalji</MudButton>
-            </MudListItem>
+            @foreach (var project in filtered)
+            {
+                <MudListItem T="GetProjectModel" Value="project">
+                    <MudText Typo="Typo.h6">@project.Name</MudText>
+                    <MudText Typo="Typo.body2">@project.Description</MudText>
+
+                    <MudChip T="string" Color="@GetChipColor(project.TypeOfProject)">
+                        @GetProjectTypeName(project.TypeOfProject)
+                    </MudChip>
+
+                    <MudButton OnClick="() => OnDetailsClicked.InvokeAsync(project)"
+                               Variant="Variant.Outlined"
+                               Color="Color.Primary"
+                               Class="mt-2">
+                        Details
+                    </MudButton>
+                </MudListItem>
+            }
+        }
+        else
+        {
+            <MudText Class="pa-2">No results found.</MudText>
         }
     }
     else
@@ -31,14 +61,24 @@
 
 @code {
     [Parameter] public List<GetProjectModel>? Projects { get; set; }
-
     [Parameter] public EventCallback<GetProjectModel> OnDetailsClicked { get; set; }
+
+    private string _searchText = string.Empty;
+    private byte? _selectedType = null;
 
     private string GetProjectTypeName(byte type) => type switch
     {
-        0 => "Privatni",
-        1 => "Poslovni",
-        2 => "Edukacijski",
-        _ => "Nepoznat"
+        0 => "Private",
+        1 => "Business",
+        2 => "Educational",
+        _ => "Unknown"
+    };
+
+    private Color GetChipColor(byte type) => type switch
+    {
+        0 => Color.Dark,
+        1 => Color.Primary,
+        2 => Color.Info,
+        _ => Color.Default
     };
 }
