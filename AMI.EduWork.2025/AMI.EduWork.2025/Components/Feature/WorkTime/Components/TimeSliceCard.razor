@@ -1,0 +1,20 @@
+﻿@using AMI.EduWork._2025.Domain.Models.TimeSlice
+
+<MudPaper Class="pa-2" Outlined="true" Style="min-width:200px;">
+    <MudGrid>
+        <MudItem xs="6">
+            <MudText Typo="Typo.subtitle2" Bold="true">@TimeSlice.ProjectId</MudText>
+        </MudItem>
+        <MudItem xs="6" Align="Right">
+            <MudText Typo="Typo.subtitle2">@TimeSlice.Start.ToString() - @TimeSlice.End.ToString()</MudText>
+        </MudItem>
+        <MudItem xs="12">
+            <MudText Typo="Typo.body2">@TimeSlice.Description</MudText>
+        </MudItem>
+    </MudGrid>
+</MudPaper>
+
+@code {
+    [Parameter]
+    public GetTimeSliceModel TimeSlice { get; set; }
+}

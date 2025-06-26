@@ -1,0 +1,183 @@
+﻿@page "/worktime"
+@using AMI.EduWork._2025.Domain.Interfaces.Service
+@using AMI.EduWork._2025.Domain.Models.TimeSlice
+@using AMI.EduWork._2025.Domain.Models.User
+@inject IServiceScopeFactory ServiceScopeFactory
+
+<PageTitle>Work time</PageTitle>
+
+<h3>Work time</h3>
+<p>This component demonstrates showing and writing work time data.</p>
+<p>Todays date: @today</p>
+
+@if (firstUser == null)
+{
+    <p>Fetching first user...</p>
+}
+else
+{
+    <p>Id of @firstUser.UserName in database is: @firstUser.Id</p>
+}
+
+<button @onclick="GetAllUserTimeSlices">Get All Time Slices</button>
+<button @onclick="GetAllUserTimeSlicesByDate">Get Time Slices By Date</button>
+<button @onclick="ClearTimeslices">Clear Table</button>
+
+@if (timeslices == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+<MudContainer>
+    <MudGrid Spacing="2">
+        @if (timeslices != null)
+        {
+            @foreach (var timeslice in timeslices)
+            {
+                <MudItem xs="12" sm="6" md="4" lg="3">
+                    <TimeSliceCard TimeSlice="timeslice" />
+                </MudItem>
+            }
+        }
+    </MudGrid>
+</MudContainer>
+
+}
+
+@if (newTimeSlice != null)
+{
+    <EditForm Model="newTimeSlice" OnValidSubmit="CreateUserTimeSlice">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label>Start (dd.MM.yy. HH:mm:ss):</label>
+            <InputText @bind-Value="startString" class="form-control" placeholder="e.g. 25.06.25. 14:30:00" />
+        </div>
+        <div class="form-group">
+            <label>End (dd.MM.yy. HH:mm:ss):</label>
+            <InputText @bind-Value="endString" class="form-control" placeholder="e.g. 25.06.25. 15:00:00" />
+        </div>
+        <div class="form-group">
+            <label>Type Of Slice:</label>
+            <InputSelect @bind-Value="selectedTypeOfSlice" class="form-control">
+                @foreach (TimeSliceType type in Enum.GetValues(typeof(TimeSliceType)))
+                {
+                    <option value="@type">@type</option>
+                }
+            </InputSelect>
+        </div>
+        <div class="form-group">
+            <label>Description:</label>
+            <InputText @bind-Value="newTimeSlice.Description" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-primary">Save Time Slice</button>
+    </EditForm>
+}
+
+@code {
+    private readonly DateTime today = DateTime.Now;
+    private List<GetTimeSliceModel> timeslices;
+    private GetUserModel firstUser;
+    private TimeSliceModel newTimeSlice;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadFirstUser();
+    }
+
+    private async Task LoadFirstUser()
+    {
+        using var scope = ServiceScopeFactory.CreateScope();
+        var _userService = scope.ServiceProvider.GetRequiredService<IUserService>();
+        firstUser = (await _userService.GetAll()).FirstOrDefault();
+
+        if (firstUser != null)
+        {
+            newTimeSlice = new TimeSliceModel { UserId = firstUser.Id };
+        }
+    }
+
+    protected async Task GetAllUserTimeSlices()
+    {
+        if (firstUser == null) return;
+
+        using var scope = ServiceScopeFactory.CreateScope();
+        var _timeSliceService = scope.ServiceProvider.GetRequiredService<ITimeSliceService>();
+        var result = await _timeSliceService.GetAllUserTimeSlices(firstUser.Id);
+        timeslices = result?.ToList() ?? new List<GetTimeSliceModel>();
+    }
+
+    protected async Task GetAllUserTimeSlicesByDate()
+    {
+        if (firstUser == null) return;
+
+        using var scope = ServiceScopeFactory.CreateScope();
+        var _timeSliceService = scope.ServiceProvider.GetRequiredService<ITimeSliceService>();
+        var result = await _timeSliceService.GetAllUserTimeSlicesByDate(firstUser.Id, today);
+        timeslices = result?.ToList() ?? new List<GetTimeSliceModel>();
+    }
+
+    protected void ClearTimeslices()
+    {
+        timeslices = null;
+    }
+
+
+
+    //-------------------------------------
+
+    private string startString { get; set; }
+    private string endString { get; set; }
+
+    protected override void OnInitialized()
+    {
+        var now = DateTime.Now;
+        startString = now.ToString("dd.MM.yy. HH:mm:ss");
+        endString = now.AddMinutes(30).ToString("dd.MM.yy. HH:mm:ss");
+    }
+
+    protected async Task CreateUserTimeSlice()
+    {
+        if (!DateTime.TryParseExact(startString, "dd.MM.yy. HH:mm:ss", null, System.Globalization.DateTimeStyles.None, out var start))
+        {
+            return;
+        }
+        if (!DateTime.TryParseExact(endString, "dd.MM.yy. HH:mm:ss", null, System.Globalization.DateTimeStyles.None, out var end))
+        {
+            return;
+        }
+
+        newTimeSlice.Start = start;
+        newTimeSlice.End = end;
+
+        using var scope = ServiceScopeFactory.CreateScope();
+        var _timeSliceService = scope.ServiceProvider.GetRequiredService<ITimeSliceService>();
+
+        await _timeSliceService.Create(newTimeSlice);
+
+        var now = DateTime.Now;
+        startString = now.ToString("dd.MM.yy. HH:mm:ss");
+        endString = now.AddMinutes(30).ToString("dd.MM.yy. HH:mm:ss");
+        newTimeSlice.TypeOfSlice = 0;
+        newTimeSlice.Description = null;
+
+        
+    }
+    //-------------------------------------
+
+    public enum TimeSliceType
+    {
+        Work = 1,
+        Break = 2,
+        Meeting = 3
+    }
+
+    private TimeSliceType selectedTypeOfSlice
+    {
+        get => (TimeSliceType)newTimeSlice.TypeOfSlice;
+        set => newTimeSlice.TypeOfSlice = (byte)value;
+    }
+
+}
