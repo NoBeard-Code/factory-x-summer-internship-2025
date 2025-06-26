@@ -15,21 +15,20 @@
     <MudSelectItem T="byte?" Value="(byte)2">Educational</MudSelectItem>
 </MudSelect>
 
-
 <MudList T="GetProjectModel" Dense="true">
     @if (Projects != null)
     {
-        var filtered = Projects
-            .Where(p =>
-                (string.IsNullOrWhiteSpace(_searchText) ||
-                 p.Name.Contains(_searchText, StringComparison.OrdinalIgnoreCase) ||
-                 p.Description.Contains(_searchText, StringComparison.OrdinalIgnoreCase)) &&
-                (!_selectedType.HasValue || p.TypeOfProject == _selectedType.Value))
-            .ToList();
+        var filtered = GetFilteredProjects();
+        var chunkedProjects = ChunkProjects(filtered);
 
-        if (filtered.Any())
+        if (_selected > chunkedProjects.Count)
         {
-            @foreach (var project in filtered)
+            _selected = 1;
+        }
+
+        if (chunkedProjects.Any() && _selected <= chunkedProjects.Count)
+        {
+            @foreach (var project in chunkedProjects[_selected - 1])
             {
                 <MudListItem T="GetProjectModel" Value="project">
                     <MudText Typo="Typo.h6">@project.Name</MudText>
@@ -59,12 +58,39 @@
     }
 </MudList>
 
+<MudPagination ShowFirstButton="true" ShowLastButton="true" Count="PaginationCount" Class="mt-4" @bind-Selected=_selected/>
+
 @code {
     [Parameter] public List<GetProjectModel>? Projects { get; set; }
     [Parameter] public EventCallback<GetProjectModel> OnDetailsClicked { get; set; }
 
+    private int _selected = 1;
     private string _searchText = string.Empty;
     private byte? _selectedType = null;
+    private const int PageSize = 5;
+
+    private List<GetProjectModel> GetFilteredProjects()
+    {
+        return Projects?
+            .Where(p =>
+                (string.IsNullOrWhiteSpace(_searchText) ||
+                 p.Name.Contains(_searchText, StringComparison.OrdinalIgnoreCase) ||
+                 p.Description.Contains(_searchText, StringComparison.OrdinalIgnoreCase)) &&
+                (!_selectedType.HasValue || p.TypeOfProject == _selectedType.Value))
+            .ToList() ?? new();
+    }
+
+    private List<List<GetProjectModel>> ChunkProjects(List<GetProjectModel> projects, int chunkSize = PageSize)
+    {
+        var result = new List<List<GetProjectModel>>();
+        for (int i = 0; i < projects.Count; i += chunkSize)
+        {
+            result.Add(projects.Skip(i).Take(chunkSize).ToList());
+        }
+        return result;
+    }
+
+    private int PaginationCount => (int)Math.Ceiling(GetFilteredProjects().Count / (double)PageSize);
 
     private string GetProjectTypeName(byte type) => type switch
     {
@@ -82,3 +108,4 @@
         _ => Color.Default
     };
 }
+

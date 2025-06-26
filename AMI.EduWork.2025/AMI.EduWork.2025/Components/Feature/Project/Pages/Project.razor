@@ -33,7 +33,7 @@
                       InputLabels="@allTimeLabels">
                 <CustomGraphics>
                     <text x="50%" y="35%" dominant-baseline="middle" text-anchor="middle" fill="black" font-size="20">Total</text>
-                    <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="black" font-size="40">
+                    <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="black" font-size="35">
                         @allTimeData.Sum().ToString("0.##") hours
                     </text>
                 </CustomGraphics>
@@ -55,7 +55,7 @@
                       InputLabels="@monthlyLabels">
                 <CustomGraphics>
                     <text x="50%" y="35%" dominant-baseline="middle" text-anchor="middle" fill="black" font-size="20">Total</text>
-                    <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="black" font-size="40">
+                    <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="black" font-size="35">
                         @monthlyData.Sum().ToString("0.##") hours
                     </text>
                 </CustomGraphics>
@@ -230,7 +230,7 @@
             Position = DialogPosition.Center,
         };
 
-        return DialogService.ShowAsync<ErrorDialog>("Dodaj Projekt", dialogParameters, options);
+        return DialogService.ShowAsync<Shared.ErrorDialog>("Dodaj Projekt", dialogParameters, options);
     }
 
     private async Task CreateUserProjects(ProjectModel project)
