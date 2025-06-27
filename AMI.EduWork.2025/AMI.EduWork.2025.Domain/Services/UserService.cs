@@ -67,7 +67,7 @@ public class UserService : IUserService
 
     public async Task<GetUserModel> GetById(string id)
     {
-        if (!string.IsNullOrEmpty(id))
+        if (string.IsNullOrEmpty(id))
         {
             _logger.LogWarning("Attempted to retrieve User with null Id");
             return null;

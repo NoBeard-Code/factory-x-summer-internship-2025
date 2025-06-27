@@ -72,7 +72,7 @@ public class UserOnVacationService : IUserOnVacationService
     {
         IEnumerable<UserOnVacation> userOnVacation = await _repository.GetAll();
         IEnumerable<UserOnVacationGetModel> userOnVacationGetModel = userOnVacation.
-            Where(v => v.StartDate>=date&& v.EndDate<=date).
+            Where(v => v.StartDate>=date || v.EndDate<=date).
             Select(v => new UserOnVacationGetModel
             {
                 Id = v.Id,
@@ -103,7 +103,80 @@ public class UserOnVacationService : IUserOnVacationService
             });
         return userOnVacationGetModel;
     }
-
+    public async Task<IEnumerable<UserOnVacationGetModel>> GetByUserIdYear(string UserId, int year)
+    {
+        IEnumerable<UserOnVacation> userOnVacation = await _repository.GetAll();
+        IEnumerable<UserOnVacationGetModel> userOnVacationGetModel = userOnVacation.
+            Where(v => v.UserId == UserId && v.AnnualVacation.Year == year).
+            Select(v => new UserOnVacationGetModel
+            {
+                Id = v.Id,
+                StartDate = v.StartDate,
+                EndDate = v.EndDate,
+                _VacationGetModel = new VacationGetModel
+                {
+                    Id = v.AnnualVacationId,
+                    AvailableVacation = v.AnnualVacation.AvailableVacation,
+                    PlannedVacation = v.AnnualVacation.PlannedVacation,
+                    UsedVacation = v.AnnualVacation.UsedVacation,
+                    Year = v.AnnualVacation.Year
+                },
+                _GetUserModel = new GetUserModel
+                {
+                    Id = v.UserId,
+                    AccessFailedCount = v.User.AccessFailedCount,
+                    Email = v.User.Email,
+                    EmailConfirmed = v.User.EmailConfirmed,
+                    LockoutEnabled = v.User.LockoutEnabled,
+                    TwoFactorEnabled = v.User.TwoFactorEnabled,
+                    LockoutEnd = v.User.LockoutEnd,
+                    NormalizedEmail = v.User.NormalizedEmail,
+                    NormalizedUserName = v.User.NormalizedUserName,
+                    PhoneNumber = v.User.PhoneNumber,
+                    PhoneNumberConfirmed = v.User.PhoneNumberConfirmed,
+                    Role = v.User.Role,
+                    UserName = v.User.UserName
+                }
+            });
+        return userOnVacationGetModel;
+    }
+    public async Task<IEnumerable<UserOnVacationGetModel>> GetByUser(string UserId)
+    {
+        IEnumerable<UserOnVacation> userOnVacation = await _repository.GetAll();
+        IEnumerable<UserOnVacationGetModel> userOnVacationGetModel = userOnVacation.
+            Where(v => v.UserId == UserId).
+            Select(v => new UserOnVacationGetModel
+            {
+                Id = v.Id,
+                StartDate = v.StartDate,
+                EndDate = v.EndDate,
+                _VacationGetModel = new VacationGetModel
+                {
+                    Id = v.AnnualVacationId,
+                    AvailableVacation = v.AnnualVacation.AvailableVacation,
+                    PlannedVacation = v.AnnualVacation.PlannedVacation,
+                    UsedVacation = v.AnnualVacation.UsedVacation,
+                    Year = v.AnnualVacation.Year
+                },
+                _GetUserModel = new GetUserModel
+                {
+                    Id = v.UserId,
+                    AccessFailedCount = v.User.AccessFailedCount,
+                    Email = v.User.Email,
+                    EmailConfirmed = v.User.EmailConfirmed,
+                    LockoutEnabled = v.User.LockoutEnabled,
+                    TwoFactorEnabled = v.User.TwoFactorEnabled,
+                    LockoutEnd = v.User.LockoutEnd,
+                    NormalizedEmail = v.User.NormalizedEmail,
+                    NormalizedUserName = v.User.NormalizedUserName,
+                    PhoneNumber = v.User.PhoneNumber,
+                    PhoneNumberConfirmed = v.User.PhoneNumberConfirmed,
+                    Role = v.User.Role,
+                    UserName = v.User.UserName
+                }
+            });
+        return userOnVacationGetModel;
+    }
     public async Task<IEnumerable<UserOnVacationGetModel>> GetAll()
     {
         IEnumerable<UserOnVacation> userOnVacation = await _repository.GetAll();
@@ -143,13 +216,12 @@ public class UserOnVacationService : IUserOnVacationService
     public async Task<bool> Update(UserOnVacationUpdateModel? userOnVacationUpdateModel)
     {
         if (userOnVacationUpdateModel is null) return false;
-        UserOnVacation userOnVacation = new UserOnVacation {
-            Id = userOnVacationUpdateModel.Id,
-            UserId = userOnVacationUpdateModel.UserId,
-            AnnualVacationId = userOnVacationUpdateModel.AnnualVacationId,
-            StartDate = userOnVacationUpdateModel.StartDate,
-            EndDate = userOnVacationUpdateModel.EndDate,
-        };
+        UserOnVacation userOnVacation = await _repository.GetById(userOnVacationUpdateModel.Id);
+        userOnVacation.Id = userOnVacationUpdateModel.Id;
+        userOnVacation.UserId = userOnVacationUpdateModel.UserId;
+        userOnVacation.AnnualVacationId = userOnVacationUpdateModel.AnnualVacationId;
+        userOnVacation.StartDate = userOnVacationUpdateModel.StartDate;
+        userOnVacation.EndDate = userOnVacationUpdateModel.EndDate;
 
         await _repository.Update(userOnVacation);
         return await _repository.SaveChangesAsync();

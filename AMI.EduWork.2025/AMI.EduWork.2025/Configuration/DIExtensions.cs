@@ -22,6 +22,7 @@ public static class DIExtensions
         // Services
         services.AddScoped<IWorkDayService, WorkDayService>();
         services.AddScoped<IVacationService, VacationService>();
+        services.AddScoped<IUserOnVacationService, UserOnVacationService>();
         services.AddScoped<IContractService, ContractService>();
         services.AddScoped<ITimeSliceService, TimeSliceService>();
         services.AddScoped<IUserService, UserService>();
