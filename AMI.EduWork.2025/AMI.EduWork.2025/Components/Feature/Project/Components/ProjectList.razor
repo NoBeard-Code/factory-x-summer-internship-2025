@@ -45,7 +45,7 @@
                                Class="m-2">
                         Details
                     </MudButton>
-                    <MudButton 
+                    <MudButton OnClick="() => OnProjectTimeEntryClicked.InvokeAsync(project)"
                                Variant="Variant.Filled"
                                Color="Color.Tertiary"
                                Class="m-2">
@@ -70,6 +70,7 @@
 @code {
     [Parameter] public List<GetProjectModel>? Projects { get; set; }
     [Parameter] public EventCallback<GetProjectModel> OnDetailsClicked { get; set; }
+    [Parameter] public EventCallback<GetProjectModel> OnProjectTimeEntryClicked { get; set; }
 
     private int _selected = 1;
     private string _searchText = string.Empty;

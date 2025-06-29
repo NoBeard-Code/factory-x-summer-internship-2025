@@ -62,6 +62,7 @@ namespace AMI.EduWork._2025.Data.Migrations
                 IsActive = true,
                 HourlyRate = 10,
             });
+
             var project = new Project {
                 Id = Guid.NewGuid().ToString(),
                 Name = projectNames[random.Next(projectNames.Length)],
@@ -77,40 +78,40 @@ namespace AMI.EduWork._2025.Data.Migrations
             };
             _context.Add(workDay);
 
-            _context.Add(new TimeSlice()
-            {
+           
+            _context.Add(new TimeSlice() {
                 Id = Guid.NewGuid().ToString(),
                 WorkDayId = workDay.Id,
-                ProjectId = project.Id,
-                Start = DateTime.Now,
-                End = DateTime.Now.AddMinutes(10),
+                ProjectId = null,
+                Start = DateTime.Now.AddMinutes(-60),
+                End = DateTime.Now.AddMinutes(-30),
                 TypeOfSlice = 1,
                 UserId = user.Id,
             });
             _context.Add(new TimeSlice() {
                 Id = Guid.NewGuid().ToString(),
                 WorkDayId = workDay.Id,
-                ProjectId = project.Id,
-                Start = DateTime.Now.AddMinutes(30),
-                End = DateTime.Now.AddMinutes(60),
+                ProjectId = null,
+                Start = DateTime.Now.AddMinutes(-60),
+                End = DateTime.Now.AddMinutes(-30),
                 TypeOfSlice = 1,
                 UserId = user.Id,
             });
             _context.Add(new TimeSlice() {
                 Id = Guid.NewGuid().ToString(),
                 WorkDayId = workDay.Id,
-                ProjectId = project.Id,
-                Start = DateTime.Now.AddMinutes(60),
-                End = DateTime.Now.AddMinutes(160),
+                ProjectId = null,
+                Start = DateTime.Now.AddMinutes(-160),
+                End = DateTime.Now.AddMinutes(-60),
                 TypeOfSlice = 1,
                 UserId = user.Id,
             });
             _context.Add(new TimeSlice() {
                 Id = Guid.NewGuid().ToString(),
                 WorkDayId = workDay.Id,
-                ProjectId = project.Id,
-                Start = DateTime.Now.AddMinutes(160),
-                End = DateTime.Now.AddMinutes(240),
+                ProjectId = null,
+                Start = DateTime.Now.AddMinutes(-240),
+                End = DateTime.Now.AddMinutes(-160),
                 TypeOfSlice = 1,
                 UserId = user.Id,
             });
