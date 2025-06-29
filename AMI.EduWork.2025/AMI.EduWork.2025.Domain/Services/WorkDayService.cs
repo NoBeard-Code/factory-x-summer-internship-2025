@@ -3,6 +3,7 @@ using AMI.EduWork._2025.Domain.Helpers;
 using AMI.EduWork._2025.Domain.Interfaces.Repository;
 using AMI.EduWork._2025.Domain.Interfaces.Service;
 using AMI.EduWork._2025.Domain.Models.WorkDay;
+using AutoMapper;
 using Microsoft.Extensions.Logging;
 
 namespace AMI.EduWork._2025.Domain.Services;
@@ -11,10 +12,12 @@ public class WorkDayService : IWorkDayService
 {
     private readonly IWorkDayRepository _repository;
     private readonly ILogger<WorkDayService> _logger;
-    public WorkDayService(IWorkDayRepository repository, ILogger<WorkDayService> logger)
+    private readonly IMapper _mapper;
+    public WorkDayService(IWorkDayRepository repository, ILogger<WorkDayService> logger, IMapper mapper)
     {
         _repository = repository;
         _logger = logger;
+        _mapper = mapper;
     }
 
     public async Task<bool> Create(WorkDayModel entity)
@@ -33,11 +36,8 @@ public class WorkDayService : IWorkDayService
         }
         try
         {
-            WorkDay workday = new WorkDay
-            {
-                Id = Guid.NewGuid().ToString(),
-                Date = entity.Date.Date,
-            };
+            WorkDay workday = _mapper.Map<WorkDay>(entity);
+
             await _repository.Create(workday);
             bool result = await _repository.SaveChangesAsync();
             if(result) _logger.LogInformation("Successfully created WorkDay for date {Date}.", workday.Date);
@@ -56,11 +56,7 @@ public class WorkDayService : IWorkDayService
     public async Task<IEnumerable<GetWorkDayModel>> GetAll()
     {
         IEnumerable<WorkDay> entity = await _repository.GetAll();
-        List<GetWorkDayModel> workday = entity.Select(x => new GetWorkDayModel
-        {
-            Id = x.Id,
-            Date = x.Date,
-        }).ToList();
+        List<GetWorkDayModel> workday = _mapper.Map<List<GetWorkDayModel>>(entity);
         return workday;
     }
 
@@ -78,11 +74,8 @@ public class WorkDayService : IWorkDayService
             entity = await _repository.GetByDate(onlyDate);
 
         }
-        GetWorkDayModel workday = new GetWorkDayModel
-        {
-            Id = entity.Id,
-            Date = entity.Date,
-        };
+        GetWorkDayModel workday = _mapper.Map<GetWorkDayModel>(entity);
+
         return workday;
     }
 }

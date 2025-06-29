@@ -37,5 +37,11 @@ public class AutoMapperProfile : Profile
 
         // Project to GetProjectModelNoRefrences
         CreateMap<Project, GetProjectModelNoRefrences>();
+
+        //WorkDayModel to WorkDay
+        CreateMap<WorkDayModel, WorkDay>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(_ => Guid.NewGuid().ToString()))
+            .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.Date));
+
     }
 }
