@@ -1,4 +1,5 @@
 ﻿using AMI.EduWork._2025.Domain.Entities;
+using AMI.EduWork._2025.Domain.Helpers;
 using AMI.EduWork._2025.Domain.Interfaces.Repository;
 using AMI.EduWork._2025.Domain.Interfaces.Service;
 using AMI.EduWork._2025.Domain.Models.WorkDay;
@@ -18,9 +19,11 @@ public class WorkDayService : IWorkDayService
 
     public async Task<bool> Create(WorkDayModel entity)
     {
+        entity.Date = DateExtension.GetDateOnly(entity.Date);
+
         if (entity is null)
         {
-            _logger.LogWarning("Attempted to create WokrDay with null entity");
+            _logger.LogWarning("Attempted to create WorkDay with null entity");
             return false;
         }
         if (await _repository.DayExists(entity.Date))
@@ -63,8 +66,18 @@ public class WorkDayService : IWorkDayService
 
     public async Task<GetWorkDayModel> GetByDate(DateTime date)
     {
-        WorkDay entity = await _repository.GetByDate(date.Date);
-        if (entity is null) return null;
+        DateTime onlyDate = DateExtension.GetDateOnly(date);
+        WorkDay entity = await _repository.GetByDate(onlyDate);
+        if (entity is null)
+        {
+            _logger.LogWarning("Attempted to fetch WorkDay without date");
+            await Create(new WorkDayModel
+            {
+                Date = onlyDate
+            });
+            entity = await _repository.GetByDate(onlyDate);
+
+        }
         GetWorkDayModel workday = new GetWorkDayModel
         {
             Id = entity.Id,

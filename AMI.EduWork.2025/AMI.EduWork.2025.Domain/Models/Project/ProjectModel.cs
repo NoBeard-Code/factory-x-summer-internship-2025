@@ -19,5 +19,8 @@ namespace AMI.EduWork._2025.Domain.Models.Project {
         public List<GetUserOnProjectModel>? UsersOnProjects { get; set; }
     }
     
-
+    public class GetProjectModelNoRefrences : ProjectModel
+    {
+        public string Id { get; set; }
+    }
 }

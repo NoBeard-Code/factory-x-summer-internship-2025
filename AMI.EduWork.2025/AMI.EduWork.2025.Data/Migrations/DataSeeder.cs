@@ -43,16 +43,6 @@ namespace AMI.EduWork._2025.Data.Migrations
                 }
             }
 
-            //var user = new ApplicationUser()
-            //{
-            //    Email = "test1@gamail.com",
-            //    UserName = "test1",
-            //    EmailConfirmed = false,
-            //    PhoneNumberConfirmed = true,
-            //    PhoneNumber = "1111111"
-            //};
-            //_context.Add(user);
-
             _context.Add(new Contract()
             {
                 Id = Guid.NewGuid().ToString(),

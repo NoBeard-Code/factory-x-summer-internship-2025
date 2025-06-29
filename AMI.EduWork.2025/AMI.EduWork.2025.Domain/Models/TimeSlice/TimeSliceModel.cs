@@ -1,4 +1,5 @@
-﻿using AMI.EduWork._2025.Domain.Models.User;
+﻿using AMI.EduWork._2025.Domain.Models.Project;
+using AMI.EduWork._2025.Domain.Models.User;
 using AMI.EduWork._2025.Domain.Models.WorkDay;
 using System;
 using System.Collections.Generic;
@@ -26,7 +27,7 @@ public class GetTimeSliceModel : TimeSliceModel
     public string Id { get; internal set; }
     public required string WorkDayId { get; set; }
     public required GetWorkDayModel WorkDay { get; set; }
-    //public required GetProjectModel? Project { get; set; }
+    public required GetProjectModelNoRefrences? Project { get; set; }
     public required GetUserModel User { get; set; }
 
 }

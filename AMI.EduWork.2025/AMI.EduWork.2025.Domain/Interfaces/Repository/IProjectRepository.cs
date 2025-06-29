@@ -11,5 +11,6 @@ namespace AMI.EduWork._2025.Domain.Interfaces.Repository {
         Task<Project> GetProjectByName(string name);
         Task<bool> ProjectExists(string name);
         Task<IEnumerable<Project>> GetProjectsByDateRange(DateTime startDate, DateTime endDate);
+        Task<IEnumerable<Project>> GetAllUserProjects(string userId);
     }
 }
