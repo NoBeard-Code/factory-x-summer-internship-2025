@@ -1,0 +1,119 @@
+﻿@using System.Security.Claims
+@using AMI.EduWork._2025.Domain.Entities
+@using AMI.EduWork._2025.Domain.Interfaces.Service
+@using AMI.EduWork._2025.Domain.Models.TimeSlice
+@using AMI.EduWork._2025.Domain.Models.Project
+@using AMI.EduWork._2025.Enums
+@inject IServiceScopeFactory ServiceScopeFactory
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<MudDialog>
+    <DialogContent>
+        <MudForm @ref="form">
+            <MudText Typo="Typo.h5" Align="Align.Center" Class="mb-4">Add a Time Slice</MudText>
+
+            <MudTimePicker Label="Start Time"
+                           AmPm="false"
+                           @bind-Time="StartTime"
+                           ShowSeconds="true"
+                           Required="true"
+                           Class="mb-2" />
+
+            <MudTimePicker Label="End Time"
+                           AmPm="false"
+                           @bind-Time="EndTime"
+                           ShowSeconds="true"
+                           Required="true"
+                           Class="mb-2" />
+
+            <MudSelect T="string"
+                       Label="Project"
+                       @bind-Value="TimeSlice.ProjectId"
+                       Required="true"
+                       Class="mb-2">
+                @foreach (var project in UserProjects)
+                {
+                    <MudSelectItem Value="@project.Id">@project.Name</MudSelectItem>
+                }
+            </MudSelect>
+
+            <MudSelect T="TimeSliceType"
+                       Label="Type"
+                       @bind-Value="SelectedType"
+                       Required="true"
+                       Class="mb-2">
+                @foreach (var type in Enum.GetValues<TimeSliceType>())
+                {
+                    <MudSelectItem Value="@type">@type.ToString()</MudSelectItem>
+                }
+            </MudSelect>
+
+            <MudTextField T="string"
+                          Label="Description"
+                          @bind-Value="TimeSlice.Description"
+                          Lines="2"
+                          Class="mb-2" />
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Save" Color="Color.Primary" Variant="Variant.Filled">Save</MudButton>
+        <MudButton OnClick="Cancel" Color="Color.Secondary" Variant="Variant.Text">Cancel</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public DateTime Date { get; set; }
+
+    private MudForm form;
+    private TimeSliceModel TimeSlice { get; set; } = new() { UserId = string.Empty };
+    private IEnumerable<GetProjectModel> UserProjects { get; set; } = new List<GetProjectModel>();
+    private TimeSpan? StartTime { get; set; }
+    private TimeSpan? EndTime { get; set; }
+
+    private TimeSliceType SelectedType
+    {
+        get => (TimeSliceType)TimeSlice.TypeOfSlice;
+        set => TimeSlice.TypeOfSlice = (byte)value;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                  ?? user.FindFirst("sub")?.Value
+                  ?? string.Empty;
+        TimeSlice.UserId = userId;
+
+        using var scope = ServiceScopeFactory.CreateScope();
+        var projectService = scope.ServiceProvider.GetRequiredService<IProjectService>();
+        UserProjects = await projectService.GetAllUserProjects(userId);
+    }
+
+    private async Task Save()
+    {
+        await form.Validate();
+        if (!form.IsValid) return;
+
+        if (StartTime.HasValue && EndTime.HasValue)
+        {
+            TimeSlice.Start = Date.Date.Add(StartTime.Value);
+            TimeSlice.End = Date.Date.Add(EndTime.Value);
+        }
+        else
+        {
+            // Handle missing time values
+            return;
+        }
+        using var scope = ServiceScopeFactory.CreateScope();
+        var timeSliceService = scope.ServiceProvider.GetRequiredService<ITimeSliceService>();
+        await timeSliceService.Create(TimeSlice);
+
+        MudDialog.Close(DialogResult.Ok(TimeSlice));
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+}

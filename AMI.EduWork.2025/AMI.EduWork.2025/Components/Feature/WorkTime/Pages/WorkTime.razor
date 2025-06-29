@@ -2,182 +2,140 @@
 @using AMI.EduWork._2025.Domain.Interfaces.Service
 @using AMI.EduWork._2025.Domain.Models.TimeSlice
 @using AMI.EduWork._2025.Domain.Models.User
+@using AMI.EduWork._2025.Components.Feature.WorkTime.Components
 @inject IServiceScopeFactory ServiceScopeFactory
+@inject IDialogService DialogService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@using Microsoft.AspNetCore.Authorization
+@using System.Security.Claims
 
-<PageTitle>Work time</PageTitle>
+@attribute [Authorize]
 
-<h3>Work time</h3>
-<p>This component demonstrates showing and writing work time data.</p>
-<p>Todays date: @today</p>
+<!-- TOP BAR -->
+<MudPaper Class="d-flex align-center justify-space-between" Style="padding:8px;">
+    <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddDialogAsync">
+        Add slice manually
+    </MudButton>
+    <div class="d-flex align-center">
+        <MudText Typo="Typo.h6" Class="mr-2" Style="font-family:monospace;">
+            00:00:00
+        </MudText>
+        <MudIconButton Icon="@Icons.Material.Filled.PlayArrow" Color="Color.Primary" Size="Size.Large" OnClick="StartTimer" />
+    </div>
+</MudPaper>
 
-@if (firstUser == null)
-{
-    <p>Fetching first user...</p>
-}
-else
-{
-    <p>Id of @firstUser.UserName in database is: @firstUser.Id</p>
-}
 
-<button @onclick="GetAllUserTimeSlices">Get All Time Slices</button>
-<button @onclick="GetAllUserTimeSlicesByDate">Get Time Slices By Date</button>
-<button @onclick="ClearTimeslices">Clear Table</button>
+<!-- DATE NAVIGATION BAR -->
+<MudPaper Class="d-flex align-center justify-space-between" Style="background-color:slategrey; padding:8px;">
+    <div style="width: 180px;"></div>
+    <div class="d-flex align-center" style="gap: 8px;">
+        <MudIconButton Icon="@Icons.Material.Filled.ChevronLeft" Color="Color.Inherit" OnClick="PreviousDate" />
+        <MudText Typo="Typo.h6" Style="font-weight:bold; color:white;">
+            @currentDate?.ToString("dd.MM.yyyy")
+        </MudText>
+        <MudIconButton Icon="@Icons.Material.Filled.ChevronRight" Color="Color.Inherit" OnClick="NextDate" />
+    </div>
+    <div style="flex: 0 0 auto;">
+        <MudDatePicker Date="@currentDate"
+                       DateChanged="OnDateChanged"
+                       DateFormat="dd.MM.yyyy" 
+                       Style="font-weight:bold; color:white;" />
+    </div>
+</MudPaper>
 
-@if (timeslices == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-<MudContainer>
-    <MudGrid Spacing="2">
-        @if (timeslices != null)
-        {
-            @foreach (var timeslice in timeslices)
-            {
-                <MudItem xs="12" sm="6" md="4" lg="3">
-                    <TimeSliceCard TimeSlice="timeslice" />
-                </MudItem>
-            }
-        }
-    </MudGrid>
-</MudContainer>
-
-}
-
-@if (newTimeSlice != null)
-{
-    <EditForm Model="newTimeSlice" OnValidSubmit="CreateUserTimeSlice">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-
-        <div class="form-group">
-            <label>Start (dd.MM.yy. HH:mm:ss):</label>
-            <InputText @bind-Value="startString" class="form-control" placeholder="e.g. 25.06.25. 14:30:00" />
-        </div>
-        <div class="form-group">
-            <label>End (dd.MM.yy. HH:mm:ss):</label>
-            <InputText @bind-Value="endString" class="form-control" placeholder="e.g. 25.06.25. 15:00:00" />
-        </div>
-        <div class="form-group">
-            <label>Type Of Slice:</label>
-            <InputSelect @bind-Value="selectedTypeOfSlice" class="form-control">
-                @foreach (TimeSliceType type in Enum.GetValues(typeof(TimeSliceType)))
+<!-- MAIN CONTENT -->
+<MudGrid Class="mt-4" Style="height:400px;">
+    <MudItem xs="12" md="8">
+        <MudContainer>
+            <MudGrid Spacing="2">
+                @if (timeslices != null)
                 {
-                    <option value="@type">@type</option>
+                    @foreach (var timeslice in timeslices)
+                    {
+                        <MudItem xs="12">
+                            <TimeSliceCard TimeSlice="timeslice" OnEditRequested="OpenUpdateDialog" />
+                        </MudItem>
+                    }
                 }
-            </InputSelect>
-        </div>
-        <div class="form-group">
-            <label>Description:</label>
-            <InputText @bind-Value="newTimeSlice.Description" class="form-control" />
-        </div>
-        <button type="submit" class="btn btn-primary">Save Time Slice</button>
-    </EditForm>
-}
+            </MudGrid>
+        </MudContainer>
+    </MudItem>
+    
+    <MudItem xs="12" md="4">
+        <MudPaper Class="pa-4" Style="height:100%; background-color:#444444; color:white;">
+            <!-- Placeholder for statistics -->
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
 
 @code {
-    private readonly DateTime today = DateTime.Now;
+    private DateTime? currentDate = DateTime.Today;
+    public DateTime nonNullableDate => currentDate ?? DateTime.Today;
     private List<GetTimeSliceModel> timeslices;
-    private GetUserModel firstUser;
-    private TimeSliceModel newTimeSlice;
+    private string firstUser;
 
     protected override async Task OnInitializedAsync()
     {
         await LoadFirstUser();
+        await GetAllUserTimeSlicesByDate();
     }
 
     private async Task LoadFirstUser()
     {
-        using var scope = ServiceScopeFactory.CreateScope();
-        var _userService = scope.ServiceProvider.GetRequiredService<IUserService>();
-        firstUser = (await _userService.GetAll()).FirstOrDefault();
-
-        if (firstUser != null)
-        {
-            newTimeSlice = new TimeSliceModel { UserId = firstUser.Id };
-        }
-    }
-
-    protected async Task GetAllUserTimeSlices()
-    {
-        if (firstUser == null) return;
-
-        using var scope = ServiceScopeFactory.CreateScope();
-        var _timeSliceService = scope.ServiceProvider.GetRequiredService<ITimeSliceService>();
-        var result = await _timeSliceService.GetAllUserTimeSlices(firstUser.Id);
-        timeslices = result?.ToList() ?? new List<GetTimeSliceModel>();
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        firstUser = user.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                  ?? user.FindFirst("sub")?.Value
+                  ?? string.Empty;
     }
 
     protected async Task GetAllUserTimeSlicesByDate()
     {
         if (firstUser == null) return;
-
         using var scope = ServiceScopeFactory.CreateScope();
         var _timeSliceService = scope.ServiceProvider.GetRequiredService<ITimeSliceService>();
-        var result = await _timeSliceService.GetAllUserTimeSlicesByDate(firstUser.Id, today);
+        var result = await _timeSliceService.GetAllUserTimeSlicesByDate(firstUser, nonNullableDate);
         timeslices = result?.ToList() ?? new List<GetTimeSliceModel>();
     }
 
-    protected void ClearTimeslices()
+    // DIALOG OPEN
+    private Task OpenAddDialogAsync()
     {
-        timeslices = null;
+        var options = new DialogOptions { CloseOnEscapeKey = true };
+
+        var parameters = new DialogParameters { ["Date"] = nonNullableDate }; 
+        return DialogService.ShowAsync<AddTimeSlice>("Add Time Slice", parameters);
     }
 
-
-
-    //-------------------------------------
-
-    private string startString { get; set; }
-    private string endString { get; set; }
-
-    protected override void OnInitialized()
+    private async Task OnDateChanged(DateTime? newDate)
     {
-        var now = DateTime.Now;
-        startString = now.ToString("dd.MM.yy. HH:mm:ss");
-        endString = now.AddMinutes(30).ToString("dd.MM.yy. HH:mm:ss");
+        currentDate = newDate;
+        await GetAllUserTimeSlicesByDate();
     }
 
-    protected async Task CreateUserTimeSlice()
+    private async Task PreviousDate()
     {
-        if (!DateTime.TryParseExact(startString, "dd.MM.yy. HH:mm:ss", null, System.Globalization.DateTimeStyles.None, out var start))
-        {
-            return;
-        }
-        if (!DateTime.TryParseExact(endString, "dd.MM.yy. HH:mm:ss", null, System.Globalization.DateTimeStyles.None, out var end))
-        {
-            return;
-        }
-
-        newTimeSlice.Start = start;
-        newTimeSlice.End = end;
-
-        using var scope = ServiceScopeFactory.CreateScope();
-        var _timeSliceService = scope.ServiceProvider.GetRequiredService<ITimeSliceService>();
-
-        await _timeSliceService.Create(newTimeSlice);
-
-        var now = DateTime.Now;
-        startString = now.ToString("dd.MM.yy. HH:mm:ss");
-        endString = now.AddMinutes(30).ToString("dd.MM.yy. HH:mm:ss");
-        newTimeSlice.TypeOfSlice = 0;
-        newTimeSlice.Description = null;
-
-        
-    }
-    //-------------------------------------
-
-    public enum TimeSliceType
-    {
-        Work = 1,
-        Break = 2,
-        Meeting = 3
+        currentDate = currentDate?.AddDays(-1);
+        await GetAllUserTimeSlicesByDate();
     }
 
-    private TimeSliceType selectedTypeOfSlice
+    private async Task NextDate()
     {
-        get => (TimeSliceType)newTimeSlice.TypeOfSlice;
-        set => newTimeSlice.TypeOfSlice = (byte)value;
+        currentDate = currentDate?.AddDays(1);
+        await GetAllUserTimeSlicesByDate();
     }
 
+    private void StartTimer()
+    {
+        // NEED TO IMPLEMENT
+    }
+
+    //-----------------------------------
+
+    private async Task OpenUpdateDialog(GetTimeSliceModel timeSlice)
+    {
+        var parameters = new DialogParameters { ["TimeSlice"] = timeSlice };
+        await DialogService.ShowAsync<UpdateTimeSlice>("Update Time Slice", parameters);
+    }
 }
