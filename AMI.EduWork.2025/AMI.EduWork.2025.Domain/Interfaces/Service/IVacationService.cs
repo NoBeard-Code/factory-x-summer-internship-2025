@@ -1,4 +1,4 @@
-﻿using AMI.EduWork._2025.Domain.Models.VacationModel;
+﻿using AMI.EduWork._2025.Domain.Models.UserOnVacationModel;
 
 namespace AMI.EduWork._2025.Domain.Interfaces.Service
 {
@@ -6,8 +6,8 @@ namespace AMI.EduWork._2025.Domain.Interfaces.Service
     {
         Task<VacationGetModel> GetById(string id);
         Task<IEnumerable<VacationGetModel>> GetAll();
-        Task<bool> Create(VacationCreateModel? vacationCreateModel);
-        Task<bool> Update(VacationUpdateModel? vacationUpdateModel);
+        Task<bool> Create(VacationCreateModel userOnVacationCreateModel);
         Task<bool> Delete(string id);
+        Task<bool> Update(VacationUpdateModel userOnVacationUpdateModel);
     }
 }

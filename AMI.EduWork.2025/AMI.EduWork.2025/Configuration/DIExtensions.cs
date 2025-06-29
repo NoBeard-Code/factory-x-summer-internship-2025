@@ -10,8 +10,8 @@ public static class DIExtensions
     {
         // Repositories
         services.AddScoped<IWorkDayRepository, WorkDayRepository>();
+        services.AddScoped<IAnnualVacationRepository, AnnualVacationRepository>();
         services.AddScoped<IVacationRepository, VacationRepository>();
-        services.AddScoped<IUserOnVacationRepository, UserOnVacationRepository>();
         services.AddScoped<IContractRepository, ContractRepository>();
         services.AddScoped<ITimeSliceRepository, TimeSliceRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
@@ -21,8 +21,8 @@ public static class DIExtensions
 
         // Services
         services.AddScoped<IWorkDayService, WorkDayService>();
+        services.AddScoped<IAnnualVacationService, AnnualVacationService>();
         services.AddScoped<IVacationService, VacationService>();
-        services.AddScoped<IUserOnVacationService, UserOnVacationService>();
         services.AddScoped<IContractService, ContractService>();
         services.AddScoped<ITimeSliceService, TimeSliceService>();
         services.AddScoped<IUserService, UserService>();

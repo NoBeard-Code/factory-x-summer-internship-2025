@@ -24,7 +24,7 @@ namespace AMI.EduWork._2025.Data
             modelBuilder.ApplyConfiguration(new SickLeaveConfig());
             modelBuilder.ApplyConfiguration(new TimeSliceConfig());
             modelBuilder.ApplyConfiguration(new UserOnProjectConfig());
-            modelBuilder.ApplyConfiguration(new UserOnVacationConfig());
+            modelBuilder.ApplyConfiguration(new VacationConfig());
             modelBuilder.ApplyConfiguration(new WorkDayConfig());
         }
 
@@ -35,7 +35,7 @@ namespace AMI.EduWork._2025.Data
         public DbSet<SickLeave> SickLeaves { get; set; }
         public DbSet<TimeSlice> TimeSlices { get; set; }
         public DbSet<UserOnProject> UsersOnProjects { get; set; }
-        public DbSet<UserOnVacation> UsersOnVacations { get; set; }
+        public DbSet<Vacation> Vacations { get; set; }
         public DbSet<WorkDay> WorkDays { get; set; }
     }
 }

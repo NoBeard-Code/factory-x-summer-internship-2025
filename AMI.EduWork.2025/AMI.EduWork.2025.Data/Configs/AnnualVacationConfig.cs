@@ -13,6 +13,9 @@ public class AnnualVacationConfig : IEntityTypeConfiguration<AnnualVacation>
 {
     public void Configure(EntityTypeBuilder<AnnualVacation> builder)
     {
+        builder.Property(uov => uov.UserId)
+            .IsRequired(); 
+
         builder.Property(av => av.UsedVacation)
             .IsRequired();
 
@@ -25,8 +28,13 @@ public class AnnualVacationConfig : IEntityTypeConfiguration<AnnualVacation>
         builder.Property(av => av.AvailableVacation)
             .IsRequired();
 
-        builder.HasMany(av => av.UsersOnVacations)
+        builder.HasMany(av => av.Vacations)
             .WithOne() 
-            .IsRequired(false); 
+            .IsRequired(false);
+
+        builder.HasOne(uov => uov.User)
+            .WithMany(u => u.AnnualVacations)
+            .HasForeignKey(uov => uov.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
