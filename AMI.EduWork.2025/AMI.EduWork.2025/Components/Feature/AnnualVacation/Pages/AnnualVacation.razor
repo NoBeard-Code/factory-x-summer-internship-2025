@@ -5,12 +5,15 @@
 @using AMI.EduWork._2025.Domain.Models.VacationModel
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
+<MudThemeProvider />
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+@using MudBlazor
 
 <PageTitle>Vacations</PageTitle>
 
 <h1>Annual Vacations</h1>
-
-<p>CRUD operations on contracts</p>
 
 @if (_annualVacationGetModel == null)
 {
@@ -18,33 +21,31 @@
 }
 else
 {
-    <a href="/annualVacation/create">Add vacation for user</a>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="contracts/add">Create annual vacation</MudButton>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Year</th>
-                <th>Available vacation</th>
-                <th>Planned vacation</th>
-                <th>User</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var model in _annualVacationGetModel)
-            {
-                <tr>
-                    <td>@model.Year</td>
-                    <td>@model.AvailableVacation</td>
-                    <td>@model.PlannedVacation</td>
-                    <td>@model._GetUserModel.UserName</td>
-                    <input type="button" value="Delete" class="btn btn-danger" @onclick="(async () => await DeleteAnnualVacation(model.Id))" />
-                    <input type="button" value="Update" class="btn btn-info" @onclick="(async () => await UpdateAnnualVacation(model.Id))" />
+    <MudTable Items="@_annualVacationGetModel" Hover="true" SortLabel="Sort By">
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortBy="new Func<AnnualVacationGetModel, object>(x => x._GetUserModel.UserName)">User</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<AnnualVacationGetModel, object>(x => x.Year)">Year</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<AnnualVacationGetModel, object>(x => x.AvailableVacation)">Available vacation</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<AnnualVacationGetModel, object>(x => x.UsedVacation)">Used vacation</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<AnnualVacationGetModel, object>(x => x.PlannedVacation)">Planned vacation</MudTableSortLabel></MudTh>
+            <MudTh>Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Nr">@context._GetUserModel.UserName</MudTd>
+            <MudTd DataLabel="Sign">@context.Year</MudTd>
+            <MudTd DataLabel="Name">@context.AvailableVacation</MudTd>
+            <MudTd DataLabel="Name">@context.UsedVacation</MudTd>
+            <MudTd DataLabel="Position">@context.PlannedVacation</MudTd>
+            <MudButton Variant="Variant.Filled" Color="Color.Info" onclick="(async () => await UpdateAnnualVacation(context.Id))">Update</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Secondary" onclick="(async () => await DeleteAnnualVacation(context.Id))">Delete</MudButton>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[] { 10, 25, 50, 100 }" />
+        </PagerContent>
+    </MudTable>
 
-                </tr>
-            }
-        </tbody>
-    </table>
 }
 @inject IAnnualVacationService iannualVacationService
 @code {

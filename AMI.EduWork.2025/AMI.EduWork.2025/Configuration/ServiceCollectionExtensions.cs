@@ -5,6 +5,7 @@ using AMI.EduWork._2025.Domain;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using MudBlazor.Services;
 
 namespace AMI.EduWork._2025.Configuration;
 public static class ServiceCollectionExtensions
@@ -16,6 +17,7 @@ public static class ServiceCollectionExtensions
                 .AddAuthenticationStateSerialization();
                 //.AddInteractiveWebAssemblyComponents();
 
+        services.AddMudServices();
         services.AddCascadingAuthenticationState();
         services.AddScoped<IdentityUserAccessor>();
         services.AddScoped<IdentityRedirectManager>();
