@@ -1,6 +1,8 @@
-﻿using AMI.EduWork._2025.Domain.Entities;
+﻿using AMI.EduWork._2025.Domain;
+using AMI.EduWork._2025.Domain.Entities;
 using AMI.EduWork._2025.Domain.Interfaces.Repository;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,10 +27,14 @@ public class UserOnProjectRepository : Repository<UserOnProject>, IUserOnProject
     public async Task<IEnumerable<UserOnProject>> GetProjectsByUserId(string userId)
     {
         return await _dbSet
-            .Include(oup => oup.User)
-            .Include(oup => oup.Project)
-            .Where(oup => oup.UserId == userId)
-            .ToListAsync();
+                .Include(oup => oup.User)
+                .Include(oup => oup.Project)
+                .ThenInclude(p => p.TimeSlices)
+                .Include(oup => oup.Project)
+                .ThenInclude(p => p.UsersOnProjects)
+                .Where(oup => oup.UserId == userId)
+                .ToListAsync();
+
     }
 
     public async Task<UserOnProject> GetUserOnProject(string userId, string projectId)
@@ -67,6 +73,14 @@ public class UserOnProjectRepository : Repository<UserOnProject>, IUserOnProject
         return _dbSet
             .Where(oup => oup.Id == userOnProjectId)
             .ExecuteDeleteAsync();
+    }
+
+    public async Task<IEnumerable<UserOnProject>> GetProjectsByApplicationUser(ApplicationUser user) {
+        return await _dbSet
+            .Include(oup => oup.User)
+            .Include(oup => oup.Project)
+            .Where(oup => oup.UserId == user.Id)
+            .ToListAsync();
     }
 }
 

@@ -1,0 +1,374 @@
+﻿@page "/projects"
+@using AMI.EduWork._2025.Components.Feature.Project.Components
+@using AMI.EduWork._2025.Domain.Interfaces.Service
+@using AMI.EduWork._2025.Domain.Models.Project
+@using AMI.EduWork._2025.Domain.Models.TimeSlice
+@using AMI.EduWork._2025.Domain.Models.UserOnProject
+@using Microsoft.AspNetCore.Authorization
+@inject IProjectService ProjectService
+@inject IUserOnProjectService UserOnProjectService
+@inject ITimeSliceService TimeSliceService
+@inject AuthenticationStateProvider AuthStateProvider
+@inject IDialogService DialogService
+@rendermode InteractiveServer
+@attribute [Authorize]
+
+@if (isLoading)
+{
+    <MudProgressCircular Class="m-auto mt-6" Size="Size.Large" Color="Color.Primary" Indeterminate="true" />
+}
+else
+{
+    @if((availableTimeEntries != null && availableTimeEntries.Count > 0) && !alertDissmised)
+    {
+        <MudAlert Class="m-6" OnClick="DismissAlert" Severity="Severity.Warning" Variant="Variant.Filled">@GetDurationForAlert(availableTimeEntries)</MudAlert>
+    }
+    <MudPaper Class="pa-4">
+    <MudText Typo="Typo.h5">My projects</MudText>
+    <ProjectList Projects="userProjects" OnDetailsClicked="ShowDetails" OnProjectTimeEntryClicked="OpenAssignTimeEntryDialog"/>
+
+    <MudDivider Class="my-4" />
+
+    <MudButton OnClick="OpenDialogAsync" Color="Color.Primary" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add">
+        Novi Projekt
+    </MudButton>
+
+    <ProjectCreateComponent OnProjectCreated="LoadUserProjects" />
+
+    <MudGrid Class="mt-4">
+        <MudItem xs="12" md="6">
+            <MudText Typo="Typo.h4">All Time Project Time</MudText>
+            <MudChart Class="pa-8 mt-4" ChartType="ChartType.Donut"
+                      Width="400px" Height="400px"
+                      InputData="@allTimeData"
+                      InputLabels="@allTimeLabels">
+                <CustomGraphics>
+                    <text x="50%" y="35%" dominant-baseline="middle" text-anchor="middle" fill="black" font-size="20">Total</text>
+                    <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="black" font-size="20">
+                        @FormatTimeSpan(allTimeData.Sum())
+                    </text>
+                </CustomGraphics>
+            </MudChart>
+        </MudItem>
+
+        <MudItem xs="12" md="6">
+            <MudDateRangePicker DateRange="_selectedRange"
+                            DateRangeChanged="OnRangeChanged"
+                            PickerVariant="PickerVariant.Inline"
+                            Label="Select Date Range"
+                            Margin="Margin.Dense"
+                            Class="my-2" />
+        <div style="display: flex; flex-direction: column; align-items: center;">
+        
+
+        <MudChart Class="pa-8 mt-4"
+                  ChartType="ChartType.Donut"
+                  Width="400px"
+                  Height="400px"
+                  InputData="@monthlyData"
+                  InputLabels="@monthlyLabels">
+            <CustomGraphics>
+                <text x="50%" y="35%" dominant-baseline="middle" text-anchor="middle" fill="black" font-size="20">Total</text>
+                <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="black" font-size="20">
+                    @FormatTimeSpan(monthlyData.Sum())
+                </text>
+            </CustomGraphics>
+         </MudChart>
+        </div>
+    </MudItem>
+
+    </MudGrid>
+</MudPaper>
+}
+@code {
+    private List<GetProjectModel>? userProjects;
+    private GetProjectModel? selectedProject;
+    private string? userId;
+    private bool isLoading = true;
+    private Dictionary<string, List<float>> timeSlicesByProject = new();
+    private List<GetTimeSliceModel> availableTimeEntries = new();
+    private List<TimeSpan> getTimeEntries = new();
+    private double[] allTimeData = Array.Empty
+    <double>();
+    private string[] allTimeLabels = Array.Empty<string>();
+    private bool alertDissmised = false;
+    private double[] monthlyData = Array.Empty<double>();
+    private string[] monthlyLabels = Array.Empty<string>();
+
+    private DateRange _selectedRange = new(DateTime.Today.AddDays(-7), DateTime.Today);
+
+
+    private DateTime _selectedMonth = DateTime.Today;
+    private async Task OnRangeChanged(DateRange range)
+    {
+        _selectedRange = range;
+        await SetupChartData(); 
+        StateHasChanged();
+    }
+
+    private void DismissAlert()
+    {
+        alertDissmised = true;
+        StateHasChanged();
+    }
+
+    private string GetDurationForAlert(List<GetTimeSliceModel> slice)
+    {
+        getTimeEntries.Clear();
+        foreach(var ts in slice)
+        {
+            if (ts.Start.HasValue && ts.End.HasValue)
+            {
+                var duration = DateTime.Now - ts.End.Value;
+                getTimeEntries.Add(duration);
+            }
+        }
+        return $"You have overdue project time entries: {getTimeEntries.Count} entries. \n With last entry being {FormatTimeSpan(getTimeEntries.Min(ts => ts.TotalHours))} ago.  Please fill them in as soon as possible.";
+
+    }
+    private string FormatTimeSpan(double totalHours)
+    {
+        var span = TimeSpan.FromHours(totalHours);
+        if (span.Hours > 0 && span.Minutes > 0)
+            return $"{span.Hours} hour{(span.Hours == 1 ? "" : "s")} {span.Minutes} minute{(span.Minutes == 1 ? "" : "s")}";
+        if (span.Hours > 0)
+            return $"{span.Hours} hour{(span.Hours == 1 ? "" : "s")}";
+        return $"{span.Minutes} minute{(span.Minutes == 1 ? "" : "s")}";
+    }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        isLoading = true;
+        try {
+            if (user.Identity?.IsAuthenticated ?? false) {
+                userId = user.FindFirst("sub")?.Value
+                      ?? user.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            }
+
+            await LoadUserProjects();
+            await SetupChartData();
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task LoadUserProjects()
+    {
+        if (userId != null)
+        {
+            var userOnProjects = await UserOnProjectService.GetProjectsByUserId(userId);
+            var timeSlices = await TimeSliceService.GetAllUserTimeSlices(userId);
+            //---------------------------------------------------
+            // Has to change after merge and delete this comment
+            //---------------------------------------------------
+            availableTimeEntries = timeSlices.Where(ts => ts.ProjectId == null && ts.TypeOfSlice == 1).ToList();
+
+            var projectIds = userOnProjects.Select(uop => uop.Project.Id).Distinct().ToList();
+            userProjects = new List<GetProjectModel>();
+            timeSlicesByProject.Clear();
+
+            foreach (var projectId in projectIds)
+            {
+                var project = await ProjectService.GetById(projectId);
+                if (project != null)
+                {
+                    var projectTimeSlices = timeSlices
+                        .Where(ts => ts.ProjectId == projectId && ts.Start.HasValue && ts.End.HasValue)
+                        .ToList();
+
+                    var durations = projectTimeSlices
+                        .Select(ts => (float)(ts.End.Value - ts.Start.Value).TotalHours)
+                        .ToList();
+
+                    var key = $"{project.Name}-({GetProjectTypeName(project.TypeOfProject)})-{project.Id}";
+                    timeSlicesByProject[key] = durations;
+
+                    project.TimeSlices = projectTimeSlices;
+                    userProjects.Add(project);
+                }
+            }
+        }
+    }
+
+    private async Task SetupChartData()
+    {
+        // All-time data
+        allTimeLabels = timeSlicesByProject.Keys
+            .Select(key => key.Split("-(")[0])
+            .ToArray();
+
+        allTimeData = timeSlicesByProject.Values
+            .Select(list => Math.Round(list.Sum(), 2))
+            .ToArray();
+
+        // Monthly data
+        var selectedMonth = _selectedMonth.Month;
+        var selectedYear = _selectedMonth.Year;
+
+        var monthlyDurations = new Dictionary<string, double>();
+
+        foreach (var project in userProjects ?? new())
+        {
+            var key = $"{project.Name}-({GetProjectTypeName(project.TypeOfProject)})-{project.Id}";
+
+            var monthTotal = (project.TimeSlices ?? new())
+                .Where(ts => ts.Start.HasValue && ts.End.HasValue &&
+                            ts.Start.Value.Date >= _selectedRange.Start?.Date &&
+                            ts.Start.Value.Date <= _selectedRange.End?.Date)
+                .Sum(ts => (ts.End!.Value - ts.Start!.Value).TotalHours);
+
+            if (monthTotal > 0)
+                monthlyDurations[key] = Math.Round(monthTotal, 2);
+        }
+
+        monthlyLabels = monthlyDurations.Keys
+            .Select(key => key.Split("-(")[0])
+            .ToArray();
+
+        monthlyData = monthlyDurations.Values.ToArray();
+    }
+
+    private async Task OnMonthChanged(DateTime? date)
+    {
+        if (date is not null)
+        {
+            _selectedMonth = date.Value;
+            await SetupChartData();
+            StateHasChanged();
+        }
+    }
+
+    private Task ShowDetails(GetProjectModel project)
+    {
+        selectedProject = project;
+
+        var dialogParameters = new DialogParameters
+        {
+            { "Project", selectedProject }
+        };
+
+        var options = new DialogOptions
+        {
+            MaxWidth = MaxWidth.False,
+            FullWidth = true,
+            FullScreen = false,
+            CloseOnEscapeKey = true,
+            Position = DialogPosition.Center
+        };
+
+        return DialogService.ShowAsync<ProjectDetailsDialog>("Project Details", dialogParameters, options);
+    }
+
+    private Task OpenDialogAsync()
+    {
+        var dialogParameters = new DialogParameters
+        {
+            { "OnProjectCreated", EventCallback.Factory.Create<ProjectModel>(this, CreateUserProjects) }
+        };
+
+        var options = new DialogOptions
+        {
+            CloseOnEscapeKey = true,
+            MaxWidth = MaxWidth.Small,
+            FullWidth = true,
+            Position = DialogPosition.Center,
+        };
+
+        return DialogService.ShowAsync<ProjectCreateDialog>("Dodaj Projekt", dialogParameters, options);
+    }
+
+    private Task ErrorDialogAsync(String message)
+    {
+        var dialogParameters = new DialogParameters
+        {
+            { "Message", message}
+        };
+
+        var options = new DialogOptions
+        {
+            CloseOnEscapeKey = true,
+            MaxWidth = MaxWidth.Small,
+            FullWidth = true,
+            Position = DialogPosition.Center,
+        };
+
+        return DialogService.ShowAsync<Shared.ErrorDialog>("Dodaj Projekt", dialogParameters, options);
+    }
+
+    private async Task OpenAssignTimeEntryDialog(GetProjectModel project)
+    {
+    
+
+    var parameters = new DialogParameters
+    {
+        { "Project", project },
+        { "AvailableTimeSlices", availableTimeEntries },
+        { "OnTimeSliceAssigned", EventCallback.Factory.Create<GetTimeSliceModel>(this, HandleAssignment) }
+    };
+
+    var options = new DialogOptions { CloseOnEscapeKey = true, FullWidth = true };
+
+    await DialogService.ShowAsync<ProjectTimeEntryDialog>("Assign Time Entry", parameters, options);
+    }
+
+    private async Task HandleAssignment(GetTimeSliceModel assignedSlice)
+    {
+    if (assignedSlice == null || string.IsNullOrEmpty(assignedSlice.ProjectId))
+        return;
+
+    try
+    {
+        
+        await TimeSliceService.Update(assignedSlice); 
+
+        
+        await LoadUserProjects(); 
+        await SetupChartData();
+    }
+    catch (Exception ex)
+    {
+        await DialogService.ShowMessageBox("Error", $"Failed to assign time entry: {ex.Message}", "OK");
+    }
+    }
+
+
+
+    private async Task CreateUserProjects(ProjectModel project)
+    {
+        if (userId == null)
+            return;
+        try
+        {
+            await ProjectService.Create(project);
+        }catch(Exception e)
+        {
+            await ErrorDialogAsync(e.Message);
+            return;
+        }
+        
+        var createdProject = await ProjectService.GetProjectByName(project.Name);
+        await UserOnProjectService.Create(new UserOnProjectModel
+        {
+            UserId = userId,
+            ProjectId = createdProject.Id,
+            ProjectRole = project.TypeOfProject.ToString()
+        });
+
+        await LoadUserProjects();
+        await SetupChartData();
+    }
+
+    private string GetProjectTypeName(byte type) => type switch
+    {
+        0 => "Privatni",
+        1 => "Poslovni",
+        2 => "Edukacijski",
+        _ => "Nepoznat"
+    };
+}

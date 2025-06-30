@@ -45,7 +45,7 @@ namespace AMI.EduWork._2025
             }
 
             var dataSeeder = scope.ServiceProvider.GetRequiredService<DataSeeder>();
-            dataSeeder.SeedData();
+            dataSeeder.SeedDataAsync();
 
             app.UseHttpsRedirection();
 

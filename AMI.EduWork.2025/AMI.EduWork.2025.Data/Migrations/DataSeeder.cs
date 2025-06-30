@@ -15,6 +15,16 @@ namespace AMI.EduWork._2025.Data.Migrations
             _userManager = userManager;
 
         }
+        Random random = new Random();
+        string[] projectNames = new[] { "Apollo", "Orion", "Zenith", "Nova", "Quantum", "Atlas" };
+        string[] descriptions = new[] {
+        "Optimizing system performance.",
+        "Developing next-gen features.",
+        "Research and innovation phase.",
+        "Team collaboration ongoing.",
+        "Bug fixing and patching.",
+        "Client delivery preparations."
+        };
 
         public async Task SeedData()
         {
@@ -43,6 +53,17 @@ namespace AMI.EduWork._2025.Data.Migrations
                 }
             }
 
+                var result = await _userManager.CreateAsync(user, "Ja123456!"); 
+                if (!result.Succeeded) {
+                    Console.WriteLine("User creation failed:");
+                    foreach (var error in result.Errors)
+                        Console.WriteLine($" - {error.Description}");
+                    return;
+                }
+            } else {
+                user = existingUser;
+            }
+
             _context.Add(new Contract()
             {
                 Id = Guid.NewGuid().ToString(),
@@ -51,12 +72,12 @@ namespace AMI.EduWork._2025.Data.Migrations
                 IsActive = true,
                 HourlyRate = 10,
             });
-            var project = new Project()
-            {
+
+            var project = new Project {
                 Id = Guid.NewGuid().ToString(),
-                Name = "Test",
-                TypeOfProject = 1,
-                Description = "Test Test Test Test Test ",
+                Name = projectNames[random.Next(projectNames.Length)],
+                TypeOfProject = (byte)random.Next(0, 3), // 0 = Private, 1 = Business, 2 = Educational
+                Description = descriptions[random.Next(descriptions.Length)]
             };
             _context.Add(project);
 
@@ -67,13 +88,49 @@ namespace AMI.EduWork._2025.Data.Migrations
             };
             _context.Add(workDay);
 
-            _context.Add(new TimeSlice()
-            {
+           
+            _context.Add(new TimeSlice() {
                 Id = Guid.NewGuid().ToString(),
                 WorkDayId = workDay.Id,
-                ProjectId = project.Id,
-                Start = DateTime.Now,
-                End = DateTime.Now.AddMinutes(10),
+                ProjectId = null,
+                Start = DateTime.Now.AddMinutes(-60),
+                End = DateTime.Now.AddMinutes(-30),
+                TypeOfSlice = 1,
+                UserId = user.Id,
+            });
+            _context.Add(new TimeSlice() {
+                Id = Guid.NewGuid().ToString(),
+                WorkDayId = workDay.Id,
+                ProjectId = null,
+                Start = DateTime.Now.AddMinutes(-60),
+                End = DateTime.Now.AddMinutes(-30),
+                TypeOfSlice = 2,
+                UserId = user.Id,
+            });
+            _context.Add(new TimeSlice() {
+                Id = Guid.NewGuid().ToString(),
+                WorkDayId = workDay.Id,
+                ProjectId = null,
+                Start = DateTime.Now.AddMinutes(-60),
+                End = DateTime.Now.AddMinutes(-30),
+                TypeOfSlice = 1,
+                UserId = user.Id,
+            });
+            _context.Add(new TimeSlice() {
+                Id = Guid.NewGuid().ToString(),
+                WorkDayId = workDay.Id,
+                ProjectId = null,
+                Start = DateTime.Now.AddMinutes(-160),
+                End = DateTime.Now.AddMinutes(-60),
+                TypeOfSlice = 1,
+                UserId = user.Id,
+            });
+            _context.Add(new TimeSlice() {
+                Id = Guid.NewGuid().ToString(),
+                WorkDayId = workDay.Id,
+                ProjectId = null,
+                Start = DateTime.Now.AddMinutes(-240),
+                End = DateTime.Now.AddMinutes(-160),
                 TypeOfSlice = 1,
                 UserId = user.Id,
             });
@@ -85,7 +142,7 @@ namespace AMI.EduWork._2025.Data.Migrations
                 ProjectId = project.Id,
                 ProjectRole = "tester",
                 RoleStartDate = DateTime.Now,
-                RoleEndDate = DateTime.Now.AddMinutes(10),
+                RoleEndDate = DateTime.Now.AddMinutes(60),
 
             });
 

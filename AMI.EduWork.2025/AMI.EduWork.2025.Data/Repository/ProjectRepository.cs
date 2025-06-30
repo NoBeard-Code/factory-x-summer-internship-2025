@@ -23,7 +23,7 @@ public class ProjectRepository : Repository<Project>, IProjectRepository {
            .ToListAsync();
     }
 
-    public async Task<Project> GetProjectByName(string name) {
+    public async Task<Project?> GetProjectByName(string name) {
         var project = await _dbSet
             .Include(p => p.UsersOnProjects)
                 .ThenInclude(uop => uop.User)
@@ -33,9 +33,7 @@ public class ProjectRepository : Repository<Project>, IProjectRepository {
                 .ThenInclude(ts => ts.WorkDay)
             .FirstOrDefaultAsync(p => p.Name == name);
 
-        if (project == null) {
-            throw new KeyNotFoundException($"Project with name '{name}' not found.");
-        }
+       
 
         return project;
     }

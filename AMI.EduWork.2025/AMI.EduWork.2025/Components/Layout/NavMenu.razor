@@ -43,12 +43,21 @@
                 <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
             </NavLink>
         </div>
+        <AuthorizeView>
+            <Authorized>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="Account/Manage">
+                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> @context.User.Identity?.Name
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                   <NavLink class="nav-link" href="projects" style="display: inline-flex; align-items: center;">
+                        <span class="bi bi-folder-fill" style="margin-right: 0.5rem; font-size: 1.2rem; line-height: 1;"></span>
+                        <span style="line-height: 1;">My Projects</span>
+                   </NavLink>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="auth">
-                <span class="bi bi-lock-nav-menu" aria-hidden="true"></span> Auth Required
-            </NavLink>
-        </div>
+
+
 
         <AuthorizeView>
             <Authorized>
