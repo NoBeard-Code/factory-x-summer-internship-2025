@@ -1,5 +1,70 @@
-﻿<h3>Vacation</h3>
+﻿@page "/annualVacation"
+@using AMI.EduWork._2025.Domain.Interfaces.Service
+@using AMI.EduWork._2025.Domain.Models.ContractModel
+@using AMI.EduWork._2025.Domain.Models.UserOnVacationModel
+@using AMI.EduWork._2025.Domain.Models.VacationModel
+@rendermode InteractiveServer
+@inject NavigationManager NavigationManager
 
+<PageTitle>Vacations</PageTitle>
+
+<h1>Annual Vacations</h1>
+
+<p>CRUD operations on contracts</p>
+
+@if (_annualVacationGetModel == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <a href="/annualVacation/create">Add vacation for user</a>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Year</th>
+                <th>Available vacation</th>
+                <th>Planned vacation</th>
+                <th>User</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var model in _annualVacationGetModel)
+            {
+                <tr>
+                    <td>@model.Year</td>
+                    <td>@model.AvailableVacation</td>
+                    <td>@model.PlannedVacation</td>
+                    <td>@model._GetUserModel.UserName</td>
+                    <input type="button" value="Delete" class="btn btn-danger" @onclick="(async () => await DeleteAnnualVacation(model.Id))" />
+                    <input type="button" value="Update" class="btn btn-info" @onclick="(async () => await UpdateAnnualVacation(model.Id))" />
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+@inject IAnnualVacationService iannualVacationService
 @code {
+    private List<AnnualVacationGetModel>? _annualVacationGetModel;
 
+    protected override async Task OnInitializedAsync()
+    {
+        IEnumerable<AnnualVacationGetModel>? annualVacationGetModel = await iannualVacationService.GetAll();
+        _annualVacationGetModel = annualVacationGetModel.ToList();
+
+    }
+
+    private async Task DeleteAnnualVacation(string id)
+    {
+        await iannualVacationService.Delete(id);
+        AnnualVacationGetModel? annualVacationGetModel = _annualVacationGetModel?.FirstOrDefault(x => x.Id == id);
+        if (annualVacationGetModel is not null) _annualVacationGetModel!.Remove(annualVacationGetModel);
+    }
+    private async Task UpdateAnnualVacation(string annualVacationId)
+    {
+        NavigationManager.NavigateTo($"/annualVacation/update/{annualVacationId}");
+    }
 }

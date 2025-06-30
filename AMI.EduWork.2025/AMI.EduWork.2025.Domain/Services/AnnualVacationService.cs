@@ -96,7 +96,8 @@ public class AnnualVacationService : IAnnualVacationService
             AvailableVacation = annualVacationCreateModel.AvailableVacation,
             PlannedVacation = annualVacationCreateModel.PlannedVacation,
             UsedVacation = annualVacationCreateModel.UsedVacation,
-            Year = annualVacationCreateModel.Year
+            Year = annualVacationCreateModel.Year,
+            UserId = annualVacationCreateModel.UserId
         };
 
         await _repository.Create(annualVacation);
