@@ -6,7 +6,8 @@
 <MudPaper Class="pa-2" Outlined="true" Style="min-width:200px; width:100%;">
     <MudGrid>
         <MudItem xs="6">
-            <MudText Typo="Typo.subtitle2" Bold="true">@TimeSlice.Project.Name</MudText>
+            <MudText Typo="Typo.subtitle2" Bold="true">@((TimeSlice.Project != null) ? TimeSlice.Project.Name : "Not set")</MudText>
+
         </MudItem>
         <MudItem xs="6" Align="Right" Style="display: flex; align-items: center; justify-content: flex-end;">
             <MudText Typo="Typo.subtitle2" Style="margin-right: 8px;">

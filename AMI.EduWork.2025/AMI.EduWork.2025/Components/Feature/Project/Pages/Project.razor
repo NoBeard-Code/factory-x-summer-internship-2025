@@ -4,6 +4,7 @@
 @using AMI.EduWork._2025.Domain.Models.Project
 @using AMI.EduWork._2025.Domain.Models.TimeSlice
 @using AMI.EduWork._2025.Domain.Models.UserOnProject
+@using AMI.EduWork._2025.Enums
 @using Microsoft.AspNetCore.Authorization
 @inject IProjectService ProjectService
 @inject IUserOnProjectService UserOnProjectService
@@ -164,10 +165,7 @@ else
         {
             var userOnProjects = await UserOnProjectService.GetProjectsByUserId(userId);
             var timeSlices = await TimeSliceService.GetAllUserTimeSlices(userId);
-            //---------------------------------------------------
-            // Has to change after merge and delete this comment
-            //---------------------------------------------------
-            availableTimeEntries = timeSlices.Where(ts => ts.ProjectId == null && ts.TypeOfSlice == 1).ToList();
+            availableTimeEntries = timeSlices.Where(ts => ts.ProjectId == null && ts.TypeOfSlice == (byte)TimeSliceType.Work).ToList();
 
             var projectIds = userOnProjects.Select(uop => uop.Project.Id).Distinct().ToList();
             userProjects = new List<GetProjectModel>();
