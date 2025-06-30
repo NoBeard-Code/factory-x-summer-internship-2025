@@ -64,8 +64,11 @@
 @code {
     [CascadingParameter]
     private IMudDialogInstance MudDialog { get; set; }
+    [Parameter] 
+    public DateTime Date { get; set; }
+    [Parameter] 
+    public EventCallback OnTimeSlicesChanged { get; set; }
 
-    [Parameter] public DateTime Date { get; set; }
 
     private MudForm form;
     private TimeSliceModel TimeSlice { get; set; } = new() { UserId = string.Empty };
@@ -110,6 +113,7 @@
         using var scope = ServiceScopeFactory.CreateScope();
         var timeSliceService = scope.ServiceProvider.GetRequiredService<ITimeSliceService>();
         await timeSliceService.Create(TimeSlice);
+        await OnTimeSlicesChanged.InvokeAsync();
 
         MudDialog.Close(DialogResult.Ok(TimeSlice));
     }

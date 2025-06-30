@@ -53,7 +53,7 @@
                     @foreach (var timeslice in timeslices)
                     {
                         <MudItem xs="12">
-                            <TimeSliceCard TimeSlice="timeslice" OnEditRequested="OpenUpdateDialog" />
+                            <TimeSliceCard TimeSlice="timeslice" OnEditRequested="OpenUpdateDialog" OnTimeSlicesChanged="OnTimeSlicesChanged" />
                         </MudItem>
                     }
                 }
@@ -99,11 +99,20 @@
         timeslices = result?.ToList() ?? new List<GetTimeSliceModel>();
     }
 
+    protected async Task OnTimeSlicesChanged()
+    {
+        await GetAllUserTimeSlicesByDate();
+    }
+
     private Task OpenAddDialogAsync()
     {
         var options = new DialogOptions { CloseOnEscapeKey = true };
 
-        var parameters = new DialogParameters { ["Date"] = nonNullableDate }; 
+        var parameters = new DialogParameters 
+        { 
+            ["Date"] = nonNullableDate,
+            ["OnTimeSlicesChanged"] = EventCallback.Factory.Create(this, OnTimeSlicesChanged)
+        }; 
         return DialogService.ShowAsync<AddTimeSlice>("Add Time Slice", parameters);
     }
 
@@ -132,7 +141,11 @@
 
     private async Task OpenUpdateDialog(GetTimeSliceModel timeSlice)
     {
-        var parameters = new DialogParameters { ["TimeSlice"] = timeSlice };
+        var parameters = new DialogParameters 
+        { 
+            ["TimeSlice"] = timeSlice,
+            ["OnTimeSlicesChanged"] = EventCallback.Factory.Create(this, OnTimeSlicesChanged)
+        };
         await DialogService.ShowAsync<UpdateTimeSlice>("Update Time Slice", parameters);
     }
 }

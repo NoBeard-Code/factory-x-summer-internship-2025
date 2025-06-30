@@ -69,9 +69,11 @@
 @code {
     [CascadingParameter]
     private IMudDialogInstance MudDialog { get; set; }
-
     [Parameter]
     public GetTimeSliceModel TimeSlice { get; set; }  
+    [Parameter] 
+    public EventCallback OnTimeSlicesChanged { get; set; }
+
 
     private MudForm form;
     private IEnumerable<GetProjectModel> UserProjects { get; set; } = new List<GetProjectModel>();
@@ -122,6 +124,7 @@
         var timeSliceService = scope.ServiceProvider.GetRequiredService<ITimeSliceService>();
 
         await timeSliceService.Update(TimeSlice);
+        await OnTimeSlicesChanged.InvokeAsync();
 
         MudDialog.Close(DialogResult.Ok(TimeSlice));
     }
