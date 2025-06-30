@@ -15,7 +15,7 @@ public static class ServiceCollectionExtensions
         services.AddRazorComponents()
                 .AddInteractiveServerComponents()
                 .AddAuthenticationStateSerialization();
-                //.AddInteractiveWebAssemblyComponents();
+        //.AddInteractiveWebAssemblyComponents();
 
         services.AddMudServices();
         services.AddCascadingAuthenticationState();
