@@ -24,12 +24,12 @@ public class ApplicationUserConfig : IEntityTypeConfiguration<ApplicationUser>
             .HasForeignKey(sl => sl.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasMany(au => au.UsersOnVacations)
+        builder.HasMany(au => au.AnnualVacations)
             .WithOne(uov => uov.User)
             .HasForeignKey(uov => uov.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasMany(au => au.UsersOnProjects)
+        builder.HasMany(au => au.AnnualVacations)
             .WithOne(uop => uop.User)
             .HasForeignKey(uop => uop.UserId)
             .OnDelete(DeleteBehavior.Cascade);

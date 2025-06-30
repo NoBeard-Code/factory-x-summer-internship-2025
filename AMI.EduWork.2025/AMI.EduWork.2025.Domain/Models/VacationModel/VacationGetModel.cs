@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AMI.EduWork._2025.Domain.Models.AnnualVacationModel;
 
-namespace AMI.EduWork._2025.Domain.Models.VacationModel
+namespace AMI.EduWork._2025.Domain.Models.UserOnVacationModel;
+
+public class VacationGetModel
 {
-    public class VacationGetModel
-    {
-        public VacationGetModel() { }
-        public string Id { get; set; }
-        public int AvailableVacation { get; set; }
-        public int PlannedVacation { get; set; }
-        public int UsedVacation { get; set; }
-        public int Year { get; set; }
-    }
+    public string Id { get; set; }
+    public AnnualVacationGetVacationModel _AnnualVacationGetModel { get; set; }
+    public DateOnly StartDate { get; set; }
+    public DateOnly EndDate { get; set; }
 }

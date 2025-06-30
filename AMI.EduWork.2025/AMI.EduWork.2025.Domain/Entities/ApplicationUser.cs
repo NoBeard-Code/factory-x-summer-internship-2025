@@ -9,7 +9,7 @@ public class ApplicationUser : IdentityUser
     public virtual byte Role { get; set; }
     public virtual ICollection<Contract> Contracts { get; set; }
     public virtual ICollection<SickLeave> SickLeaves { get; set; }
-    public virtual ICollection<UserOnVacation> UsersOnVacations { get; set; }
+    public virtual ICollection<AnnualVacation> AnnualVacations { get; set; }
     public virtual ICollection<UserOnProject> UsersOnProjects { get; set; }
     public virtual ICollection<TimeSlice>? TimeSlices { get; set; }
 

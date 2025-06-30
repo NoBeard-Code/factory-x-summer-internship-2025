@@ -12,9 +12,9 @@ namespace AMI.EduWork._2025.Domain.Interfaces.Service
         Task<bool> Create(ContractCreateModel contractCreateModel);
         Task<bool> Delete(string id);
         Task<bool> Update(ContractUpdateModel contractUpdateModel);
-        Task<ContractGetByIdModel> GetById(string id);
-        Task<IEnumerable<ContractGetByIdModel>> GetAll();
-        Task<IEnumerable<ContractGetByIdModel>> GetByHourlyRate(int hourlyRate);
-        Task<IEnumerable<ContractGetByIdModel>> GetByIsActive();
+        Task<ContractGetModel> GetById(string id);
+        Task<IEnumerable<ContractGetModel>> GetAll();
+        Task<IEnumerable<ContractGetModel>> GetByHourlyRate(int hourlyRate);
+        Task<IEnumerable<ContractGetModel>> GetByIsActive();
     }
 }

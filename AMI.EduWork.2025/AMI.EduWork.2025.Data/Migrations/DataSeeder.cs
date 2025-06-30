@@ -1,10 +1,5 @@
 ﻿using AMI.EduWork._2025.Domain;
 using AMI.EduWork._2025.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AMI.EduWork._2025.Data.Migrations
 {
@@ -79,26 +74,26 @@ namespace AMI.EduWork._2025.Data.Migrations
                 UserId = user.Id,
                 StartDate = DateOnly.FromDateTime(DateTime.Now),
                 EndDate = DateOnly.FromDateTime(DateTime.Now.AddDays(5)),
-                Year = 1000
+                Year = 2025
             });
 
             var vacation = new AnnualVacation()
             {
                 Id = Guid.NewGuid().ToString(),
-                UsedVacation = 0,
-                Year = 1000,
-                PlannedVacation = 0,
-                AvailableVacation = 0,
+                UsedVacation = 5,
+                Year = 2025,
+                PlannedVacation = 3,
+                AvailableVacation = 8,
+                UserId = user.Id
             };
 
             _context.Add(vacation);
 
-            _context.Add(new UserOnVacation() {
+            _context.Add(new Vacation() {
                 Id = Guid.NewGuid().ToString(),
-                UserId = user.Id,
                 AnnualVacationId = vacation.Id,
-                StartDate = DateTime.Now,
-                EndDate = DateTime.Now.AddDays(5),
+                StartDate = DateOnly.FromDateTime(DateTime.Now),
+                EndDate = DateOnly.FromDateTime(DateTime.Now.AddDays(5))
             });
 
             _context.SaveChanges();
