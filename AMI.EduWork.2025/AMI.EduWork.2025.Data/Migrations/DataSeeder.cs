@@ -1,26 +1,47 @@
 ﻿using AMI.EduWork._2025.Domain;
 using AMI.EduWork._2025.Domain.Entities;
+using AMI.EduWork._2025.Domain.Helpers;
+using Microsoft.AspNetCore.Identity;
+using System.Threading.Tasks;
 
 namespace AMI.EduWork._2025.Data.Migrations
 {
     public class DataSeeder
     {
         private readonly ApplicationDbContext _context;
-        public DataSeeder(ApplicationDbContext context) {
+        private readonly UserManager<ApplicationUser> _userManager;
+        public DataSeeder(ApplicationDbContext context, UserManager<ApplicationUser> userManager) {
             _context = context;
+            _userManager = userManager;
+
         }
 
-        public void SeedData()
+        public async Task SeedData()
         {
-            var user = new ApplicationUser()
+            var userEmail = "test1@gmail.com";
+            var userName = "test1";
+            var password = "Test123!";
+
+            var user = await _userManager.FindByEmailAsync(userEmail);
+
+            if (user == null)
             {
-                Email = "test1@gamail.com",
-                UserName = "test1",
-                EmailConfirmed = false,
-                PhoneNumberConfirmed = true,
-                PhoneNumber = "1111111"
-            };
-            _context.Add(user);
+                user = new ApplicationUser
+                {
+                    Email = userEmail,
+                    UserName = userEmail,
+                    EmailConfirmed = true,
+                    PhoneNumberConfirmed = true,
+                    PhoneNumber = "1111111"
+                };
+
+                var result = await _userManager.CreateAsync(user, password);
+                if (!result.Succeeded)
+                {
+                    // Handle errors (e.g. log them)
+                    return;
+                }
+            }
 
             _context.Add(new Contract()
             {
@@ -42,7 +63,7 @@ namespace AMI.EduWork._2025.Data.Migrations
             var workDay = new WorkDay()
             {
                 Id = Guid.NewGuid().ToString(),
-                Date = DateTime.Now,
+                Date = DateExtension.GetDateOnly(DateTime.Now),
             };
             _context.Add(workDay);
 

@@ -16,7 +16,12 @@ using Microsoft.EntityFrameworkCore;
 public class ProjectRepository : Repository<Project>, IProjectRepository {
     public ProjectRepository(ApplicationDbContext context) : base(context) { }
 
-
+    public async Task<IEnumerable<Project>> GetAllUserProjects(string userId)
+    {
+        return await _dbSet
+           .Where(p => p.UsersOnProjects.Any(uop => uop.UserId == userId))
+           .ToListAsync();
+    }
 
     public async Task<Project> GetProjectByName(string name) {
         var project = await _dbSet

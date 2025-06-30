@@ -7,16 +7,19 @@ using AMI.EduWork._2025.Domain.Models.TimeSlice;
 using AMI.EduWork._2025.Domain.Models.User;
 using AMI.EduWork._2025.Domain.Models.UserOnProject;
 using AMI.EduWork._2025.Domain.Models.WorkDay;
+using AutoMapper;
 using Microsoft.Extensions.Logging;
 
 namespace AMI.EduWork._2025.Domain.Services {
     public class ProjectService : IProjectService {
         private readonly IProjectRepository _repository;
         private readonly ILogger<ProjectService> _logger;
+        private readonly IMapper _mapper;
 
-        public ProjectService(IProjectRepository repository, ILogger<ProjectService> logger) {
+        public ProjectService(IProjectRepository repository, ILogger<ProjectService> logger, IMapper mapper) {
             _repository = repository;
             _logger = logger;
+            _mapper = mapper;
         }
 
         public async Task Create(ProjectModel model) {
@@ -155,6 +158,13 @@ namespace AMI.EduWork._2025.Domain.Services {
                     End = ts.End,
                     TypeOfSlice = ts.TypeOfSlice,
                     ProjectId = ts.ProjectId,
+                    Project = ts.Project != null ? new GetProjectModelNoRefrences 
+                    {
+                        Id = ts.ProjectId,
+                        Description = ts.Project.Description,
+                        Name = ts.Project.Name,
+                        TypeOfProject = ts.Project.TypeOfProject,
+                    } : null,
                     WorkDayId = ts.WorkDayId,
                     UserId = ts.UserId ?? string.Empty,
                     WorkDay = ts.WorkDay != null ? new GetWorkDayModel
@@ -189,7 +199,25 @@ namespace AMI.EduWork._2025.Domain.Services {
                         }}).ToList()
 
                         };
-                }   
+                }
 
+        public async Task<IEnumerable<GetProjectModel>> GetAllUserProjects(string userId)
+        {
+            if (userId is null)
+            {
+                _logger.LogError("Invalid user.");
+                throw new ArgumentException("User Id cannot be null.");
+            }
+
+            var projects = await _repository.GetAllUserProjects(userId);
+            if (projects == null || !projects.Any())
+            {
+                _logger.LogWarning($"No projects found for user.");
+                throw new KeyNotFoundException("No projects found for user.");
+            }
+            List<GetProjectModel> getProjectModel = _mapper.Map<List<GetProjectModel>>(projects);
+
+            return getProjectModel;
         }
+    }
 }

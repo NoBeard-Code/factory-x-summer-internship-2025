@@ -4,6 +4,7 @@ using AMI.EduWork._2025.Domain.Interfaces.Service;
 using AMI.EduWork._2025.Domain.Models.TimeSlice;
 using AMI.EduWork._2025.Domain.Models.User;
 using AMI.EduWork._2025.Domain.Models.WorkDay;
+using AutoMapper;
 using Microsoft.Extensions.Logging;
 using System.Data;
 
@@ -13,10 +14,12 @@ public class UserService : IUserService
 {
     private readonly IUserRepository _repository;
     private readonly ILogger<UserService> _logger;
-    public UserService(IUserRepository repository, ILogger<UserService> logger)
+    private readonly IMapper _mapper;
+    public UserService(IUserRepository repository, ILogger<UserService> logger, IMapper mapper)
     {
         _repository = repository;
         _logger = logger;
+        _mapper = mapper;
     }
 
     public async Task<bool> Delete(string id)
@@ -46,22 +49,7 @@ public class UserService : IUserService
     public async Task<IEnumerable<GetUserModel>> GetAll()
     {
         IEnumerable<ApplicationUser> entity = await _repository.GetAll();
-        List<GetUserModel> users = entity.Select(u => new GetUserModel
-        {
-            Id = u.Id,
-            UserName = u.UserName,
-            NormalizedUserName = u.NormalizedUserName,
-            Email = u.Email,
-            NormalizedEmail = u.NormalizedEmail,
-            EmailConfirmed = u.EmailConfirmed,
-            PhoneNumber = u.PhoneNumber,
-            PhoneNumberConfirmed = u.PhoneNumberConfirmed,
-            TwoFactorEnabled = u.TwoFactorEnabled,
-            LockoutEnd = u.LockoutEnd,
-            LockoutEnabled = u.LockoutEnabled,
-            AccessFailedCount = u.AccessFailedCount,
-            Role = u.Role
-        }).ToList();
+        List<GetUserModel> users = _mapper.Map<List<GetUserModel>>(entity);
         return users;
     }
 
@@ -78,22 +66,7 @@ public class UserService : IUserService
             _logger.LogWarning("User with Id {Id} doesn't exist", id);
             return null;
         }
-        GetUserModel user = new GetUserModel
-        {
-            Id = entity.Id,
-            UserName = entity.UserName,
-            NormalizedUserName = entity.NormalizedUserName,
-            Email = entity.Email,
-            NormalizedEmail = entity.NormalizedEmail,
-            EmailConfirmed = entity.EmailConfirmed,
-            PhoneNumber = entity.PhoneNumber,
-            PhoneNumberConfirmed = entity.PhoneNumberConfirmed,
-            TwoFactorEnabled = entity.TwoFactorEnabled,
-            LockoutEnd = entity.LockoutEnd,
-            LockoutEnabled = entity.LockoutEnabled,
-            AccessFailedCount = entity.AccessFailedCount,
-            Role = entity.Role
-        };
+        GetUserModel user = _mapper.Map<GetUserModel>(entity);
         return user;
     }
 

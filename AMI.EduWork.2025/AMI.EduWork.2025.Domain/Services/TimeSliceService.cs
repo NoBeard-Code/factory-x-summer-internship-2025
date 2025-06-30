@@ -1,9 +1,12 @@
 ﻿using AMI.EduWork._2025.Domain.Entities;
+using AMI.EduWork._2025.Domain.Helpers;
 using AMI.EduWork._2025.Domain.Interfaces.Repository;
 using AMI.EduWork._2025.Domain.Interfaces.Service;
+using AMI.EduWork._2025.Domain.Models.Project;
 using AMI.EduWork._2025.Domain.Models.TimeSlice;
 using AMI.EduWork._2025.Domain.Models.User;
 using AMI.EduWork._2025.Domain.Models.WorkDay;
+using AutoMapper;
 using Microsoft.Extensions.Logging;
 
 namespace AMI.EduWork._2025.Domain.Services;
@@ -12,12 +15,19 @@ public class TimeSliceService : ITimeSliceService
 {
     private readonly ITimeSliceRepository _repository;
     private readonly IUserRepository _userRepository;
+    private readonly IWorkDayRepository _workDayRepository;
+    private readonly IWorkDayService _workDayService;
     private readonly ILogger<TimeSliceService> _logger;
-    public TimeSliceService(ITimeSliceRepository repository,IUserRepository userRepository, ILogger<TimeSliceService> logger)
+    private readonly IMapper _mapper;
+
+    public TimeSliceService(ITimeSliceRepository repository,IUserRepository userRepository, ILogger<TimeSliceService> logger, IWorkDayRepository workDayRepository, IWorkDayService workDayService, IMapper mapper)
     {
         _repository = repository;
         _userRepository = userRepository;
         _logger = logger;
+        _workDayRepository = workDayRepository;
+        _workDayService = workDayService;
+        _mapper = mapper;
     }
 
     public async Task<bool> Create(TimeSliceModel entity)
@@ -29,16 +39,16 @@ public class TimeSliceService : ITimeSliceService
         }
         try
         {
-            TimeSlice timeSlice = new TimeSlice
+            if (!entity.Start.HasValue)
             {
-                Id = Guid.NewGuid().ToString(),
-                Start = entity.Start.Value,
-                End = entity.End.Value,
-                TypeOfSlice = entity.TypeOfSlice,
-                WorkDayId = entity.WorkDayId,
-                ProjectId = entity.ProjectId,
-                UserId = entity.UserId,
-            };
+                _logger.LogWarning("Attempted to create TimeSlice without Start date/time");
+                return false;
+            }
+            GetWorkDayModel workDay = await _workDayService.GetByDate(entity.Start.Value);
+
+            TimeSlice timeSlice = _mapper.Map<TimeSlice>(entity);
+            timeSlice.WorkDayId = workDay.Id;
+
             await _repository.Create(timeSlice);
             bool result = await _repository.SaveChangesAsync();
             if (result) _logger.LogInformation("Successfully created TimeSlice for user {UserId}.", timeSlice.UserId);
@@ -79,7 +89,7 @@ public class TimeSliceService : ITimeSliceService
 
     public async Task<IEnumerable<GetTimeSliceModel>> GetAllUserTimeSlices(string userId)
     {
-        if (!string.IsNullOrEmpty(userId))
+        if (string.IsNullOrEmpty(userId))
         {
             _logger.LogWarning("Attempted to retrieve all TimeSlices for null user");
             return null;
@@ -90,43 +100,36 @@ public class TimeSliceService : ITimeSliceService
             return null;
         }
         IEnumerable<TimeSlice> entity = await _repository.GetAllUserTimeSlices(userId);
-        List<GetTimeSliceModel> timeSlice = entity.Select(ts => new GetTimeSliceModel
+        var timeSlice = _mapper.Map<List<GetTimeSliceModel>>(entity);
+        return timeSlice;
+    }
+
+    public async Task<IEnumerable<GetTimeSliceModel>> GetAllUserTimeSlicesByDate(string userId, DateTime date)
+    {
+        if (string.IsNullOrEmpty(userId))
         {
-            Id = ts.Id,
-            Start = ts.Start,
-            End = ts.End,
-            TypeOfSlice = ts.TypeOfSlice,
-            WorkDayId = ts.WorkDayId,
-            WorkDay = new GetWorkDayModel
-            {
-                Id = ts.WorkDayId,
-                Date = ts.WorkDay.Date,
-            },
-            ProjectId = ts.ProjectId,
-            UserId = ts.UserId,
-            User = new GetUserModel
-            {
-                Id = ts.Id,
-                UserName = ts.User.UserName,
-                NormalizedUserName = ts.User.NormalizedUserName,
-                Email = ts.User.Email,
-                NormalizedEmail = ts.User.NormalizedEmail,
-                EmailConfirmed = ts.User.EmailConfirmed,
-                PhoneNumber = ts.User.PhoneNumber,
-                PhoneNumberConfirmed = ts.User.PhoneNumberConfirmed,
-                TwoFactorEnabled = ts.User.TwoFactorEnabled,
-                LockoutEnd = ts.User.LockoutEnd,
-                LockoutEnabled = ts.User.LockoutEnabled,
-                AccessFailedCount = ts.User.AccessFailedCount,
-                Role = ts.User.Role
-            }
-        }).ToList();
+            _logger.LogWarning("Attempted to retrieve all TimeSlices for null user");
+            return null;
+        }
+        if (!await _userRepository.UserExists(userId))
+        {
+            _logger.LogWarning("Attempted to retrieve all TimeSlices for non exisiting user");
+            return null;
+        }
+        DateTime onlyDate = DateExtension.GetDateOnly(date);
+        IEnumerable<TimeSlice> entity = await _repository.GetAllUserTimeSlicesByDate(userId, onlyDate);
+        if(entity is null)
+        {
+            _logger.LogWarning("TimeSlices for date {date} doesn't exist", onlyDate.Date);
+            return null;
+        }
+        List<GetTimeSliceModel> timeSlice = _mapper.Map<List<GetTimeSliceModel>>(entity);
         return timeSlice;
     }
 
     public async Task<GetTimeSliceModel> GetById(string id)
     {
-        if (!string.IsNullOrEmpty(id))
+        if (string.IsNullOrEmpty(id))
         {
             _logger.LogWarning("Attempted to retrieve TimeSlice with null Id");
             return null;
@@ -137,37 +140,7 @@ public class TimeSliceService : ITimeSliceService
             _logger.LogWarning("TimeSlice with Id {Id} doesn't exist", id);
             return null;
         }
-        GetTimeSliceModel timeSlice = new GetTimeSliceModel
-        {
-            Id = entity.Id,
-            Start = entity.Start,
-            End = entity.End,
-            TypeOfSlice = entity.TypeOfSlice,
-            WorkDayId = entity.WorkDayId,
-            WorkDay = new GetWorkDayModel
-            {
-                Id = entity.WorkDayId,
-                Date = entity.WorkDay.Date,
-            },
-            ProjectId = entity.ProjectId,
-            UserId = entity.UserId,
-            User = new GetUserModel
-            {
-                Id = entity.Id,
-                UserName = entity.User.UserName,
-                NormalizedUserName = entity.User.NormalizedUserName,
-                Email = entity.User.Email,
-                NormalizedEmail = entity.User.NormalizedEmail,
-                EmailConfirmed = entity.User.EmailConfirmed,
-                PhoneNumber = entity.User.PhoneNumber,
-                PhoneNumberConfirmed = entity.User.PhoneNumberConfirmed,
-                TwoFactorEnabled = entity.User.TwoFactorEnabled,
-                LockoutEnd = entity.User.LockoutEnd,
-                LockoutEnabled = entity.User.LockoutEnabled,
-                AccessFailedCount = entity.User.AccessFailedCount,
-                Role = entity.User.Role
-            }
-        };
+        GetTimeSliceModel timeSlice = _mapper.Map<GetTimeSliceModel>(entity);
         return timeSlice;
     }
 
@@ -189,7 +162,19 @@ public class TimeSliceService : ITimeSliceService
             }
 
             if (entity.Start != null)
+            {
+                var existingDate = existing.Start.Date;
+                var newDate = entity.Start.Value.Date;
+                if (existingDate != newDate)
+                {
+                    var workDay = await _workDayService.GetByDate(newDate);
+                    if (workDay != null)
+                    {
+                        existing.WorkDayId = workDay.Id;
+                    }
+                }
                 existing.Start = entity.Start.Value;
+            }
 
             if (entity.End != null)
                 existing.End = entity.End.Value;
@@ -197,11 +182,11 @@ public class TimeSliceService : ITimeSliceService
             if (entity.TypeOfSlice != existing.TypeOfSlice)
                 existing.TypeOfSlice = entity.TypeOfSlice;
 
-            if (entity.WorkDayId != null)
-                existing.WorkDayId = entity.WorkDayId;
-
             if (entity.ProjectId != null)
                 existing.ProjectId = entity.ProjectId;
+
+            if (entity.Description != null)
+                existing.Description = entity.Description;
 
             await _repository.Update(existing);
 
