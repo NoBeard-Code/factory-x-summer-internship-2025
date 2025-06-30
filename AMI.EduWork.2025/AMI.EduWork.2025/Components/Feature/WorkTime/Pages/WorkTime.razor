@@ -63,7 +63,7 @@
     
     <MudItem xs="12" md="4">
         <MudPaper Class="pa-4" Style="height:100%; background-color:#444444; color:white;">
-            <!-- Placeholder for statistics -->
+            <!-- TODO statistics -->
         </MudPaper>
     </MudItem>
 </MudGrid>
@@ -99,7 +99,6 @@
         timeslices = result?.ToList() ?? new List<GetTimeSliceModel>();
     }
 
-    // DIALOG OPEN
     private Task OpenAddDialogAsync()
     {
         var options = new DialogOptions { CloseOnEscapeKey = true };
@@ -128,10 +127,8 @@
 
     private void StartTimer()
     {
-        // NEED TO IMPLEMENT
+        // TODO
     }
-
-    //-----------------------------------
 
     private async Task OpenUpdateDialog(GetTimeSliceModel timeSlice)
     {
