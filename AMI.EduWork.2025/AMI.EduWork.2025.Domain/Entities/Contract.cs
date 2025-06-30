@@ -1,11 +1,6 @@
 ﻿using AMI.EduWork._2025.Domain.Entities.Abstraction;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AMI.EduWork._2025.Domain.Entities;
 
@@ -13,6 +8,8 @@ public class Contract : EntityBase
 {
     [Required]
     public int WorkingHour { get; set; }
+    [Required]
+    public DateOnly Created { get; set; }
     [Required]
     public bool IsActive { get; set; }
     [Required]

@@ -20,6 +20,10 @@
             <InputNumber id="HourlyRate" @bind-Value="contractUpdateModel.HourlyRate" class="form-control" />
         </div>
         <div class="mb-3">
+            <labe1 for="Created" class="form-label">Date of creation</labe1>
+            <InputDate id="Created" @bind-Value="contractUpdateModel.Created" class="form-control" />
+        </div>
+        <div class="mb-3">
             <labe1 for="IsActive" class="form-label">Is active</labe1>
             <InputCheckbox id="IsActive" @bind-Value="contractUpdateModel.IsActive" />
         </div>
@@ -38,7 +42,6 @@
 
     </EditForm>
 </div>
-
 
 @code {
     [Parameter]
