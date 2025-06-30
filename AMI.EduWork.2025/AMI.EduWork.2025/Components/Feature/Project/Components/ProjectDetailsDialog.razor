@@ -23,14 +23,19 @@
 
         <MudText Typo="Typo.h6" Class="mt-4">Working hours for date:</MudText>
         <MudDatePicker Class="mt-4" Label="Date Format" @bind-Date="_date" DateFormat="dd.MM.yyyy" />
-        
-       <MudTimeline Class="mt-4" TimelineOrientation="TimelineOrientation.Horizontal"
+       @if(!Project.TimeSlices.Any(iterator=> iterator.Start?.Date == _date!.Value.Date))
+                {  
+                <MudText Class="mt-4" Typo="Typo.h3">No time spent on the project. 😔</MudText>
+            }
+            else
+            {
+                
+            
+            <MudTimeline Class="mt-4" TimelineOrientation="TimelineOrientation.Horizontal"
               TimelinePosition="TimelinePosition.Alternate"
               Reverse="false">
-                @if(!Project.TimeSlices.Any(iterator=> iterator.Start?.Date == _date!.Value.Date))
-                {
-                    <MudText Class="mb-16" Typo="Typo.h3">No time spent on the project. 😔</MudText>
-                } 
+                
+                   
                 @foreach (var slice in Project.TimeSlices.Where(iterator=> iterator.Start?.Date == _date!.Value.Date).OrderBy(iterator=> iterator.Start))
     {
         <MudTimelineItem Color="Color.Primary" Variant="Variant.Filled">
@@ -53,7 +58,7 @@
         </MudTimelineItem>
     }
     </MudTimeline>
-
+    }
 
 
     </MudPaper>

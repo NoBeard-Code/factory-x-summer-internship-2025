@@ -164,7 +164,10 @@ else
         {
             var userOnProjects = await UserOnProjectService.GetProjectsByUserId(userId);
             var timeSlices = await TimeSliceService.GetAllUserTimeSlices(userId);
-            availableTimeEntries = timeSlices.Where(ts => ts.ProjectId == null).ToList();
+            //---------------------------------------------------
+            // Has to change after merge and delete this comment
+            //---------------------------------------------------
+            availableTimeEntries = timeSlices.Where(ts => ts.ProjectId == null && ts.TypeOfSlice == 1).ToList();
 
             var projectIds = userOnProjects.Select(uop => uop.Project.Id).Distinct().ToList();
             userProjects = new List<GetProjectModel>();

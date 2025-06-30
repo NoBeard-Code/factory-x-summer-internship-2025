@@ -94,6 +94,15 @@ namespace AMI.EduWork._2025.Data.Migrations
                 ProjectId = null,
                 Start = DateTime.Now.AddMinutes(-60),
                 End = DateTime.Now.AddMinutes(-30),
+                TypeOfSlice = 2,
+                UserId = user.Id,
+            });
+            _context.Add(new TimeSlice() {
+                Id = Guid.NewGuid().ToString(),
+                WorkDayId = workDay.Id,
+                ProjectId = null,
+                Start = DateTime.Now.AddMinutes(-60),
+                End = DateTime.Now.AddMinutes(-30),
                 TypeOfSlice = 1,
                 UserId = user.Id,
             });
