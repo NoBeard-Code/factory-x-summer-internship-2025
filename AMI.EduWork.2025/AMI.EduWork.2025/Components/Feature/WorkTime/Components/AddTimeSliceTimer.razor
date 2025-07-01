@@ -1,30 +1,26 @@
-﻿@using System.Security.Claims
-@using AMI.EduWork._2025.Domain.Entities
-@using AMI.EduWork._2025.Domain.Interfaces.Service
-@using AMI.EduWork._2025.Domain.Models.TimeSlice
+﻿@using AMI.EduWork._2025.Domain.Interfaces.Service
 @using AMI.EduWork._2025.Domain.Models.Project
+@using AMI.EduWork._2025.Domain.Models.TimeSlice
 @using AMI.EduWork._2025.Enums
+@using System.Security.Claims
+@inject IDialogService DialogService
 @inject IServiceScopeFactory ServiceScopeFactory
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 <MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h5" Align="Align.Center" Class="mb-4"><b>Add a Time Slice</b></MudText>
+    </TitleContent>
     <DialogContent>
         <MudForm @ref="form">
-            <MudText Typo="Typo.h5" Align="Align.Center" Class="mb-4">Update Time Slice</MudText>
-
-            <MudDatePicker Label="Date"
-                           @bind-Date="SelectedDate"
-                           Required="true"
-                           Class="mb-2" />
-
-            <MudTimePicker Label="Start Time"
+            <MudTimePicker Label="Start time"
                            AmPm="false"
                            @bind-Time="StartTime"
                            ShowSeconds="true"
                            Required="true"
                            Class="mb-2" />
 
-            <MudTimePicker Label="End Time"
+            <MudTimePicker Label="End time"
                            AmPm="false"
                            @bind-Time="EndTime"
                            ShowSeconds="true"
@@ -34,7 +30,7 @@
             <MudSelect T="string"
                        Label="Project"
                        @bind-Value="TimeSlice.ProjectId"
-                       Required="false"
+                       Required="true"
                        Class="mb-2">
                 @foreach (var project in UserProjects)
                 {
@@ -61,26 +57,54 @@
         </MudForm>
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="Save" Color="Color.Primary" Variant="Variant.Filled">Update</MudButton>
-        <MudButton OnClick="Cancel" Color="Color.Secondary" Variant="Variant.Text">Cancel</MudButton>
+        <MudButton Variant="Variant.Outlined" OnClick="Cancel" Class="mr-2">Cancel</MudButton>
+        <MudButton Variant="Variant.Outlined" OnClick="Save" Class="mr-2">Save</MudButton>
+        <MudButton Variant="Variant.Outlined" OnClick="Continue">Continue</MudButton>
     </DialogActions>
 </MudDialog>
 
 @code {
-    [CascadingParameter]
-    private IMudDialogInstance MudDialog { get; set; }
-    [Parameter]
-    public GetTimeSliceModel TimeSlice { get; set; }  
+    [CascadingParameter] 
+    IMudDialogInstance MudDialog { get; set; } = default!;
     [Parameter] 
+    public TimeSpan TimerElapsed { get; set; }
+    [Parameter] 
+    public EventCallback OnCancel { get; set; }
+    [Parameter]
+    public EventCallback OnContinue { get; set; }
+    [Parameter]
+    public DateTime Date { get; set; }
+    [Parameter]
     public EventCallback OnTimeSlicesChanged { get; set; }
+
+    public TimeSpan? StartTime { get; set; }
+    public TimeSpan? EndTime { get; set; }
+    public string Project { get; set; } = "";
+    public string Type { get; set; } = "";
+
+    protected override void OnInitialized()
+    {
+        var now = DateTime.Now;
+        StartTime = (now - TimerElapsed).TimeOfDay;
+        EndTime = now.TimeOfDay;
+    }
+
+    private async void Cancel()
+    {
+        await OnCancel.InvokeAsync();
+        MudDialog.Cancel(); /
+    }
+
+    private async Task Continue()
+    {
+        await OnContinue.InvokeAsync();
+        MudDialog.Close();
+    }
 
 
     private MudForm form;
+    private TimeSliceModel TimeSlice { get; set; } = new() { UserId = string.Empty };
     private IEnumerable<GetProjectModel> UserProjects { get; set; } = new List<GetProjectModel>();
-    private TimeSpan? StartTime { get; set; }
-    private TimeSpan? EndTime { get; set; }
-    private DateTime? SelectedDate { get; set; }
-
 
     private TimeSliceType SelectedType
     {
@@ -95,39 +119,33 @@
         var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value
                   ?? user.FindFirst("sub")?.Value
                   ?? string.Empty;
+        TimeSlice.UserId = userId;
 
         using var scope = ServiceScopeFactory.CreateScope();
         var projectService = scope.ServiceProvider.GetRequiredService<IProjectService>();
         UserProjects = await projectService.GetAllUserProjects(userId);
-
-        if (TimeSlice?.Start != null)
-        {
-            SelectedDate = TimeSlice.Start.Value.Date;
-            StartTime = TimeSlice.Start.Value.TimeOfDay;
-        }
-        if (TimeSlice?.End != null)
-            EndTime = TimeSlice.End.Value.TimeOfDay;
     }
 
-    private async Task Save()
+    private async void Save()
     {
         await form.Validate();
         if (!form.IsValid) return;
 
-        if (SelectedDate.HasValue && StartTime.HasValue && EndTime.HasValue)
+        if (StartTime.HasValue && EndTime.HasValue)
         {
-            TimeSlice.Start = SelectedDate.Value.Date.Add(StartTime.Value);
-            TimeSlice.End = SelectedDate.Value.Date.Add(EndTime.Value);
+            TimeSlice.Start = Date.Date.Add(StartTime.Value);
+            TimeSlice.End = Date.Date.Add(EndTime.Value);
         }
-
+        else
+        {
+            return;
+        }
         using var scope = ServiceScopeFactory.CreateScope();
         var timeSliceService = scope.ServiceProvider.GetRequiredService<ITimeSliceService>();
-
-        await timeSliceService.Update(TimeSlice);
+        await timeSliceService.Create(TimeSlice);
         await OnTimeSlicesChanged.InvokeAsync();
+        await OnCancel.InvokeAsync();
 
         MudDialog.Close(DialogResult.Ok(TimeSlice));
     }
-
-    private void Cancel() => MudDialog.Cancel();
 }
