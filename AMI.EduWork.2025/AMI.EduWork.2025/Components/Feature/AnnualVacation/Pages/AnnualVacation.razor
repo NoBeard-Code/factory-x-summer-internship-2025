@@ -3,10 +3,13 @@
 @using AMI.EduWork._2025.Domain.Models.ContractModel
 @using AMI.EduWork._2025.Domain.Models.UserOnVacationModel
 @using AMI.EduWork._2025.Domain.Models.VacationModel
+@using Microsoft.AspNetCore.Authorization
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
-
+@inject IAnnualVacationService iannualVacationService
+@attribute [Authorize(Roles = "Admin")]
 <PageTitle>Vacations</PageTitle>
+<AdminOnly/>
 
 <h1>Annual Vacations</h1>
 
@@ -42,7 +45,6 @@ else
     </MudTable>
 
 }
-@inject IAnnualVacationService iannualVacationService
 @code {
     private List<AnnualVacationGetModel>? _annualVacationGetModel;
 
