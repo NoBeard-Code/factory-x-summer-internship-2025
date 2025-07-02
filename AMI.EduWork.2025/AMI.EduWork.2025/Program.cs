@@ -14,7 +14,7 @@ namespace AMI.EduWork._2025
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.ConfigureServices(builder.Configuration);
+            builder.Services.ConfigureServices(builder.Configuration, builder);
             builder.Services.AddMudServices();
             var app = builder.Build();
             

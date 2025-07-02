@@ -11,7 +11,7 @@ using MudBlazor.Services;
 namespace AMI.EduWork._2025.Configuration;
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection ConfigureServices(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection ConfigureServices(this IServiceCollection services, IConfiguration configuration, WebApplicationBuilder builder)
     {
         services.AddRazorComponents()
                 .AddInteractiveServerComponents()
@@ -32,6 +32,12 @@ public static class ServiceCollectionExtensions
             .AddIdentityCookies();
 
         var connectionString = configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+        if (builder.Environment.IsProduction()) {
+
+            connectionString = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTIONSTRING");
+
+        }
+
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(connectionString));
         services.AddDatabaseDeveloperPageExceptionFilter();
