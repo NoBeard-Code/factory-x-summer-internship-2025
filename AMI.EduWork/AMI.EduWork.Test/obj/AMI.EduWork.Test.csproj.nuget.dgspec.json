@@ -1,0 +1,510 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork.Test\\AMI.EduWork.Test.csproj": {}
+  },
+  "projects": {
+    "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork.Client\\AMI.EduWork.Client.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork.Client\\AMI.EduWork.Client.csproj",
+        "projectName": "AMI.EduWork.Client",
+        "projectPath": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork.Client\\AMI.EduWork.Client.csproj",
+        "packagesPath": "C:\\Users\\Adrian\\.nuget\\packages\\",
+        "outputPath": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork.Client\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "D:\\Apps\\Visual studio 2022\\components\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Adrian\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "Microsoft.AspNetCore.Components.WebAssembly": {
+              "target": "Package",
+              "version": "[9.0.6, )"
+            },
+            "Microsoft.AspNetCore.Components.WebAssembly.Authentication": {
+              "target": "Package",
+              "version": "[9.0.6, )"
+            },
+            "Microsoft.NET.ILLink.Tasks": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.6, )",
+              "autoReferenced": true
+            },
+            "Microsoft.NET.Sdk.WebAssembly.Pack": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.6, )",
+              "autoReferenced": true
+            },
+            "MudBlazor": {
+              "target": "Package",
+              "version": "[8.8.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.NETCore.App.Runtime.Mono.browser-wasm",
+              "version": "[9.0.6, 9.0.6]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
+        }
+      },
+      "runtimes": {
+        "browser-wasm": {
+          "#import": []
+        }
+      }
+    },
+    "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork.Data\\AMI.EduWork.Data.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork.Data\\AMI.EduWork.Data.csproj",
+        "projectName": "AMI.EduWork.Data",
+        "projectPath": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork.Data\\AMI.EduWork.Data.csproj",
+        "packagesPath": "C:\\Users\\Adrian\\.nuget\\packages\\",
+        "outputPath": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork.Data\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "D:\\Apps\\Visual studio 2022\\components\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Adrian\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork.Domain\\AMI.EduWork.Domain.csproj": {
+                "projectPath": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork.Domain\\AMI.EduWork.Domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.6, )"
+            },
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.6, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.6, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[9.0.6, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.6, )"
+            },
+            "MudBlazor": {
+              "target": "Package",
+              "version": "[8.8.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork.Domain\\AMI.EduWork.Domain.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork.Domain\\AMI.EduWork.Domain.csproj",
+        "projectName": "AMI.EduWork.Domain",
+        "projectPath": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork.Domain\\AMI.EduWork.Domain.csproj",
+        "packagesPath": "C:\\Users\\Adrian\\.nuget\\packages\\",
+        "outputPath": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork.Domain\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "D:\\Apps\\Visual studio 2022\\components\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Adrian\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "AutoMapper": {
+              "target": "Package",
+              "version": "[14.0.0, )"
+            },
+            "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.6, )"
+            },
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.6, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.6, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[9.0.6, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.6, )"
+            },
+            "MudBlazor": {
+              "target": "Package",
+              "version": "[8.8.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork.Test\\AMI.EduWork.Test.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork.Test\\AMI.EduWork.Test.csproj",
+        "projectName": "AMI.EduWork.Test",
+        "projectPath": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork.Test\\AMI.EduWork.Test.csproj",
+        "packagesPath": "C:\\Users\\Adrian\\.nuget\\packages\\",
+        "outputPath": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork.Test\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "D:\\Apps\\Visual studio 2022\\components\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Adrian\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork.Domain\\AMI.EduWork.Domain.csproj": {
+                "projectPath": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork.Domain\\AMI.EduWork.Domain.csproj"
+              },
+              "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork\\AMI.EduWork.csproj": {
+                "projectPath": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork\\AMI.EduWork.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "Microsoft.NET.Test.Sdk": {
+              "target": "Package",
+              "version": "[17.11.1, )"
+            },
+            "bunit": {
+              "target": "Package",
+              "version": "[1.34.0, )"
+            },
+            "coverlet.collector": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
+            "xunit": {
+              "target": "Package",
+              "version": "[2.9.0, )"
+            },
+            "xunit.runner.visualstudio": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.5.4, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork\\AMI.EduWork.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork\\AMI.EduWork.csproj",
+        "projectName": "AMI.EduWork",
+        "projectPath": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork\\AMI.EduWork.csproj",
+        "packagesPath": "C:\\Users\\Adrian\\.nuget\\packages\\",
+        "outputPath": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "D:\\Apps\\Visual studio 2022\\components\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Adrian\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork.Client\\AMI.EduWork.Client.csproj": {
+                "projectPath": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork.Client\\AMI.EduWork.Client.csproj"
+              },
+              "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork.Data\\AMI.EduWork.Data.csproj": {
+                "projectPath": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork.Data\\AMI.EduWork.Data.csproj"
+              },
+              "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork.Domain\\AMI.EduWork.Domain.csproj": {
+                "projectPath": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork.Domain\\AMI.EduWork.Domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "Microsoft.AspNetCore.Components.WebAssembly.Server": {
+              "target": "Package",
+              "version": "[9.0.6, )"
+            },
+            "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.6, )"
+            },
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.6, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[9.0.6, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "target": "Package",
+              "version": "[9.0.6, )"
+            },
+            "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": {
+              "target": "Package",
+              "version": "[1.22.1-Preview.1, )"
+            },
+            "MudBlazor": {
+              "target": "Package",
+              "version": "[8.8.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

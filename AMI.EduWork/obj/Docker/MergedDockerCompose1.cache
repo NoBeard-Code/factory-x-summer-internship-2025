@@ -1,0 +1,132 @@
+name: dockercompose12815584194551566825
+services:
+  ami.eduwork:
+    build:
+      context: C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork
+      dockerfile: AMI.EduWork/Dockerfile
+      args:
+        BUILD_CONFIGURATION: Debug
+        LAUNCHING_FROM_VS: "true"
+      labels:
+        com.microsoft.created-by: visual-studio
+        com.microsoft.visual-studio.project-name: AMI.EduWork
+      target: base
+    depends_on:
+      sqlserver:
+        condition: service_started
+        required: true
+    entrypoint:
+      - dotnet
+      - --roll-forward
+      - Major
+      - /VSTools/DistrolessHelper/DistrolessHelper.dll
+      - --wait
+    environment:
+      ASPNETCORE_ENVIRONMENT: Containers
+      ASPNETCORE_HTTP_PORTS: "8080"
+      ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS: "true"
+      DOTNET_USE_POLLING_FILE_WATCHER: "1"
+      NUGET_FALLBACK_PACKAGES: /.nuget/fallbackpackages
+    image: amieduwork:dev
+    labels:
+      com.microsoft.visualstudio.debuggee.arguments: ' --additionalProbingPath /.nuget/packages --additionalProbingPath /.nuget/fallbackpackages  "/app/bin/Debug/net9.0/AMI.EduWork.dll"'
+      com.microsoft.visualstudio.debuggee.killprogram: dotnet --roll-forward Major /VSTools/DistrolessHelper/DistrolessHelper.dll --stop dotnet
+      com.microsoft.visualstudio.debuggee.program: dotnet
+      com.microsoft.visualstudio.debuggee.workingdirectory: /app
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 8080
+        protocol: tcp
+      - mode: ingress
+        target: 8081
+        protocol: tcp
+    tty: true
+    volumes:
+      - type: bind
+        source: C:\Users\Adrian\AppData\Roaming\Microsoft\UserSecrets
+        target: /home/app/.microsoft/usersecrets
+        read_only: true
+        bind:
+          create_host_path: true
+      - type: bind
+        source: C:\Users\Adrian\AppData\Roaming\Microsoft\UserSecrets
+        target: /root/.microsoft/usersecrets
+        read_only: true
+        bind:
+          create_host_path: true
+      - type: bind
+        source: C:\Users\Adrian\AppData\Roaming\ASP.NET\Https
+        target: /home/app/.aspnet/https
+        read_only: true
+        bind:
+          create_host_path: true
+      - type: bind
+        source: C:\Users\Adrian\AppData\Roaming\ASP.NET\Https
+        target: /root/.aspnet/https
+        read_only: true
+        bind:
+          create_host_path: true
+      - type: bind
+        source: C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\AMI.EduWork
+        target: /app
+        bind:
+          create_host_path: true
+      - type: bind
+        source: C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork
+        target: /src
+        bind:
+          create_host_path: true
+      - type: bind
+        source: C:\Users\Adrian\vsdbg\vs2017u5
+        target: /remote_debugger
+        bind:
+          create_host_path: true
+      - type: bind
+        source: C:\Users\Adrian\.nuget\packages
+        target: /.nuget/packages
+        read_only: true
+        bind:
+          create_host_path: true
+      - type: bind
+        source: D:\Apps\Visual studio 2022\components\NuGetPackages
+        target: /.nuget/fallbackpackages
+        read_only: true
+        bind:
+          create_host_path: true
+      - type: bind
+        source: D:\Apps\Visual studio 2022\ide\MSBuild\Sdks\Microsoft.Docker.Sdk\tools\linux-x64\net6.0
+        target: /VSTools
+        read_only: true
+        bind:
+          create_host_path: true
+      - type: bind
+        source: D:\Apps\Visual studio 2022\ide\Common7\IDE\CommonExtensions\Microsoft\HotReload
+        target: /HotReloadAgent
+        read_only: true
+        bind:
+          create_host_path: true
+  sqlserver:
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: Str0ng_P@ssword2025!
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 1433
+        published: "1433"
+        protocol: tcp
+    volumes:
+      - type: volume
+        source: sqlserver-data
+        target: /var/opt/mssql
+        volume: {}
+networks:
+  default:
+    name: dockercompose12815584194551566825_default
+volumes:
+  sqlserver-data:
+    name: dockercompose12815584194551566825_sqlserver-data
