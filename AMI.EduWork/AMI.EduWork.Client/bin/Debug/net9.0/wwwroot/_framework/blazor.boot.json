@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "AMI.EduWork.Client",
   "resources": {
-    "hash": "sha256-zNLsN5CYw3m0vJnQ2UAFohX0k9mC56IeKJ2j5y7hp2Y=",
+    "hash": "sha256-pg+oNig899NWKoh88+5FX7fbjF9DCiv2bptv30XtFy4=",
     "fingerprinting": {
       "Microsoft.AspNetCore.Authorization.phaa9r44xv.wasm": "Microsoft.AspNetCore.Authorization.wasm",
       "Microsoft.AspNetCore.Components.4o2vz6uw5j.wasm": "Microsoft.AspNetCore.Components.wasm",
@@ -206,8 +206,8 @@
       "icudt_CJK.tjcz0u77k5.dat": "icudt_CJK.dat",
       "icudt_EFIGS.tptq2av103.dat": "icudt_EFIGS.dat",
       "icudt_no_CJK.lfu7j35m59.dat": "icudt_no_CJK.dat",
-      "AMI.EduWork.Client.kuil9v1m11.wasm": "AMI.EduWork.Client.wasm",
-      "AMI.EduWork.Client.rf2i7kw454.pdb": "AMI.EduWork.Client.pdb"
+      "AMI.EduWork.Client.df6qx1pd1e.wasm": "AMI.EduWork.Client.wasm",
+      "AMI.EduWork.Client.dht4ag43mc.pdb": "AMI.EduWork.Client.pdb"
     },
     "jsModuleNative": {
       "dotnet.native.rtblh4npr3.js": "sha256-HyBzcYNpT2l19+f1bpjNOa1oFoLe3K4JIQ6GsFK5m6I="
@@ -422,10 +422,10 @@
       "WindowsBase.u25hol0de4.wasm": "sha256-CgB28KCiYKHd4yK6IM0PJ526P7IbRCpNkGTqn+cLwxs=",
       "mscorlib.brg9pkj3je.wasm": "sha256-FzZwzxUYYyg3qxc7Km8r50UKAmRWrIeckSFG1NTHKNU=",
       "netstandard.wuzd3f1y6v.wasm": "sha256-yAXc0deBIRkWTVXqADZfhgZtrxGgJCIbZYVtA0NjvdM=",
-      "AMI.EduWork.Client.kuil9v1m11.wasm": "sha256-rGdNqXhCqMJMK/N9oy9k4aQHgN5ZtX3637RITMJ0jCI="
+      "AMI.EduWork.Client.df6qx1pd1e.wasm": "sha256-CdhF/J2bZHALrlwbLbbyc2yaaC6H+PrPdVEVCgvGJ+A="
     },
     "pdb": {
-      "AMI.EduWork.Client.rf2i7kw454.pdb": "sha256-Kex6nygGx5iZDYVOrAkdAJ8Kgz5eL6MbSYWVWBIdZLk="
+      "AMI.EduWork.Client.dht4ag43mc.pdb": "sha256-QfiKGadYyn10yeIgzWppS/Pe6ISSC7rCr+9X43KxZVI="
     }
   },
   "cacheBootResources": true,

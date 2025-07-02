@@ -85,35 +85,35 @@
       },
       "_framework": {
         "Children": {
-          "AMI.EduWork.Client.kuil9v1m11.wasm": {
+          "AMI.EduWork.Client.df6qx1pd1e.wasm": {
             "Children": null,
             "Asset": {
               "ContentRootIndex": 5,
-              "SubPath": "_framework/AMI.EduWork.Client.kuil9v1m11.wasm"
+              "SubPath": "_framework/AMI.EduWork.Client.df6qx1pd1e.wasm"
             },
             "Patterns": null
           },
-          "AMI.EduWork.Client.kuil9v1m11.wasm.gz": {
+          "AMI.EduWork.Client.df6qx1pd1e.wasm.gz": {
             "Children": null,
             "Asset": {
               "ContentRootIndex": 4,
-              "SubPath": "6bx1q91k5z-kuil9v1m11.gz"
+              "SubPath": "6bx1q91k5z-df6qx1pd1e.gz"
             },
             "Patterns": null
           },
-          "AMI.EduWork.Client.rf2i7kw454.pdb": {
+          "AMI.EduWork.Client.dht4ag43mc.pdb": {
             "Children": null,
             "Asset": {
               "ContentRootIndex": 5,
-              "SubPath": "_framework/AMI.EduWork.Client.rf2i7kw454.pdb"
+              "SubPath": "_framework/AMI.EduWork.Client.dht4ag43mc.pdb"
             },
             "Patterns": null
           },
-          "AMI.EduWork.Client.rf2i7kw454.pdb.gz": {
+          "AMI.EduWork.Client.dht4ag43mc.pdb.gz": {
             "Children": null,
             "Asset": {
               "ContentRootIndex": 4,
-              "SubPath": "f73sh7y5x1-rf2i7kw454.gz"
+              "SubPath": "f73sh7y5x1-dht4ag43mc.gz"
             },
             "Patterns": null
           },
@@ -129,7 +129,7 @@
             "Children": null,
             "Asset": {
               "ContentRootIndex": 4,
-              "SubPath": "ya8fyb5wao-u6408h6n4l.gz"
+              "SubPath": "ya8fyb5wao-chrbq9qnkn.gz"
             },
             "Patterns": null
           },
