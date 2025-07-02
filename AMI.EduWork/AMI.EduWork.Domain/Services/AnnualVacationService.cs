@@ -5,7 +5,7 @@ using AMI.EduWork.Domain.Models.User;
 using AMI.EduWork.Domain.Models.VacationModel;
 using Microsoft.Extensions.Logging;
 
-namespace AMI.EduWork._2025.Domain.Services;
+namespace AMI.EduWork.Domain.Services;
 
 public class AnnualVacationService : IAnnualVacationService
 {

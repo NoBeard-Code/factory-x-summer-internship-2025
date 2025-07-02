@@ -1,10 +1,8 @@
-﻿using AMI.EduWork.Data;
-using AMI.EduWork.Data.Repository;
-using AMI.EduWork.Domain.Entities;
+﻿using AMI.EduWork.Domain.Entities;
 using AMI.EduWork.Domain.Interfaces.Repository;
 using Microsoft.EntityFrameworkCore;
 
-namespace AMI.EduWork._2025.Data.Repository
+namespace AMI.EduWork.Data.Repository
 {
     public class AnnualVacationRepository : Repository<AnnualVacation>, IAnnualVacationRepository
     {

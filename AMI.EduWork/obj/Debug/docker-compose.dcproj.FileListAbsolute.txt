@@ -40,13 +40,13 @@ C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\bin\Debug\Micros
 C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\bin\Debug\Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore.dll
 C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\bin\Debug\Microsoft.EntityFrameworkCore.Relational.dll
 C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\bin\Debug\AMI.EduWork.Client.dll
+C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\bin\Debug\Microsoft.Extensions.Identity.Stores.dll
 C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\bin\Debug\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
 C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\bin\Debug\AutoMapper.dll
 C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\bin\Debug\Microsoft.EntityFrameworkCore.SqlServer.dll
 C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\bin\Debug\Microsoft.JSInterop.dll
 C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\bin\Debug\Microsoft.Extensions.Localization.Abstractions.dll
 C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\bin\Debug\Microsoft.Extensions.Localization.dll
-C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\bin\Debug\Microsoft.Extensions.Identity.Stores.dll
 C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\bin\Debug\Microsoft.EntityFrameworkCore.Abstractions.dll
 C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\bin\Debug\Microsoft.AspNetCore.Metadata.dll
 C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\bin\Debug\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll

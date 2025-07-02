@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace AMI.EduWork._2025.Migrations
+namespace AMI.EduWork.Migrations
 {
     /// <inheritdoc />
-    public partial class contract_created_property : Migration
+    public partial class contract_property_created : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

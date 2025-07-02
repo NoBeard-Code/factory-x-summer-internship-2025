@@ -1,7 +1,51 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{2D3EB3B8-5881-44D4-8350-DBDD290A8E89}|AMI.EduWork\\AMI.EduWork.csproj|c:\\factoryxproject\\factory-x-summer-internship-2025\\ami.eduwork\\ami.eduwork\\configuration\\servicecollectionextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2D3EB3B8-5881-44D4-8350-DBDD290A8E89}|AMI.EduWork\\AMI.EduWork.csproj|solutionrelative:ami.eduwork\\configuration\\servicecollectionextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2D3EB3B8-5881-44D4-8350-DBDD290A8E89}|AMI.EduWork\\AMI.EduWork.csproj|c:\\factoryxproject\\factory-x-summer-internship-2025\\ami.eduwork\\ami.eduwork\\configuration\\diextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2D3EB3B8-5881-44D4-8350-DBDD290A8E89}|AMI.EduWork\\AMI.EduWork.csproj|solutionrelative:ami.eduwork\\configuration\\diextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork.Data\\Migrations\\20250702223938_contract_property_created.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:AMI.EduWork.Data\\Migrations\\20250702223938_contract_property_created.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Apps\\Visual studio 2022\\ide\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{79DF495A-D7C1-426D-9BCB-49187DA7E746}|AMI.EduWork.Domain\\AMI.EduWork.Domain.csproj|c:\\factoryxproject\\factory-x-summer-internship-2025\\ami.eduwork\\ami.eduwork.domain\\services\\vacationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{79DF495A-D7C1-426D-9BCB-49187DA7E746}|AMI.EduWork.Domain\\AMI.EduWork.Domain.csproj|solutionrelative:ami.eduwork.domain\\services\\vacationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{79DF495A-D7C1-426D-9BCB-49187DA7E746}|AMI.EduWork.Domain\\AMI.EduWork.Domain.csproj|c:\\factoryxproject\\factory-x-summer-internship-2025\\ami.eduwork\\ami.eduwork.domain\\services\\contractservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{79DF495A-D7C1-426D-9BCB-49187DA7E746}|AMI.EduWork.Domain\\AMI.EduWork.Domain.csproj|solutionrelative:ami.eduwork.domain\\services\\contractservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{79DF495A-D7C1-426D-9BCB-49187DA7E746}|AMI.EduWork.Domain\\AMI.EduWork.Domain.csproj|c:\\factoryxproject\\factory-x-summer-internship-2025\\ami.eduwork\\ami.eduwork.domain\\services\\annualvacationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{79DF495A-D7C1-426D-9BCB-49187DA7E746}|AMI.EduWork.Domain\\AMI.EduWork.Domain.csproj|solutionrelative:ami.eduwork.domain\\services\\annualvacationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5975D5E1-EEAD-4FAC-9C31-CC9FC721C1FC}|AMI.EduWork.Data\\AMI.EduWork.Data.csproj|c:\\factoryxproject\\factory-x-summer-internship-2025\\ami.eduwork\\ami.eduwork.data\\repository\\annualvacationrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5975D5E1-EEAD-4FAC-9C31-CC9FC721C1FC}|AMI.EduWork.Data\\AMI.EduWork.Data.csproj|solutionrelative:ami.eduwork.data\\repository\\annualvacationrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{79DF495A-D7C1-426D-9BCB-49187DA7E746}|AMI.EduWork.Domain\\AMI.EduWork.Domain.csproj|c:\\factoryxproject\\factory-x-summer-internship-2025\\ami.eduwork\\ami.eduwork.domain\\entities\\contract.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{79DF495A-D7C1-426D-9BCB-49187DA7E746}|AMI.EduWork.Domain\\AMI.EduWork.Domain.csproj|solutionrelative:ami.eduwork.domain\\entities\\contract.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5975D5E1-EEAD-4FAC-9C31-CC9FC721C1FC}|AMI.EduWork.Data\\AMI.EduWork.Data.csproj|c:\\factoryxproject\\factory-x-summer-internship-2025\\ami.eduwork\\ami.eduwork.data\\migrations\\dataseeder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5975D5E1-EEAD-4FAC-9C31-CC9FC721C1FC}|AMI.EduWork.Data\\AMI.EduWork.Data.csproj|solutionrelative:ami.eduwork.data\\migrations\\dataseeder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7F480DB2-9B48-41D8-AE17-F231B5964569}|AMI.EduWork.Test\\AMI.EduWork.Test.csproj|c:\\factoryxproject\\factory-x-summer-internship-2025\\ami.eduwork\\ami.eduwork.test\\ami.eduwork.test.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{7F480DB2-9B48-41D8-AE17-F231B5964569}|AMI.EduWork.Test\\AMI.EduWork.Test.csproj|solutionrelative:ami.eduwork.test\\ami.eduwork.test.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,11 +53,152 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ServiceCollectionExtensions.cs",
+              "DocumentMoniker": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork\\Configuration\\ServiceCollectionExtensions.cs",
+              "RelativeDocumentMoniker": "AMI.EduWork\\Configuration\\ServiceCollectionExtensions.cs",
+              "ToolTip": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork\\Configuration\\ServiceCollectionExtensions.cs",
+              "RelativeToolTip": "AMI.EduWork\\Configuration\\ServiceCollectionExtensions.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-02T22:42:26.483Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "20250702223938_contract_property_created.cs",
+              "DocumentMoniker": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork.Data\\Migrations\\20250702223938_contract_property_created.cs",
+              "RelativeDocumentMoniker": "AMI.EduWork.Data\\Migrations\\20250702223938_contract_property_created.cs",
+              "ToolTip": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork.Data\\Migrations\\20250702223938_contract_property_created.cs",
+              "RelativeToolTip": "AMI.EduWork.Data\\Migrations\\20250702223938_contract_property_created.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-02T22:39:38.592Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Microsoft.Common.CurrentVersion.targets",
+              "DocumentMoniker": "D:\\Apps\\Visual studio 2022\\ide\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets",
+              "ToolTip": "D:\\Apps\\Visual studio 2022\\ide\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets",
+              "ViewState": "AgIAANUTAAAAAAAAAAAAAOcTAABDAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003801|",
+              "WhenOpened": "2025-07-02T22:36:53.338Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "ContractService.cs",
+              "DocumentMoniker": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork.Domain\\Services\\ContractService.cs",
+              "RelativeDocumentMoniker": "AMI.EduWork.Domain\\Services\\ContractService.cs",
+              "ToolTip": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork.Domain\\Services\\ContractService.cs",
+              "RelativeToolTip": "AMI.EduWork.Domain\\Services\\ContractService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-02T22:36:03.998Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "AnnualVacationService.cs",
+              "DocumentMoniker": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork.Domain\\Services\\AnnualVacationService.cs",
+              "RelativeDocumentMoniker": "AMI.EduWork.Domain\\Services\\AnnualVacationService.cs",
+              "ToolTip": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork.Domain\\Services\\AnnualVacationService.cs",
+              "RelativeToolTip": "AMI.EduWork.Domain\\Services\\AnnualVacationService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-02T22:35:56.988Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "AnnualVacationRepository.cs",
+              "DocumentMoniker": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork.Data\\Repository\\AnnualVacationRepository.cs",
+              "RelativeDocumentMoniker": "AMI.EduWork.Data\\Repository\\AnnualVacationRepository.cs",
+              "ToolTip": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork.Data\\Repository\\AnnualVacationRepository.cs",
+              "RelativeToolTip": "AMI.EduWork.Data\\Repository\\AnnualVacationRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-02T22:35:10.28Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "DIExtensions.cs",
+              "DocumentMoniker": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork\\Configuration\\DIExtensions.cs",
+              "RelativeDocumentMoniker": "AMI.EduWork\\Configuration\\DIExtensions.cs",
+              "ToolTip": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork\\Configuration\\DIExtensions.cs",
+              "RelativeToolTip": "AMI.EduWork\\Configuration\\DIExtensions.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAhwBcAAAAzAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-02T22:34:18.283Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Contract.cs",
+              "DocumentMoniker": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork.Domain\\Entities\\Contract.cs",
+              "RelativeDocumentMoniker": "AMI.EduWork.Domain\\Entities\\Contract.cs",
+              "ToolTip": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork.Domain\\Entities\\Contract.cs",
+              "RelativeToolTip": "AMI.EduWork.Domain\\Entities\\Contract.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAWwBMAAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-02T22:31:15.15Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "DataSeeder.cs",
+              "DocumentMoniker": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork.Data\\Migrations\\DataSeeder.cs",
+              "RelativeDocumentMoniker": "AMI.EduWork.Data\\Migrations\\DataSeeder.cs",
+              "ToolTip": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork.Data\\Migrations\\DataSeeder.cs",
+              "RelativeToolTip": "AMI.EduWork.Data\\Migrations\\DataSeeder.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAASwBYAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-02T22:23:08.896Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "AMI.EduWork.Test",
+              "DocumentMoniker": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork.Test\\AMI.EduWork.Test.csproj",
+              "RelativeDocumentMoniker": "AMI.EduWork.Test\\AMI.EduWork.Test.csproj",
+              "ToolTip": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork.Test\\AMI.EduWork.Test.csproj",
+              "RelativeToolTip": "AMI.EduWork.Test\\AMI.EduWork.Test.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-07-02T22:23:03.156Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "VacationService.cs",
+              "DocumentMoniker": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork.Domain\\Services\\VacationService.cs",
+              "RelativeDocumentMoniker": "AMI.EduWork.Domain\\Services\\VacationService.cs",
+              "ToolTip": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork.Domain\\Services\\VacationService.cs",
+              "RelativeToolTip": "AMI.EduWork.Domain\\Services\\VacationService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-02T22:21:14.009Z",
+              "EditorCaption": ""
             }
           ]
         }

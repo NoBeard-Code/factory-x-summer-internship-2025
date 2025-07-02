@@ -4,7 +4,7 @@ using AMI.EduWork.Domain.Entities;
 using AMI.EduWork.Domain.Helpers;
 using Microsoft.AspNetCore.Identity;
 
-namespace AMI.EduWork._2025.Data.Migrations
+namespace AMI.EduWork.Data.Migrations
 {
     public class DataSeeder
     {

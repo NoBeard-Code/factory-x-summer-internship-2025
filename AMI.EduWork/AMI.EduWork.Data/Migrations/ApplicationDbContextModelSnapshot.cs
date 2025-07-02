@@ -123,6 +123,9 @@ namespace AMI.EduWork.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<DateOnly>("Created")
+                        .HasColumnType("date");
+
                     b.Property<int>("HourlyRate")
                         .HasColumnType("int");
 
