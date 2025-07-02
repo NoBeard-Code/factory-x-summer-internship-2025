@@ -10,13 +10,11 @@ namespace AMI.EduWork._2025.Domain.Services
     public class ContractService : IContractService
     {
         private readonly IContractRepository _repository;
-        private readonly IUserService _iuserService;
         private readonly ILogger<ContractService> _logger;
-        public ContractService(IContractRepository repository, ILogger<ContractService> logger, IUserService iuserService)
+        public ContractService(IContractRepository repository, ILogger<ContractService> logger)
         {
             _logger = logger;
             _repository = repository;
-            _iuserService = iuserService;
         }
         public async Task<bool> Create(ContractCreateModel? contractCreateModel)
         {
@@ -26,7 +24,8 @@ namespace AMI.EduWork._2025.Domain.Services
                 HourlyRate = contractCreateModel.HourlyRate,
                 IsActive = contractCreateModel.IsActive,
                 WorkingHour = contractCreateModel.WorkingHour,
-                UserId = contractCreateModel.UserId
+                UserId = contractCreateModel.UserId,
+                Created = DateOnly.FromDateTime(DateTime.Now)
             };
             await _repository.Create(contract);    
             return await _repository.SaveChangesAsync();
@@ -45,7 +44,8 @@ namespace AMI.EduWork._2025.Domain.Services
                 Id = contract.Id,
                 HourlyRate = contract.HourlyRate,
                 IsActive= contract.IsActive,
-                WorkingHour= contract.WorkingHour,
+                Created = DateOnly.FromDateTime(DateTime.Now),
+                WorkingHour = contract.WorkingHour,
                 _GetUserModel = new GetUserModel{
                     Id = contract.UserId,
                     AccessFailedCount = contract.User.AccessFailedCount,
@@ -75,6 +75,7 @@ namespace AMI.EduWork._2025.Domain.Services
                     Id = x.Id,
                     HourlyRate= x.HourlyRate,
                     IsActive = x.IsActive,
+                    Created = DateOnly.FromDateTime(DateTime.Now),
                     WorkingHour = x.WorkingHour,
                     _GetUserModel = new GetUserModel
                     {
@@ -106,6 +107,7 @@ namespace AMI.EduWork._2025.Domain.Services
                 {
                     Id = x.Id,
                     HourlyRate = x.HourlyRate,
+                    Created = DateOnly.FromDateTime(DateTime.Now),
                     IsActive = x.IsActive,
                     WorkingHour = x.WorkingHour,
                     _GetUserModel = new GetUserModel
@@ -138,6 +140,7 @@ namespace AMI.EduWork._2025.Domain.Services
                     Id = x.Id,
                     HourlyRate = x.HourlyRate,
                     IsActive = x.IsActive,
+                    Created = DateOnly.FromDateTime(DateTime.Now),
                     WorkingHour = x.WorkingHour,
                     _GetUserModel = new GetUserModel
                     {
@@ -167,6 +170,7 @@ namespace AMI.EduWork._2025.Domain.Services
                     Id = x.Id,
                     HourlyRate = x.HourlyRate,
                     IsActive = x.IsActive,
+                    Created = DateOnly.FromDateTime(DateTime.Now),
                     WorkingHour = x.WorkingHour,
                     _GetUserModel = new GetUserModel
                     {
@@ -198,6 +202,7 @@ namespace AMI.EduWork._2025.Domain.Services
             contract.IsActive = contractUpdateModel.IsActive;
             contract.UserId = contractUpdateModel.UserId;
             contract.WorkingHour = contractUpdateModel.WorkingHour;
+            contract.Created = contractUpdateModel.Created;
 
             await _repository.Update(contract);
             return await _repository.SaveChangesAsync();

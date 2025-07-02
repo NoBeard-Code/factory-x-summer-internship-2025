@@ -2,8 +2,6 @@
 using AMI.EduWork._2025.Domain.Entities;
 using AMI.EduWork._2025.Domain.Helpers;
 using Microsoft.AspNetCore.Identity;
-using System;
-using System.Threading.Tasks;
 
 namespace AMI.EduWork._2025.Data.Migrations {
     public class DataSeeder {
@@ -55,7 +53,8 @@ namespace AMI.EduWork._2025.Data.Migrations {
                 UserId = user.Id,
                 WorkingHour = 8,
                 IsActive = true,
-                HourlyRate = 10
+                HourlyRate = 10,
+                Created = DateOnly.FromDateTime(DateTime.Now)
             });
 
             var project = new Project {
