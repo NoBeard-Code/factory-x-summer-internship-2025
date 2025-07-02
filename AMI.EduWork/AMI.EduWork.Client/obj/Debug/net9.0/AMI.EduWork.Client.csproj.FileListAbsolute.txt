@@ -1053,10 +1053,10 @@ C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\AMI.EduWork.Clie
 C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\AMI.EduWork.Client\obj\Debug\net9.0\refint\AMI.EduWork.Client.dll
 C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\AMI.EduWork.Client\obj\Debug\net9.0\AMI.EduWork.Client.pdb
 C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\AMI.EduWork.Client\obj\Debug\net9.0\ref\AMI.EduWork.Client.dll
-C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\AMI.EduWork.Client\bin\Debug\net9.0\wwwroot\_framework\AMI.EduWork.Client.w2pnihq6tt.wasm
-C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\AMI.EduWork.Client\bin\Debug\net9.0\wwwroot\_framework\AMI.EduWork.Client.k8wmqnvq83.pdb
-C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\AMI.EduWork.Client\bin\Debug\net9.0\wwwroot\_framework\AMI.EduWork.Client.w2pnihq6tt.wasm.gz
-C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\AMI.EduWork.Client\bin\Debug\net9.0\wwwroot\_framework\AMI.EduWork.Client.k8wmqnvq83.pdb.gz
-C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\AMI.EduWork.Client\obj\Debug\net9.0\compressed\6bx1q91k5z-w2pnihq6tt.gz
-C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\AMI.EduWork.Client\obj\Debug\net9.0\compressed\f73sh7y5x1-k8wmqnvq83.gz
-C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\AMI.EduWork.Client\obj\Debug\net9.0\compressed\ya8fyb5wao-zt06ggi7fb.gz
+C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\AMI.EduWork.Client\bin\Debug\net9.0\wwwroot\_framework\AMI.EduWork.Client.5rebsw21w8.wasm
+C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\AMI.EduWork.Client\bin\Debug\net9.0\wwwroot\_framework\AMI.EduWork.Client.cterwxrd8y.pdb
+C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\AMI.EduWork.Client\bin\Debug\net9.0\wwwroot\_framework\AMI.EduWork.Client.5rebsw21w8.wasm.gz
+C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\AMI.EduWork.Client\bin\Debug\net9.0\wwwroot\_framework\AMI.EduWork.Client.cterwxrd8y.pdb.gz
+C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\AMI.EduWork.Client\obj\Debug\net9.0\compressed\6bx1q91k5z-5rebsw21w8.gz
+C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\AMI.EduWork.Client\obj\Debug\net9.0\compressed\f73sh7y5x1-cterwxrd8y.gz
+C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\AMI.EduWork.Client\obj\Debug\net9.0\compressed\ya8fyb5wao-qalkrgaymr.gz
