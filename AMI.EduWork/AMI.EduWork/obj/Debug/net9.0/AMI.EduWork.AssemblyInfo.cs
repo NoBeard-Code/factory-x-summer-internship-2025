@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AMI.EduWork")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+866bf2d3e81720bf91a716ac7fb9484e4433ab1f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+49ff7597f7166f530c6914d9302aa2921e53e1c6")]
 [assembly: System.Reflection.AssemblyProductAttribute("AMI.EduWork")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AMI.EduWork")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
