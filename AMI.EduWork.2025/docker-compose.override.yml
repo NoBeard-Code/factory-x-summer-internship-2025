@@ -1,5 +1,5 @@
 services:
-  ami.eduwork.2025:
+  ami.eduwork:
     environment:
       - ASPNETCORE_ENVIRONMENT=Containers
       - ASPNETCORE_HTTP_PORTS=8080

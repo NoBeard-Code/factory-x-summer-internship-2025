@@ -1,9 +1,9 @@
 services:
-  ami.eduwork.2025:
-    image: ${DOCKER_REGISTRY-}amieduwork2025
+  ami.eduwork:
+    image: ${DOCKER_REGISTRY-}amieduwork
     build:
       context: .
-      dockerfile: AMI.EduWork.2025/Dockerfile
+      dockerfile: AMI.EduWork/Dockerfile
     depends_on:
        - sqlserver
   sqlserver:

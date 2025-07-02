@@ -4,7 +4,7 @@
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
       "serviceActions": {
-        "ami.eduwork.2025": "StartDebugging",
+        "ami.eduwork": "StartDebugging",
         "sqlserver": "StartWithoutDebugging"
       }
     }
