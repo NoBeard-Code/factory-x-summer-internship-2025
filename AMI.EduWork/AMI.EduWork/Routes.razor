@@ -1,0 +1,19 @@
+﻿@using AMI.EduWork.Client
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.Routing;
+@using Components.Layout;
+@using System.Reflection
+<Router AppAssembly="@typeof(Program).Assembly" AdditionalAssemblies="@additionalAssemblies">
+    <Found Context="routeData">
+        <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+            <NotAuthorized>
+                <RedirectToLogin />
+            </NotAuthorized>
+        </AuthorizeRouteView>
+        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+    </Found>
+</Router>
+
+@code {
+    private static readonly Assembly[] additionalAssemblies = new[] { typeof(AMI.EduWork.Client.Program).Assembly };
+}

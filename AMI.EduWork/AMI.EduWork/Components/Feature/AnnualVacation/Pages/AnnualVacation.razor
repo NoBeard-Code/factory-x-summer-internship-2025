@@ -1,0 +1,75 @@
+﻿@page "/annualVacation"
+<<<<<<< HEAD:AMI.EduWork.2025/AMI.EduWork.2025/Components/Feature/AnnualVacation/Pages/AnnualVacation.razor
+@using AMI.EduWork._2025.Domain.Interfaces.Service
+@using AMI.EduWork._2025.Domain.Models.ContractModel
+@using AMI.EduWork._2025.Domain.Models.UserOnVacationModel
+@using AMI.EduWork._2025.Domain.Models.VacationModel
+@using Microsoft.AspNetCore.Authorization
+=======
+@using AMI.EduWork.Domain.Interfaces.Service
+@using AMI.EduWork.Domain.Models.ContractModel
+@using AMI.EduWork.Domain.Models.UserOnVacationModel
+@using AMI.EduWork.Domain.Models.VacationModel
+>>>>>>> main:AMI.EduWork/AMI.EduWork/Components/Feature/AnnualVacation/Pages/AnnualVacation.razor
+@rendermode InteractiveServer
+@inject NavigationManager NavigationManager
+@inject IAnnualVacationService iannualVacationService
+@attribute [Authorize(Roles = "Admin")]
+<PageTitle>Vacations</PageTitle>
+<AdminOnly/>
+
+<h1>Annual Vacations</h1>
+
+@if (_annualVacationGetModel == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="contracts/add">Create annual vacation</MudButton>
+
+    <MudTable Items="@_annualVacationGetModel" Hover="true" SortLabel="Sort By">
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortBy="new Func<AnnualVacationGetModel, object>(x => x._GetUserModel.UserName)">User</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<AnnualVacationGetModel, object>(x => x.Year)">Year</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<AnnualVacationGetModel, object>(x => x.AvailableVacation)">Available vacation</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<AnnualVacationGetModel, object>(x => x.UsedVacation)">Used vacation</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<AnnualVacationGetModel, object>(x => x.PlannedVacation)">Planned vacation</MudTableSortLabel></MudTh>
+            <MudTh>Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Nr">@context._GetUserModel.UserName</MudTd>
+            <MudTd DataLabel="Sign">@context.Year</MudTd>
+            <MudTd DataLabel="Name">@context.AvailableVacation</MudTd>
+            <MudTd DataLabel="Name">@context.UsedVacation</MudTd>
+            <MudTd DataLabel="Position">@context.PlannedVacation</MudTd>
+            <MudButton Variant="Variant.Filled" Color="Color.Info" onclick="(async () => await UpdateAnnualVacation(context.Id))">Update</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Secondary" onclick="(async () => await DeleteAnnualVacation(context.Id))">Delete</MudButton>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[] { 10, 25, 50, 100 }" />
+        </PagerContent>
+    </MudTable>
+
+}
+@code {
+    private List<AnnualVacationGetModel>? _annualVacationGetModel;
+
+    protected override async Task OnInitializedAsync()
+    {
+        IEnumerable<AnnualVacationGetModel>? annualVacationGetModel = await iannualVacationService.GetAll();
+        _annualVacationGetModel = annualVacationGetModel.ToList();
+
+    }
+
+    private async Task DeleteAnnualVacation(string id)
+    {
+        await iannualVacationService.Delete(id);
+        AnnualVacationGetModel? annualVacationGetModel = _annualVacationGetModel?.FirstOrDefault(x => x.Id == id);
+        if (annualVacationGetModel is not null) _annualVacationGetModel!.Remove(annualVacationGetModel);
+    }
+    private async Task UpdateAnnualVacation(string annualVacationId)
+    {
+        NavigationManager.NavigateTo($"/annualVacation/update/{annualVacationId}");
+    }
+}

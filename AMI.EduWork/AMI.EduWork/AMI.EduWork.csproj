@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>aspnet-AMI.EduWork-1e169976-6e44-40cc-ac76-b36bc380a437</UserSecretsId>
+    <RootNamespace>AMI.EduWork</RootNamespace>
+    
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="9.0.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="9.0.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.6" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1-Preview.1" />
+    <PackageReference Include="MudBlazor" Version="8.8.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Components\Feature\Contract\Components\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\Users\mustr\source\repos\factory-x-summer-internship-2025\AMI.EduWork\AMI.EduWork\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AMI.EduWork.Client\AMI.EduWork.Client.csproj" />
+    <ProjectReference Include="..\AMI.EduWork.Data\AMI.EduWork.Data.csproj" />
+    <ProjectReference Include="..\AMI.EduWork.Domain\AMI.EduWork.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

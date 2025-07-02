@@ -1,0 +1,90 @@
+﻿@page "/annualVacation/update/{annualVacationId}"
+<<<<<<< HEAD:AMI.EduWork.2025/AMI.EduWork.2025/Components/Feature/AnnualVacation/Pages/AnnualVacationUpdate.razor
+@using AMI.EduWork._2025.Domain.Interfaces.Service
+@using AMI.EduWork._2025.Domain.Models.ContractModel
+@using AMI.EduWork._2025.Domain.Models.User
+@using AMI.EduWork._2025.Domain.Models.UserOnVacationModel
+@using AMI.EduWork._2025.Domain.Models.VacationModel
+@using Microsoft.AspNetCore.Authorization
+=======
+@using AMI.EduWork.Domain.Interfaces.Service
+@using AMI.EduWork.Domain.Models.ContractModel
+@using AMI.EduWork.Domain.Models.User
+@using AMI.EduWork.Domain.Models.UserOnVacationModel
+@using AMI.EduWork.Domain.Models.VacationModel
+>>>>>>> main:AMI.EduWork/AMI.EduWork/Components/Feature/AnnualVacation/Pages/AnnualVacationUpdate.razor
+@rendermode InteractiveServer
+@inject IUserService iuserService
+@inject IAnnualVacationService iannualVacationService
+@inject NavigationManager Navigation
+@attribute [Authorize(Roles = "Admin")]
+
+<h3>Update annual vacation</h3>
+
+<div class="col-md-4">
+    <EditForm method="post" Model="annualVacationUpdateModel" OnValidSubmit="Update" FormName="Update" Enhance>
+        <div class="mb-3">
+            <label for="annualVacationUpdateModel.UserId">Select user :</label>
+            <select class="form-select" @bind="annualVacationUpdateModel.UserId">
+                <option value="">-- Choose --</option>
+                @foreach (var user in userGetModel)
+                {
+                    <option id="@user.Id" value="@user.Id">@user.UserName</option>
+                }
+            </select>
+        </div>
+        <div class="mb-3">
+            <labe1 for="Year" class="form-label">Year</labe1>
+            <InputNumber id="Year" @bind-Value="annualVacationUpdateModel.Year" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <labe1 for="PlannedVacation" class="form-label">Planned vacation</labe1>
+            <InputNumber id="PlannedVacation" @bind-Value="annualVacationUpdateModel.PlannedVacation" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <labe1 for="AvailableVacation" class="form-label">Available vacation</labe1>
+            <InputNumber id="AvailableVacation" @bind-Value="annualVacationUpdateModel.AvailableVacation" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <labe1 for="UsedVacation" class="form-label">Available vacation</labe1>
+            <InputNumber id="UsedVacation" @bind-Value="annualVacationUpdateModel.UsedVacation" class="form-control" />
+        </div>
+        <button class="btn btn-primary" type="submit">Save</button>
+        <button class="btn btn-secondary" type="button" @onclick="Cancel">Cancel</button>
+    </EditForm>
+</div>
+
+
+@code {
+    [Parameter]
+    public string annualVacationId { get; set; }
+    public AnnualVacationUpdateModel annualVacationUpdateModel { get; set; } = new();
+    private List<GetUserModel> userGetModel { get; set; } = new();
+    protected override async Task OnInitializedAsync()
+    {
+        IEnumerable<GetUserModel> _userGetModel = await iuserService.GetAll();
+        userGetModel = _userGetModel.ToList();
+    }
+    protected override async Task OnParametersSetAsync()
+    {
+        AnnualVacationGetModel _annualVacationGetModel = await iannualVacationService.GetById(annualVacationId);
+        annualVacationUpdateModel = new AnnualVacationUpdateModel{
+            Id = _annualVacationGetModel.Id,
+            UserId = _annualVacationGetModel._GetUserModel.Id,
+            AvailableVacation = _annualVacationGetModel.AvailableVacation,
+            PlannedVacation = _annualVacationGetModel.PlannedVacation,
+            UsedVacation = _annualVacationGetModel.UsedVacation,
+            Year = _annualVacationGetModel.Year
+        };
+    }
+    private async Task Update()
+    {
+        await iannualVacationService.Update(annualVacationUpdateModel);
+        Navigation.NavigateTo("/annualVacation");
+    }
+
+    private void Cancel()
+    {
+        Navigation.NavigateTo("/annualVacation");
+    }
+}
