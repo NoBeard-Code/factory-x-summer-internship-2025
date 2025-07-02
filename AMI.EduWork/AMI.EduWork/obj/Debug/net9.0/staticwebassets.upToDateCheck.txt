@@ -44,6 +44,7 @@ wwwroot\lib\bootstrap\dist\js\bootstrap.js
 wwwroot\lib\bootstrap\dist\js\bootstrap.js.map
 wwwroot\lib\bootstrap\dist\js\bootstrap.min.js
 wwwroot\lib\bootstrap\dist\js\bootstrap.min.js.map
+C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\AMI.EduWork\wwwroot\lib\bootstrap\dist\js\bootstrap.min.js.map
 C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\AMI.EduWork\wwwroot\app.css
 C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\AMI.EduWork\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css
 C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\AMI.EduWork\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map
@@ -88,4 +89,3 @@ C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\AMI.EduWork\wwwr
 C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\AMI.EduWork\wwwroot\lib\bootstrap\dist\js\bootstrap.js
 C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\AMI.EduWork\wwwroot\lib\bootstrap\dist\js\bootstrap.js.map
 C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\AMI.EduWork\wwwroot\lib\bootstrap\dist\js\bootstrap.min.js
-C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\AMI.EduWork\wwwroot\lib\bootstrap\dist\js\bootstrap.min.js.map

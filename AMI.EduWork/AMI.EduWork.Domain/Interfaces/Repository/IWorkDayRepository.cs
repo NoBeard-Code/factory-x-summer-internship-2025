@@ -1,10 +1,5 @@
 ﻿using AMI.EduWork.Domain.Entities;
 using AMI.EduWork.Domain.IRepository.Repository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AMI.EduWork.Domain.Interfaces.Repository;
 

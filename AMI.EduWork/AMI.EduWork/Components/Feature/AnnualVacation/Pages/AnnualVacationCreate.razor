@@ -4,10 +4,12 @@
 @using AMI.EduWork.Domain.Models.User
 @using AMI.EduWork.Domain.Models.UserOnVacationModel
 @using AMI.EduWork.Domain.Models.VacationModel
+@using Microsoft.AspNetCore.Authorization
 @rendermode InteractiveServer
 @inject IUserService iuserService
 @inject IAnnualVacationService iannualVacationService
 @inject NavigationManager Navigation
+@attribute [Authorize(Roles = "Admin")]
 
 <h3>Create annual vacation</h3>
 

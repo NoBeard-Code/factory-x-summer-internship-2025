@@ -207,6 +207,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xGZWF0dXJlXEVycm9yLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/FactoryXproject/factory-x-summer-internship-2025/AMI.EduWork/AMI.EduWork/Components/Feature/Profile/Components/VacationComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xGZWF0dXJlXFByb2ZpbGVcQ29tcG9uZW50c1xWYWNhdGlvbkNvbXBvbmVudC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/FactoryXproject/factory-x-summer-internship-2025/AMI.EduWork/AMI.EduWork/Components/Feature/Profile/Pages/Profile.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xGZWF0dXJlXFByb2ZpbGVcUGFnZXNcUHJvZmlsZS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
@@ -237,6 +241,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/FactoryXproject/factory-x-summer-internship-2025/AMI.EduWork/AMI.EduWork/Components/Feature/Shared/ErrorDialog.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xGZWF0dXJlXFNoYXJlZFxFcnJvckRpYWxvZy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/FactoryXproject/factory-x-summer-internship-2025/AMI.EduWork/AMI.EduWork/Components/Feature/Users/Users.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xGZWF0dXJlXFVzZXJzXFVzZXJzLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/FactoryXproject/factory-x-summer-internship-2025/AMI.EduWork/AMI.EduWork/Components/Feature/Vacation/Pages/Vacation.razor]

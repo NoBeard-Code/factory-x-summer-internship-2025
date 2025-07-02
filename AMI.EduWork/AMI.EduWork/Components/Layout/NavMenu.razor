@@ -17,14 +17,6 @@
                 <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
             </NavLink>
         </div>
-       
-
-       
-        
-                
-                
-
-
 
         <AuthorizeView>
             <Authorized>
@@ -34,27 +26,36 @@
                     </NavLink>
                 </div>
                 <div class="nav-item px-3">
-                   <NavLink class="nav-link" href="projects" style="display: inline-flex; align-items: center;">
+                    <NavLink class="nav-link" href="projects" style="display: inline-flex; align-items: center;">
                         <span class="bi bi-folder-fill" style="margin-right: 0.5rem; font-size: 1.2rem; line-height: 1;"></span>
                         <span style="line-height: 1;">My Projects</span>
-                   </NavLink>
+                    </NavLink>
                 </div>
                 <div class="nav-item px-3">
-            <NavLink class="nav-link" href="profile" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Profile
-            </NavLink>
-        </div>
-        
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="contracts">
-                <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Contracts
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="annualVacation">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Annual vacation
-            </NavLink>
-        </div>
+                    <NavLink class="nav-link" href="profile" Match="NavLinkMatch.All">
+                        <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Profile
+                    </NavLink>
+                </div>
+                <AuthorizeView Roles="Admin">
+                    <Authorized Context="adminContext">
+                        <div class="nav-item px-3">
+                            <NavLink class="nav-link" href="annualVacation">
+                                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Annual vacation
+                            </NavLink>
+                        </div>
+                        <div class="nav-item px-3">
+                            <NavLink class="nav-link" href="users">
+                                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Users
+                            </NavLink>
+                        </div>
+                    </Authorized>
+                </AuthorizeView>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="contracts">
+                        <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Contracts
+                    </NavLink>
+                </div>
+
                 <div class="nav-item px-3">
                     <form action="Account/Logout" method="post">
                         <AntiforgeryToken />

@@ -1,7 +1,12 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{2D3EB3B8-5881-44D4-8350-DBDD290A8E89}|AMI.EduWork\\AMI.EduWork.csproj|c:\\factoryxproject\\factory-x-summer-internship-2025\\ami.eduwork\\ami.eduwork\\components\\feature\\profile\\pages\\profile.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{2D3EB3B8-5881-44D4-8350-DBDD290A8E89}|AMI.EduWork\\AMI.EduWork.csproj|solutionrelative:ami.eduwork\\components\\feature\\profile\\pages\\profile.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,8 +14,21 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 0,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Profile.razor",
+              "DocumentMoniker": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork\\Components\\Feature\\Profile\\Pages\\Profile.razor",
+              "RelativeDocumentMoniker": "AMI.EduWork\\Components\\Feature\\Profile\\Pages\\Profile.razor",
+              "ToolTip": "C:\\FactoryXproject\\factory-x-summer-internship-2025\\AMI.EduWork\\AMI.EduWork\\Components\\Feature\\Profile\\Pages\\Profile.razor",
+              "RelativeToolTip": "AMI.EduWork\\Components\\Feature\\Profile\\Pages\\Profile.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-07-02T21:49:01.766Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Bookmark",
               "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"

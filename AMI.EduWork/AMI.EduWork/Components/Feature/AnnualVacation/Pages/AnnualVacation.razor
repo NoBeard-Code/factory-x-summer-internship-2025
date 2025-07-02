@@ -3,8 +3,10 @@
 @using AMI.EduWork.Domain.Models.ContractModel
 @using AMI.EduWork.Domain.Models.UserOnVacationModel
 @using AMI.EduWork.Domain.Models.VacationModel
+@using Microsoft.AspNetCore.Authorization
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
+@attribute [Authorize(Roles = "Admin")]
 
 <PageTitle>Vacations</PageTitle>
 

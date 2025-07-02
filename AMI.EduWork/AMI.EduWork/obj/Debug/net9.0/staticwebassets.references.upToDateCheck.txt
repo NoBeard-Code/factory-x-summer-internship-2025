@@ -2,3 +2,5 @@ C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\AMI.EduWork.Clie
 C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\AMI.EduWork.Client\obj\Debug\net9.0\staticwebassets.build.json
 C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\AMI.EduWork.Client\obj\Debug\net9.0\staticwebassets.build.json
 C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\AMI.EduWork.Client\obj\Debug\net9.0\staticwebassets.build.json
+C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\AMI.EduWork.Client\obj\Debug\net9.0\staticwebassets.build.json
+C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\AMI.EduWork.Client\obj\Debug\net9.0\staticwebassets.build.json

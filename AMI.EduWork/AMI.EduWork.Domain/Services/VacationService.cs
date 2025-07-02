@@ -2,9 +2,7 @@
 using AMI.EduWork.Domain.Interfaces.Repository;
 using AMI.EduWork.Domain.Interfaces.Service;
 using AMI.EduWork.Domain.Models.AnnualVacationModel;
-using AMI.EduWork.Domain.Models.User;
 using AMI.EduWork.Domain.Models.UserOnVacationModel;
-using AMI.EduWork.Domain.Models.VacationModel;
 using Microsoft.Extensions.Logging;
 
 namespace AMI.EduWork.Domain.Services;

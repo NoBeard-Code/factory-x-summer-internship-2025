@@ -42,10 +42,13 @@ public static class ServiceCollectionExtensions
             options.UseSqlServer(connectionString));
         services.AddDatabaseDeveloperPageExceptionFilter();
 
-        services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
-            .AddEntityFrameworkStores<ApplicationDbContext>()
-            .AddSignInManager()
-            .AddDefaultTokenProviders();
+        services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+        {
+            options.SignIn.RequireConfirmedAccount = true;
+        })
+        .AddEntityFrameworkStores<ApplicationDbContext>()
+        .AddDefaultTokenProviders();
+        services.AddAuthorization();
 
         //AutoMapper
         services.AddAutoMapper(typeof(AutoMapperProfile));
