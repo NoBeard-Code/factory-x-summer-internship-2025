@@ -2,6 +2,8 @@
 using AMI.EduWork._2025.Domain.Models.Project;
 using AMI.EduWork._2025.Domain.Models.TimeSlice;
 using AMI.EduWork._2025.Domain.Models.User;
+using AMI.EduWork._2025.Domain.Models.UserOnVacationModel;
+using AMI.EduWork._2025.Domain.Models.VacationModel;
 using AMI.EduWork._2025.Domain.Models.WorkDay;
 using AutoMapper;
 
@@ -43,5 +45,15 @@ public class AutoMapperProfile : Profile
             .ForMember(dest => dest.Id, opt => opt.MapFrom(_ => Guid.NewGuid().ToString()))
             .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.Date));
 
+        //Vacation
+        CreateMap<VacationGetModel, Vacation>();
+        CreateMap<VacationCreateModel, Vacation>();
+        CreateMap<VacationUpdateModel, Vacation>();
+        CreateMap<VacationGetModels, Vacation>();
+
+        //Annual Vacation
+        CreateMap<AnnualVacationGetModel, AnnualVacation>();
+        CreateMap<AnnualVacationCreateModel, AnnualVacation>();
+        CreateMap<AnnualVacationUpdateModel, AnnualVacation>();
     }
 }

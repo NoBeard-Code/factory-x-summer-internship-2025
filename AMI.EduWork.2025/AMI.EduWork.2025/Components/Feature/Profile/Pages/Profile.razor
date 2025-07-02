@@ -1,4 +1,5 @@
 ﻿@page "/profile"
+@using AMI.EduWork._2025.Components.Feature.Profile.Components
 @using AMI.EduWork._2025.Domain.Interfaces.Service
 @using AMI.EduWork._2025.Domain.Models.VacationModel
 @inject IAnnualVacationService iannualVacationService
@@ -11,7 +12,9 @@
 
             </MudPaper>
     </MudItem>
-    <MudItem xs="6">
+
+    <VacationComponent AnnualVacations="_annualVacationGetModel"></VacationComponent>
+@*     <MudItem xs="6">
         <MudPaper Class="d-flex flex-column align-center justify-space-around mud-height-full mud-width-full py-8">
             <h4>Annual Vacation</h4>
             <MudChart ChartType="ChartType.Donut" LegendPosition="@LegendPosition" Width="300px" Height="300px" InputData="@data" InputLabels="@labels">
@@ -20,17 +23,9 @@
                     <text class="donut-inner-text" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="black" font-family="Helvetica" font-size="50">@data.Sum().ToString()</text>
                 </CustomGraphics>
             </MudChart>
-            <MudSelect Label="Legend Position" Variant="Variant.Outlined" Dense="true" T="@Position" ValueChanged="OnSelectedValue" Class="mt-4">
-                <MudSelectItem T="Position" Value="Position.Top">Top</MudSelectItem>
-                <MudSelectItem T="Position" Value="Position.Left">Left</MudSelectItem>
-                <MudSelectItem T="Position" Value="Position.Right">Right</MudSelectItem>
-                <MudSelectItem T="Position" Value="Position.Bottom">Bottom</MudSelectItem>
-                <MudSelectItem T="Position" Value="Position.Start">Start</MudSelectItem>
-                <MudSelectItem T="Position" Value="Position.End">End</MudSelectItem>
-            </MudSelect>
             
         </MudPaper>
-    </MudItem>
+    </MudItem> *@
     <MudFlexBreak />
     <MudItem xs="6">
         <MudPaper Class="d-flex flex-column align-center justify-center mud-height-full mud-width-full py-8">
@@ -70,28 +65,4 @@
             nameof(_annualVacationGetModel.AvailableVacation) };
     }
 
-    private void OnSelectedValue(Position value)
-    {
-        switch (value)
-        {
-            case Position.Top:
-                LegendPosition = Position.Top;
-                break;
-            case Position.Left:
-                LegendPosition = Position.Left;
-                break;
-            case Position.Right:
-                LegendPosition = Position.Right;
-                break;
-            case Position.Bottom:
-                LegendPosition = Position.Bottom;
-                break;
-            case Position.Start:
-                LegendPosition = Position.Start;
-                break;
-            case Position.End:
-                LegendPosition = Position.End;
-                break;
-        }
-    }
 }

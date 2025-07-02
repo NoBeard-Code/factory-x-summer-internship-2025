@@ -1,0 +1,35 @@
+﻿@using AMI.EduWork._2025.Domain.Models.VacationModel
+<h3>VacationComponent</h3>
+
+<MudItem xs="6">
+    <MudPaper Class="d-flex flex-column align-center justify-space-around mud-height-full mud-width-full py-8">
+        <h4>Annual Vacation</h4>
+        <MudChart ChartType="ChartType.Donut" LegendPosition="@LegendPosition" Width="300px" Height="300px" InputData="@data" InputLabels="@labels">
+            <CustomGraphics>
+                <text class="donut-inner-text" x="50%" y="35%" dominant-baseline="middle" text-anchor="middle" fill="black" font-family="Helvetica" font-size="20">Total</text>
+                <text class="donut-inner-text" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="black" font-family="Helvetica" font-size="50">@data.Sum().ToString()</text>
+            </CustomGraphics>
+        </MudChart>
+
+    </MudPaper>
+</MudItem>
+@code {
+    [Parameter]
+    public IEnumerable<AnnualVacationGetModel>? AnnualVacations { get; set; }
+    private AnnualVacationGetModel? annualVacation;
+    private Position LegendPosition { get; set; } = Position.Bottom;
+    private double[] data { get; set; } = Array.Empty<double>();
+    private string[] labels { get; set; } = Array.Empty<string>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        annualVacation = AnnualVacations.ToList().FirstOrDefault();
+
+        data = new double[] { (double)annualVacation.UsedVacation,
+            (double)annualVacation.PlannedVacation,
+            (double)annualVacation.AvailableVacation };
+        labels = new string[] { nameof(annualVacation.UsedVacation),
+            nameof(annualVacation.PlannedVacation),
+            nameof(annualVacation.AvailableVacation) };
+    }
+}
