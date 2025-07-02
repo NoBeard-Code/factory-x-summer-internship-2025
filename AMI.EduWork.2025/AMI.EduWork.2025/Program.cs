@@ -2,6 +2,7 @@ using AMI.EduWork._2025.Components;
 using AMI.EduWork._2025.Configuration;
 using AMI.EduWork._2025.Data;
 using AMI.EduWork._2025.Data.Migrations;
+using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 namespace AMI.EduWork._2025
@@ -16,6 +17,8 @@ namespace AMI.EduWork._2025
             builder.Services.ConfigureServices(builder.Configuration);
             builder.Services.AddMudServices();
             var app = builder.Build();
+            
+
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -30,7 +33,14 @@ namespace AMI.EduWork._2025
                 app.UseHsts();
             }
 
-            using var scope = app.Services.CreateScope();
+            if(!app.Environment.IsEnvironment("Containers"))
+            {
+                app.UseHttpsRedirection();
+            } else {
+                StaticWebAssetsLoader.UseStaticWebAssets(app.Environment, app.Configuration);
+            }
+
+                using var scope = app.Services.CreateScope();
 
             var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             var pendingMigrations = context.Database.GetPendingMigrations();
