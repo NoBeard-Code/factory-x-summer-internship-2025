@@ -1,9 +1,0 @@
-@code {
-    [Parameter]
-    public EventCallback OnProjectCreated { get; set; }
-
-    private async Task CreateProjectAsync()
-    {
-        await OnProjectCreated.InvokeAsync();
-    }
-}
