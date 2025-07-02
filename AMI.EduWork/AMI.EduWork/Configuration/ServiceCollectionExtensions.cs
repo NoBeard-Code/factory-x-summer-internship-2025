@@ -31,7 +31,7 @@ public static class ServiceCollectionExtensions
         })
             .AddIdentityCookies();
 
-        var connectionString = configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+        var connectionString = configuration.GetConnectionString("DefaultConnection");
         if (builder.Environment.IsProduction()) {
 
             connectionString = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTIONSTRING");
