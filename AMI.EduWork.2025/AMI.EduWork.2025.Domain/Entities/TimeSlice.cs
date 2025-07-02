@@ -31,4 +31,6 @@ public class TimeSlice : EntityBase
     [ForeignKey(nameof(UserId))]
     public string? UserId { get; set; }
     public virtual ApplicationUser? User { get; set; }
+    [AllowNull]
+    public string? Description { get; set; }
 }

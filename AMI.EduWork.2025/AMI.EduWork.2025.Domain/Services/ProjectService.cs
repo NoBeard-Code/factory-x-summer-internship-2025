@@ -7,16 +7,19 @@ using AMI.EduWork._2025.Domain.Models.TimeSlice;
 using AMI.EduWork._2025.Domain.Models.User;
 using AMI.EduWork._2025.Domain.Models.UserOnProject;
 using AMI.EduWork._2025.Domain.Models.WorkDay;
+using AutoMapper;
 using Microsoft.Extensions.Logging;
 
 namespace AMI.EduWork._2025.Domain.Services {
     public class ProjectService : IProjectService {
         private readonly IProjectRepository _repository;
         private readonly ILogger<ProjectService> _logger;
+        private readonly IMapper _mapper;
 
-        public ProjectService(IProjectRepository repository, ILogger<ProjectService> logger) {
+        public ProjectService(IProjectRepository repository, ILogger<ProjectService> logger, IMapper mapper) {
             _repository = repository;
             _logger = logger;
+            _mapper = mapper;
         }
 
         public async Task Create(ProjectModel model) {
@@ -102,7 +105,7 @@ namespace AMI.EduWork._2025.Domain.Services {
             var project = await _repository.GetProjectByName(name);
             if (project == null) {
                 _logger.LogError($"Project with name '{name}' not found.");
-                throw new KeyNotFoundException($"Project with name '{name}' not found.");
+                return MapToNullModel(); 
             }
 
             return MapToGetModel(project);
@@ -138,58 +141,94 @@ namespace AMI.EduWork._2025.Domain.Services {
             return await _repository.ProjectExists(name);
         }
 
+        private GetProjectModel MapToNullModel() {
+            return new GetProjectModel {
+                Description = string.Empty,
+                Id = string.Empty,
+                Name = string.Empty,
+                TimeSlices = new List<GetTimeSliceModel>(),
+                TypeOfProject = 0,
+                UsersOnProjects = new List<GetUserOnProjectModel>()
 
-        private GetProjectModel MapToGetModel(Project project)
-        {
-            return new GetProjectModel
-            {
+            };
+        }
+
+
+        private GetProjectModel MapToGetModel(Project project) {
+            return new GetProjectModel {
                 Id = project.Id,
                 Name = project.Name,
                 TypeOfProject = project.TypeOfProject,
                 Description = project.Description,
 
-                TimeSlices = project.TimeSlices?.Select(ts => new GetTimeSliceModel
-                {
+                TimeSlices = project.TimeSlices?.Select(ts => new GetTimeSliceModel {
                     Id = ts.Id,
                     Start = ts.Start,
                     End = ts.End,
                     TypeOfSlice = ts.TypeOfSlice,
                     ProjectId = ts.ProjectId,
+                    Project = ts.Project != null ? new GetProjectModelNoRefrences 
+                    {
+                        Id = ts.ProjectId,
+                        Description = ts.Project.Description,
+                        Name = ts.Project.Name,
+                        TypeOfProject = ts.Project.TypeOfProject,
+                    } : null,
                     WorkDayId = ts.WorkDayId,
                     UserId = ts.UserId ?? string.Empty,
-                    WorkDay = ts.WorkDay != null ? new GetWorkDayModel
-                    {
+
+                    WorkDay = ts.WorkDay != null ? new GetWorkDayModel {
                         Id = ts.WorkDay.Id,
                         Date = ts.WorkDay.Date
-                    }:throw new InvalidOperationException("WorkDay is required but was null."),
-                        User = ts.User != null ? new GetUserModel
-                        {
-                            Id = ts.User.Id,
-                            UserName = ts.User.UserName
-                        }
-                        :
-                        throw new InvalidOperationException("User is required but was null.")}).ToList(),
+                    } : new GetWorkDayModel { Id = "", Date = DateTime.MinValue },
 
-                        UsersOnProjects = project.UsersOnProjects?.Select(uop => new GetUserOnProjectModel {
-                        Id = uop.Id,
-                        UserId = uop.UserId,
-                        ProjectId = uop.ProjectId,
-                        ProjectRole = uop.ProjectRole,
-                        RoleStartDate = uop.RoleStartDate,
-                        RoleEndDate = uop.RoleEndDate,
-                        User = new GetUserModel {
-                        Id = uop.User.Id,
-                        UserName = uop.User.UserName
-                        },
-                        Project = new GetProjectModel {
-                        Id = uop.Project.Id,
-                        Name = uop.Project.Name,
-                        TypeOfProject = uop.Project.TypeOfProject,
-                        Description = uop.Project.Description
-                        }}).ToList()
+                    User = ts.User != null ? new GetUserModel {
+                        Id = ts.User.Id,
+                        UserName = ts.User.UserName
+                    } : new GetUserModel { Id = "", UserName = "Unknown" }
 
-                        };
-                }   
+                }).ToList(),
 
+                UsersOnProjects = project.UsersOnProjects?.Select(uop => new GetUserOnProjectModel {
+                    Id = uop.Id,
+                    UserId = uop.UserId,
+                    ProjectId = uop.ProjectId,
+                    ProjectRole = uop.ProjectRole,
+                    RoleStartDate = uop.RoleStartDate,
+                    RoleEndDate = uop.RoleEndDate,
+
+                    User = new GetUserModel {
+                        Id = uop.User?.Id ?? "",
+                        UserName = uop.User?.UserName ?? "Unknown"
+                    },
+
+                    Project = new GetProjectModel {
+                        Id = uop.Project?.Id ?? "",
+                        Name = uop.Project?.Name ?? "",
+                        Description = uop.Project?.Description ?? "",
+                        TypeOfProject = uop.Project?.TypeOfProject ?? 0
+                    }
+                }).ToList()
+            };
         }
+
+        public async Task<IEnumerable<GetProjectModel>> GetAllUserProjects(string userId)
+        {
+            if (userId is null)
+            {
+                _logger.LogError("Invalid user.");
+                throw new ArgumentException("User Id cannot be null.");
+            }
+
+            var projects = await _repository.GetAllUserProjects(userId);
+            if (projects == null || !projects.Any())
+            {
+                _logger.LogWarning($"No projects found for user.");
+                throw new KeyNotFoundException("No projects found for user.");
+            }
+            List<GetProjectModel> getProjectModel = _mapper.Map<List<GetProjectModel>>(projects);
+
+            return getProjectModel;
+        }
+    }
 }

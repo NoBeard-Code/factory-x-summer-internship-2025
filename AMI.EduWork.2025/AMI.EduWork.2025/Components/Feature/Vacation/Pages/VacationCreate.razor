@@ -1,0 +1,87 @@
+﻿@* @page "/userOnVacation/create/{userId}"
+@using AMI.EduWork._2025.Domain.Interfaces.Service
+@using AMI.EduWork._2025.Domain.Models.ContractModel
+@using AMI.EduWork._2025.Domain.Models.User
+@using AMI.EduWork._2025.Domain.Models.UserOnVacationModel
+@using AMI.EduWork._2025.Domain.Models.VacationModel
+@rendermode InteractiveServer
+@inject IUserService iuserService
+@inject IUserOnVacationService iuserOnVacationService
+@inject IVacationService ivacationService
+@inject NavigationManager Navigation
+
+<h3>Add user to vacation</h3>
+
+<div class="col-md-4">
+    <EditForm method="post" Model="userOnVacationCreateModel" OnValidSubmit="CreateUserOnVacation" FormName="Create" Enhance>
+
+        @if (vacationGetModel.Any())
+        {
+            <div class="mb-3">
+                <label for="userOnVacationCreateModel.AnnualVacationId">Select annual vacation:</label>
+                <select class="form-select" @bind="userOnVacationCreateModel.AnnualVacationId">
+                    <option value="">-- Choose --</option>
+                    @foreach (var vacation in vacationGetModel)
+                    {
+                        <option id="@vacation.Id" value="@vacation.Id">@vacation.Year | @vacation.AvailableVacation </option>
+                    }
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <labe1 for="StartDate" class="form-label">Start date</labe1>
+                <InputDate id="StartDate" @bind-Value="userOnVacationCreateModel.StartDate" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <labe1 for="EndDate" class="form-label">End date</labe1>
+                <InputDate id="EndDate" @bind-Value="userOnVacationCreateModel.EndDate" class="form-control" />
+            </div>
+            
+            var _vacation = vacationGetModel.FirstOrDefault(x => x.Id == userOnVacationCreateModel.AnnualVacationId);
+            
+            if (_vacation is not null && _vacation.Year == userOnVacationCreateModel.StartDate.Year)
+            {
+                <button class="btn btn-primary" type="submit">Create vacation for user</button>
+
+            }
+            else
+            {
+                <div class="text-warning">Year from chosen vacation has to be equal to chosen year!</div>
+
+            }
+
+        }
+        else
+        {
+            <div class="text-warning">You need to define annual vacation in other to add it to user!</div>
+            <a class="btn btn-primary" href="/vacation/create">Create annual vacation</a>
+        }
+        <button class="btn btn-secondary" type="button" @onclick="Cancel">Cancel</button>
+    </EditForm>
+</div>
+
+
+@code {
+    [Parameter]
+    public string userId { get; set; }
+    [SupplyParameterFromForm]
+    private UserOnVacationCreateModel userOnVacationCreateModel { get; set; } = new();
+    private List<VacationGetModel> vacationGetModel { get; set; } = new();
+    protected override async Task OnInitializedAsync()
+    {
+        IEnumerable<VacationGetModel> _vacationGetModel = await ivacationService.GetAll();
+        vacationGetModel = _vacationGetModel.ToList();
+    }
+
+    private async Task CreateUserOnVacation()
+    {
+        userOnVacationCreateModel.UserId = userId;
+        await iuserOnVacationService.Create(userOnVacationCreateModel);
+        Navigation.NavigateTo("/userOnVacation");
+    }
+    private void Cancel()
+    {
+        Navigation.NavigateTo("/userOnVacation");
+    }
+}
+ *@

@@ -11,6 +11,8 @@ namespace AMI.EduWork._2025.Domain.Interfaces.Repository {
         public Task<IEnumerable<UserOnProject>> GetUsersByProjectId(string projectId);
         public Task<IEnumerable<UserOnProject>> GetProjectsByUserId(string userId);
 
+        public Task<IEnumerable<UserOnProject>> GetProjectsByApplicationUser(ApplicationUser user);
+
         public Task<UserOnProject> GetUserOnProject(string userId, string projectId);
 
         public Task<IEnumerable<UserOnProject>> GetProjectsForUserForIntervalDateTime(string userId, DateTime startDate, DateTime endDate);

@@ -1,0 +1,79 @@
+﻿@* @page "/userOnVacation"
+@using AMI.EduWork._2025.Domain.Interfaces.Service
+@using AMI.EduWork._2025.Domain.Models.ContractModel
+@using AMI.EduWork._2025.Domain.Models.UserOnVacationModel
+@rendermode InteractiveServer
+@inject NavigationManager NavigationManager
+
+<PageTitle>Vacations</PageTitle>
+
+<h1>Vacations</h1>
+
+<p>CRUD operations on contracts</p>
+
+@if (_userOnVacationGetModel == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <a href="/userOnVacation/add">Add vacation for user</a>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Start date</th>
+                <th>End date</th>
+                <th>User</th>
+                <th>Email</th>
+                <th>Used vacation</th>
+                <th>Available vacation</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var model in _userOnVacationGetModel)
+            {
+                <tr>
+                    <td>@model.StartDate.Date</td>
+                    <td>@model.EndDate.Date</td>
+                    <td>@model._GetUserModel.UserName</td>
+                    <td>@model._GetUserModel.Email</td>
+                    <td>@model._VacationGetModel.UsedVacation</td>
+                    <td>@model._VacationGetModel.AvailableVacation</td>
+                    <input type="button" value="Create" class="btn btn-outline-primary" @onclick="(async () => await CreateUserOnVacation(model._GetUserModel.Id))" />
+                    <input type="button" value="Delete" class="btn btn-danger" @onclick="(async () => await DeleteUserOnVacation(model.Id))" />
+                    <input type="button" value="Update" class="btn btn-info" @onclick="(async () => await UpdateUserOnVacation(model.Id))" />
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+@inject IUserOnVacationService iuserOnVacationService
+@code {
+    private List<UserOnVacationGetModel>? _userOnVacationGetModel;
+
+    protected override async Task OnInitializedAsync()
+    {
+        IEnumerable<UserOnVacationGetModel>? userOnVacationGetModel = await iuserOnVacationService.GetAll();
+        _userOnVacationGetModel = userOnVacationGetModel.ToList();
+
+    }
+
+    private async Task DeleteUserOnVacation(string id)
+    {
+        await iuserOnVacationService.Delete(id);
+        UserOnVacationGetModel? userOnVacationGetModel = _userOnVacationGetModel?.FirstOrDefault(x => x.Id == id);
+        if (userOnVacationGetModel is not null) _userOnVacationGetModel!.Remove(userOnVacationGetModel);
+    }
+    private async Task UpdateUserOnVacation(string userOnVacationId)
+    {
+        NavigationManager.NavigateTo($"/userOnVacation/update/{userOnVacationId}");
+    }
+    private async Task CreateUserOnVacation(string userId)
+    {
+        NavigationManager.NavigateTo($"/userOnVacation/create/{userId}");
+    }
+}
+ *@

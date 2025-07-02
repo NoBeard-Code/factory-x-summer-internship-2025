@@ -1,17 +1,13 @@
-﻿using AMI.EduWork._2025.Domain.Models.VacationModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AMI.EduWork._2025.Domain.Models.UserOnVacationModel;
 
 namespace AMI.EduWork._2025.Domain.Interfaces.Service
 {
     public interface IVacationService
     {
         Task<VacationGetModel> GetById(string id);
-        Task<bool> Create(VacationCreateModel? vacationCreateModel);
-        Task<bool> Update(VacationUpdateModel? vacationUpdateModel);
+        Task<IEnumerable<VacationGetModel>> GetAll();
+        Task<bool> Create(VacationCreateModel userOnVacationCreateModel);
         Task<bool> Delete(string id);
+        Task<bool> Update(VacationUpdateModel userOnVacationUpdateModel);
     }
 }

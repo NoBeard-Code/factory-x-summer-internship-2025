@@ -16,6 +16,7 @@ public class TimeSliceConfig : IEntityTypeConfiguration<TimeSlice>
         builder.Property(ts => ts.Start).IsRequired();
         builder.Property(ts => ts.End).IsRequired();
         builder.Property(ts => ts.TypeOfSlice).IsRequired();
+        builder.Property(ts => ts.Description).IsRequired(false);
 
         builder.HasOne(ts => ts.WorkDay)
             .WithMany(wd => wd.TimeSlices)

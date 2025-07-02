@@ -2,9 +2,11 @@
 using AMI.EduWork._2025.Data;
 using AMI.EduWork._2025.Data.Migrations;
 using AMI.EduWork._2025.Domain;
+using AMI.EduWork._2025.Domain.Helpers;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using MudBlazor.Services;
 
 namespace AMI.EduWork._2025.Configuration;
 public static class ServiceCollectionExtensions
@@ -14,8 +16,9 @@ public static class ServiceCollectionExtensions
         services.AddRazorComponents()
                 .AddInteractiveServerComponents()
                 .AddAuthenticationStateSerialization();
-                //.AddInteractiveWebAssemblyComponents();
+        //.AddInteractiveWebAssemblyComponents();
 
+        services.AddMudServices();
         services.AddCascadingAuthenticationState();
         services.AddScoped<IdentityUserAccessor>();
         services.AddScoped<IdentityRedirectManager>();
@@ -37,6 +40,9 @@ public static class ServiceCollectionExtensions
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddSignInManager()
             .AddDefaultTokenProviders();
+
+        //AutoMapper
+        services.AddAutoMapper(typeof(AutoMapperProfile));
 
         services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 

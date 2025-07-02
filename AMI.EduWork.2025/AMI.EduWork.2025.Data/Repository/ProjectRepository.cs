@@ -16,9 +16,14 @@ using Microsoft.EntityFrameworkCore;
 public class ProjectRepository : Repository<Project>, IProjectRepository {
     public ProjectRepository(ApplicationDbContext context) : base(context) { }
 
+    public async Task<IEnumerable<Project>> GetAllUserProjects(string userId)
+    {
+        return await _dbSet
+           .Where(p => p.UsersOnProjects.Any(uop => uop.UserId == userId))
+           .ToListAsync();
+    }
 
-
-    public async Task<Project> GetProjectByName(string name) {
+    public async Task<Project?> GetProjectByName(string name) {
         var project = await _dbSet
             .Include(p => p.UsersOnProjects)
                 .ThenInclude(uop => uop.User)
@@ -28,9 +33,7 @@ public class ProjectRepository : Repository<Project>, IProjectRepository {
                 .ThenInclude(ts => ts.WorkDay)
             .FirstOrDefaultAsync(p => p.Name == name);
 
-        if (project == null) {
-            throw new KeyNotFoundException($"Project with name '{name}' not found.");
-        }
+       
 
         return project;
     }

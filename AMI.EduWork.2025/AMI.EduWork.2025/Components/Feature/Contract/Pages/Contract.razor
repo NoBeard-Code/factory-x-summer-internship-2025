@@ -1,4 +1,4 @@
-﻿@page "/"
+﻿@page "/contracts"
 @using AMI.EduWork._2025.Domain.Interfaces.Service
 @using AMI.EduWork._2025.Domain.Models.ContractModel
 @rendermode InteractiveServer
@@ -8,49 +8,43 @@
 
 <h1>Contracts</h1>
 
-<p>CRUD operations on contracts</p>
-
 @if (_contractGetByIdModel == null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
-    <button class="btn btn-success" @onclick="() => ShowForm = true">Add</button>
-    <AddContact @bind-IsVisible="ShowForm" OnSubmit="Create" />
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="contracts/add">Create contract</MudButton>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>IsActive</th>
-                <th>HourlyRate</th>
-                <th>WorkingHour</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var model in _contractGetByIdModel)
-            {
-                <tr>
-                    <td>@model.Id</td>
-                    <td>@model.IsActive</td>
-                    <td>@model.HourlyRate</td>
-                    <td>@model.WorkingHour</td>
-                    <input type="submit" value="Delete" class="btn btn-danger" @onclick="(async () => await DeleteContract(model.Id))"/>
+    <MudTable Items="@_contractGetByIdModel" Hover="true" SortLabel="Sort By">
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortBy="new Func<ContractGetModel, object>(x => x._GetUserModel.UserName)">User</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<ContractGetModel, object>(x => x.WorkingHour)">Working Hour</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<ContractGetModel, object>(x => x.HourlyRate)">Hourly Rate</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<ContractGetModel, object>(x => x.IsActive)">Is Active?</MudTableSortLabel></MudTh>
+            <MudTh>Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Nr">@context._GetUserModel.UserName</MudTd>
+            <MudTd DataLabel="Sign">@context.WorkingHour</MudTd>
+            <MudTd DataLabel="Name">@context.HourlyRate</MudTd>
+            <MudTd DataLabel="Position">@context.IsActive</MudTd>
+            <MudButton Variant="Variant.Filled" Color="Color.Info" onclick="(async () => await UpdateContract(context.Id))">Update</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Secondary" onclick="(async () => await DeleteContract(context.Id))">Delete</MudButton>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[] { 10, 25, 50, 100 }" />
+        </PagerContent>
+    </MudTable>
 
-                </tr>
-            }
-        </tbody>
-    </table>
 }
 @inject IContractService icontractService
 @code {
-    private bool ShowForm = false;
-    private List<ContractGetByIdModel>? _contractGetByIdModel;
+    private List<ContractGetModel>? _contractGetByIdModel;
 
     protected override async Task OnInitializedAsync()
     {
-        IEnumerable<ContractGetByIdModel>? contractGetByIdModel = await icontractService.GetAll();
+        IEnumerable<ContractGetModel>? contractGetByIdModel = await icontractService.GetAll();
         _contractGetByIdModel = contractGetByIdModel.ToList();
 
     }
@@ -58,17 +52,15 @@ else
     private async Task DeleteContract(string id)
     {
         await icontractService.Delete(id);
-        NavigationManager.NavigateTo("/", true);
+        ContractGetModel? contractGetByIdModel = _contractGetByIdModel?.FirstOrDefault(x => x.Id==id);
+        if (contractGetByIdModel is not null) _contractGetByIdModel!.Remove(contractGetByIdModel);
     }
-
-
-    private async Task Create(ContractCreateModel model)
+    private async Task UpdateContract(string contractId)
     {
-        await icontractService.Create(model);
+        NavigationManager.NavigateTo($"/contracts/update/{contractId}");
     }
-    private Task OnModalVisibility(bool value)
+    private async Task CreateContract()
     {
-        ShowForm = value;
-        return Task.CompletedTask;
+        NavigationManager.NavigateTo($"/contracts/add");
     }
 }
