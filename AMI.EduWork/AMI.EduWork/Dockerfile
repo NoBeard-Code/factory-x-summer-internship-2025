@@ -12,7 +12,7 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["AMI.EduWork/AMI.EduWork.csproj", "AMI.EduWork/"]
+COPY ["AMI.EduWork/AMI.EduWork/AMI.EduWork.csproj", "AMI.EduWork/"]
 COPY ["AMI.EduWork/AMI.EduWork.Client/AMI.EduWork.Client.csproj", "AMI.EduWork.Client/"]
 COPY ["AMI.EduWork/AMI.EduWork.Data/AMI.EduWork.Data.csproj", "AMI.EduWork.Data/"]
 COPY ["AMI.EduWork/AMI.EduWork.Domain/AMI.EduWork.Domain.csproj", "AMI.EduWork.Domain/"]
