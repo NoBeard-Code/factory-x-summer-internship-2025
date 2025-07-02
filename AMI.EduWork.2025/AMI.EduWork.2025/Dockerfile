@@ -12,22 +12,22 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["AMI.EduWork._2025/AMI.EduWork._2025.csproj", "AMI.EduWork._2025/"]
-COPY ["AMI.EduWork._2025.Client/AMI.EduWork._2025.Client.csproj", "AMI.EduWork._2025.Client/"]
-COPY ["AMI.EduWork._2025.Data/AMI.EduWork._2025.Data.csproj", "AMI.EduWork._2025.Data/"]
-COPY ["AMI.EduWork._2025.Domain/AMI.EduWork._2025.Domain.csproj", "AMI.EduWork._2025.Domain/"]
-RUN dotnet restore "./AMI.EduWork._2025/AMI.EduWork._2025.csproj"
+COPY ["AMI.EduWork.2025/AMI.EduWork._2025.csproj", "AMI.EduWork.2025/"]
+COPY ["AMI.EduWork.2025.Client/AMI.EduWork.2025.Client.csproj", "AMI.EduWork._2025.Client/"]
+COPY ["AMI.EduWork.2025.Data/AMI.EduWork.2025.Data.csproj", "AMI.EduWork.2025.Data/"]
+COPY ["AMI.EduWork.2025.Domain/AMI.EduWork.2025.Domain.csproj", "AMI.EduWork.2025.Domain/"]
+RUN dotnet restore "./AMI.EduWork.2025/AMI.EduWork.2025.csproj"
 COPY . .
-WORKDIR "/src/AMI.EduWork._2025"
-RUN dotnet build "./AMI.EduWork._2025.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/AMI.EduWork.2025"
+RUN dotnet build "./AMI.EduWork.2025.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./AMI.EduWork._2025.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./AMI.EduWork.2025.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "AMI.EduWork._2025.dll"]
+ENTRYPOINT ["dotnet", "AMI.EduWork.2025.dll"]
