@@ -1,0 +1,61 @@
+﻿@inject IDialogService DialogService
+@using AMI.EduWork.Domain.Models.Project
+
+<MudDialog>
+    <DialogContent>
+        <MudForm @ref="form" Model="@model" Validated="OnValidated">
+            <MudStack Spacing="3">
+                <MudText Typo="Typo.h6">Novi projekt</MudText>
+
+                <MudTextField @bind-Value="model.Name" Label="Naziv projekta" Required="true" />
+                <MudSelect T="byte" @bind-Value="model.TypeOfProject" Label="Tip projekta" Required="true">
+                <MudSelectItem Value="(byte)0">Privatni</MudSelectItem>
+                <MudSelectItem Value="(byte)1">Poslovni</MudSelectItem>
+                <MudSelectItem Value="(byte)2">Edukacijski</MudSelectItem>
+                </MudSelect>
+
+                <MudTextField @bind-Value="model.Description" Label="Opis" Required="true" Lines="3" TextArea="true" />
+
+                <MudButton  Variant="Variant.Filled" Color="Color.Primary" OnClick="SubmitAsync" Disabled="@isSubmitting">
+                    <MudProgressCircular Indeterminate="true" Size="Size.Medium" Style="margin-right:10px;" Color="Color.Inherit" Class="@(!isSubmitting ? "d-none" : "")" />
+                    Spremi
+                </MudButton>
+            </MudStack>
+        </MudForm>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [CascadingParameter] IMudDialogInstance MudDialog { get; set; } = default!;
+    [Parameter] public EventCallback<ProjectModel> OnProjectCreated { get; set; }
+
+    private ProjectModel model = new ProjectModel
+    {
+        Description = string.Empty,
+        Name = string.Empty
+    };
+    private MudForm form;
+    private bool isSubmitting = false;
+
+    private async Task SubmitAsync()
+{
+    await form.Validate();
+
+    if (form.IsValid)
+    {
+        isSubmitting = true;
+        await OnProjectCreated.InvokeAsync(model);
+        MudDialog.Close(DialogResult.Ok(model));
+    }
+}
+
+    private async void OnValidated()
+    {
+        if (form.IsValid)
+        {
+            isSubmitting = true;
+            await OnProjectCreated.InvokeAsync(model);
+            MudDialog.Close(DialogResult.Ok(model));
+        }
+    }
+}

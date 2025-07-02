@@ -1,0 +1,21 @@
+services:
+  ami.eduwork:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Containers
+      - ASPNETCORE_HTTP_PORTS=8080
+    ports:
+      - "8080"
+      - "8081"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+  sqlserver:
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Str0ng_P@ssword2025!
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql

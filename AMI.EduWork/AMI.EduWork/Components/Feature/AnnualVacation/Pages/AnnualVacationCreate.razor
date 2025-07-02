@@ -1,0 +1,67 @@
+﻿@page "/annualVacation/create"
+@using AMI.EduWork.Domain.Interfaces.Service
+@using AMI.EduWork.Domain.Models.ContractModel
+@using AMI.EduWork.Domain.Models.User
+@using AMI.EduWork.Domain.Models.UserOnVacationModel
+@using AMI.EduWork.Domain.Models.VacationModel
+@rendermode InteractiveServer
+@inject IUserService iuserService
+@inject IAnnualVacationService iannualVacationService
+@inject NavigationManager Navigation
+
+<h3>Create annual vacation</h3>
+
+<div class="col-md-4">
+    <EditForm method="post" Model="annualVacationCreateModel" OnValidSubmit="CreateAnnualVacation" FormName="Create" Enhance>
+        <div class="mb-3">
+            <label for="annualVacationCreateModel.UserId">Select user:</label>
+            <select class="form-select" @bind="annualVacationCreateModel.UserId">
+                <option value="">-- Choose --</option>
+                @foreach (var user in userGetModel)
+                {
+                    <option id="@user.Id" value="@user.Id">@user.UserName</option>
+                }
+            </select>
+        </div>
+        <div class="mb-3">
+            <labe1 for="Year" class="form-label">Year</labe1>
+            <InputNumber id="Year" @bind-Value="annualVacationCreateModel.Year" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <labe1 for="PlannedVacation" class="form-label">Planned vacation</labe1>
+            <InputNumber id="PlannedVacation" @bind-Value="annualVacationCreateModel.PlannedVacation" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <labe1 for="AvailableVacation" class="form-label">Available vacation</labe1>
+            <InputNumber id="AvailableVacation" @bind-Value="annualVacationCreateModel.AvailableVacation" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <labe1 for="UsedVacation" class="form-label">Available vacation</labe1>
+            <InputNumber id="UsedVacation" @bind-Value="annualVacationCreateModel.UsedVacation" class="form-control" />
+        </div>
+        <button class="btn btn-primary" type="submit">Save</button>
+        <button class="btn btn-secondary" type="button" @onclick="Cancel">Cancel</button>
+    </EditForm>
+</div>
+
+
+@code {
+    [SupplyParameterFromForm]
+    private AnnualVacationCreateModel annualVacationCreateModel { get; set; } = new();
+    private List<GetUserModel> userGetModel { get; set; } = new();
+    protected override async Task OnInitializedAsync()
+    {
+        IEnumerable<GetUserModel> _userGetModel = await iuserService.GetAll();
+        userGetModel = _userGetModel.ToList();
+    }
+
+    private async Task CreateAnnualVacation()
+    {
+        await iannualVacationService.Create(annualVacationCreateModel);
+        Navigation.NavigateTo("/annualVacation");
+    }
+    private void Cancel()
+    {
+        Navigation.NavigateTo("/annualVacation");
+    }
+}
