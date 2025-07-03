@@ -7,11 +7,14 @@
 @using AMI.EduWork.Domain.Models.UserOnProject
 @using AMI.EduWork.Domain.Models.VacationModel
 @using AMI.EduWork.Domain.Services
+@using Microsoft.AspNetCore.Authorization
 @inject AuthenticationStateProvider AuthStateProvider
 @inject IAnnualVacationService iannualVacationService
 @inject IProjectService ProjectService
 @inject IUserOnProjectService UserOnProjectService
 @inject ITimeSliceService TimeSliceService
+@attribute [Authorize]
+
 <h3>Profile</h3>
 
 <MudGrid>
