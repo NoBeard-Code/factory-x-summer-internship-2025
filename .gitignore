@@ -204,3 +204,31 @@ __pycache__/
 
 # Windows thumbnail cache files
 Thumbs.db
+/AMI.EduWork/.vs/AMI.EduWork/DesignTimeBuild/.dtbcache.v2
+/AMI.EduWork/.vs/AMI.EduWork/v17/.futdcache.v2
+/AMI.EduWork/.vs/AMI.EduWork/v17/.suo
+/AMI.EduWork/.vs/AMI.EduWork/v17/DocumentLayout.backup.json
+/AMI.EduWork/.vs/AMI.EduWork/v17/DocumentLayout.json
+/AMI.EduWork/.vs/ProjectEvaluation/ami.eduwork.metadata.v9.bin
+/AMI.EduWork/.vs/ProjectEvaluation/ami.eduwork.projects.v9.bin
+/AMI.EduWork/.vs/ProjectEvaluation/ami.eduwork.strings.v9.bin
+/AMI.EduWork/AMI.EduWork/bin/Debug/net9.0/AMI.EduWork.dll
+/AMI.EduWork/AMI.EduWork/bin/Debug/net9.0/AMI.EduWork.exe
+/AMI.EduWork/AMI.EduWork/bin/Debug/net9.0/AMI.EduWork.pdb
+/AMI.EduWork/AMI.EduWork/obj/Debug/net9.0/ref/AMI.EduWork.dll
+/AMI.EduWork/AMI.EduWork/obj/Debug/net9.0/AMI.EduWork.AssemblyInfo.cs
+/AMI.EduWork/AMI.EduWork/obj/Debug/net9.0/AMI.EduWork.AssemblyInfoInputs.cache
+/AMI.EduWork/AMI.EduWork/obj/Debug/net9.0/AMI.EduWork.dll
+/AMI.EduWork/AMI.EduWork/obj/Debug/net9.0/AMI.EduWork.pdb
+/AMI.EduWork/AMI.EduWork/obj/Debug/net9.0/AMI.EduWork.sourcelink.json
+/AMI.EduWork/AMI.EduWork/obj/Debug/net9.0/apphost.exe
+/AMI.EduWork/AMI.EduWork/obj/Debug/net9.0/refint/AMI.EduWork.dll
+/AMI.EduWork/AMI.EduWork/obj/Debug/net9.0/rjsmcshtml.dswa.cache.json
+/AMI.EduWork/AMI.EduWork/obj/Debug/net9.0/rjsmrazor.dswa.cache.json
+/AMI.EduWork/AMI.EduWork/obj/Debug/net9.0/rpswa.dswa.cache.json
+/AMI.EduWork/AMI.EduWork/obj/Debug/net9.0/staticwebassets.references.upToDateCheck.txt
+/AMI.EduWork/obj/Debug/docker-compose.dcproj.AssemblyReference.cache
+/AMI.EduWork/obj/Docker/CachedComposeConfigFilePaths.cache
+/AMI.EduWork/bin/Debug/AMI.EduWork.dll
+/AMI.EduWork/bin/Debug/AMI.EduWork.exe
+/AMI.EduWork/bin/Debug/AMI.EduWork.pdb
