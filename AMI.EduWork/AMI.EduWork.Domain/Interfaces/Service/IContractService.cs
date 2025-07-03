@@ -16,5 +16,6 @@ namespace AMI.EduWork.Domain.Interfaces.Service
         Task<IEnumerable<ContractGetModel>> GetAll();
         Task<IEnumerable<ContractGetModel>> GetByHourlyRate(int hourlyRate);
         Task<IEnumerable<ContractGetModel>> GetByIsActive();
+        Task<IEnumerable<ContractGetModel>?> GetByUserIsActive(string userId);
     }
 }

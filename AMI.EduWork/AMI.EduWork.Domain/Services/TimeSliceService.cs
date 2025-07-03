@@ -30,6 +30,30 @@ public class TimeSliceService : ITimeSliceService
         _mapper = mapper;
     }
 
+    public async Task<TimeSpan?> CalculateUserWorkTime(IEnumerable<GetTimeSliceModel> timeSlices)
+    {
+        if (timeSlices == null)
+        {
+            _logger.LogWarning("Attempted to calculate work time for zero TimeSlices");
+            return null;
+        }
+
+        TimeSpan? total = TimeSpan.Zero;
+
+        foreach (var slice in timeSlices)
+        {
+            if (slice.TypeOfSlice == 1 || slice.TypeOfSlice == 3)
+            {
+                if (slice.Start != null && slice.End != null)
+                {
+                    total += slice.End - slice.Start;
+                }
+            }
+        }
+
+        return await Task.FromResult(total);
+    }
+
     public async Task<bool> Create(TimeSliceModel entity)
     {
         if (entity is null)

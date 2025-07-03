@@ -16,4 +16,5 @@ public interface ITimeSliceService
     Task<bool> Create(TimeSliceModel entity);
     Task<bool> Update(GetTimeSliceModel entity);
     Task<bool> DeleteById(string id);
+    Task<TimeSpan?> CalculateUserWorkTime(IEnumerable<GetTimeSliceModel> timeSlices);
 }

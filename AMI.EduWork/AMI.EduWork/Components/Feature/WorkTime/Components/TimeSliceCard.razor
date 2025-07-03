@@ -1,13 +1,24 @@
 ﻿@using AMI.EduWork.Domain.Interfaces.Service
 @using AMI.EduWork.Domain.Models.TimeSlice
+@using AMI.EduWork.Enums
 @inject IServiceScopeFactory ServiceScopeFactory
 @inject IDialogService DialogService
 
 <MudPaper Class="pa-2" Outlined="true" Style="min-width:200px; width:100%;">
     <MudGrid>
         <MudItem xs="6">
-            <MudText Typo="Typo.subtitle2" Bold="true">@((TimeSlice.Project != null) ? TimeSlice.Project.Name : "Not set")</MudText>
-
+            @{
+                var type = (TimeSliceType)TimeSlice.TypeOfSlice;
+                var showProject = type != TimeSliceType.Break && type != TimeSliceType.NotAssigned;
+            }
+            <MudText Typo="Typo.subtitle2" Bold="true">
+                @GetDisplayName(type)
+                @if (showProject)
+                {
+                    @(": ")
+                    @(TimeSlice.Project != null ? TimeSlice.Project.Name : "Not set")
+                }
+            </MudText>
         </MudItem>
         <MudItem xs="6" Align="Right" Style="display: flex; align-items: center; justify-content: flex-end;">
             <MudText Typo="Typo.subtitle2" Style="margin-right: 8px;">
@@ -25,12 +36,15 @@
 @code {
     [Parameter]
     public GetTimeSliceModel TimeSlice { get; set; }
+    [Parameter]
+    public EventCallback OnTimeSlicesChanged { get; set; }
 
     private async Task DeleteTimeSlice()
     {
         using var scope = ServiceScopeFactory.CreateScope();
         var _timeSliceService = scope.ServiceProvider.GetRequiredService<ITimeSliceService>();
         await _timeSliceService.DeleteById(TimeSlice.Id);
+        await OnTimeSlicesChanged.InvokeAsync();
     }
 
     [Parameter]
@@ -39,5 +53,18 @@
     private async Task EditClicked()
     {
         await OnEditRequested.InvokeAsync(TimeSlice);
+        await OnTimeSlicesChanged.InvokeAsync();
+    }
+
+    private string GetDisplayName(TimeSliceType type)
+    {
+        return type switch
+        {
+            TimeSliceType.NotAssigned => "Not assigned",
+            TimeSliceType.Work => "Work",
+            TimeSliceType.Break => "Break",
+            TimeSliceType.Meeting => "Meeting",
+            _ => type.ToString()
+        };
     }
 }

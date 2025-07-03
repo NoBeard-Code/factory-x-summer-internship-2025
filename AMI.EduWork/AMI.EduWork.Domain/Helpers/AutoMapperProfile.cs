@@ -1,4 +1,5 @@
 ﻿using AMI.EduWork.Domain.Entities;
+using AMI.EduWork.Domain.Models.ContractModel;
 using AMI.EduWork.Domain.Models.Project;
 using AMI.EduWork.Domain.Models.TimeSlice;
 using AMI.EduWork.Domain.Models.User;
@@ -42,6 +43,10 @@ public class AutoMapperProfile : Profile
         CreateMap<WorkDayModel, WorkDay>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(_ => Guid.NewGuid().ToString()))
             .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.Date));
+
+        //Contract to ContractGetModel
+        CreateMap<Contract, ContractGetModel>()
+            .ForMember(dest => dest._GetUserModel, opt => opt.MapFrom(src => src.User));
 
     }
 }

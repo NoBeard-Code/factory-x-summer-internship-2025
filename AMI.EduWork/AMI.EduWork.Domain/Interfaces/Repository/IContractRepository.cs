@@ -5,5 +5,6 @@ namespace AMI.EduWork.Domain.Interfaces.Repository
 {
     public interface IContractRepository : IRepository<Contract>
     {
+        Task<IEnumerable<Contract>> GetByUserIsActive(string userId);
     }
 }
