@@ -18,9 +18,9 @@
     <MudItem xs="6">
         <MudPaper Class="d-flex flex-column align-center justify-space-around mud-height-full mud-width-full py-8">
             <h4>Projects</h4>
-            @if (timeSlices is not null && userOnProjects is not null)
+            @if (!isLoading)
             {
-                <ProjectChartComponent UserId="@userId" />
+                <ProjectChartComponent userOnProjects="userOnProjects" timeSlices = "timeSlices "UserId="@userId" />
             }
         </MudPaper>
     </MudItem>  
@@ -59,7 +59,7 @@
     public IEnumerable<GetUserOnProjectModel> userOnProjects { get; set; } = Enumerable.Empty<GetUserOnProjectModel>();
     public IEnumerable<GetTimeSliceModel> timeSlices { get; set; } = Enumerable.Empty<GetTimeSliceModel>();
     private bool isLoading = true;
-    private string? userId;
+    public  string? userId { get; set; }
     protected override async Task OnInitializedAsync()
     {
         var authState = await AuthStateProvider.GetAuthenticationStateAsync();
