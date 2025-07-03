@@ -1,0 +1,105 @@
+﻿@using AMI.EduWork.Domain.Interfaces.Service
+@using AMI.EduWork.Domain.Models.Project
+@using AMI.EduWork.Domain.Models.TimeSlice
+@using AMI.EduWork.Domain.Models.UserOnProject
+@using AMI.EduWork.Enums
+@inject IProjectService ProjectService
+
+@inject AuthenticationStateProvider AuthStateProvider
+
+<MudChart Class="pa-8 mt-4" ChartType="ChartType.Donut"
+          Width="400px" Height="400px"
+          InputData="@allTimeData"
+          InputLabels="@allTimeLabels">
+    <CustomGraphics>
+        <text x="50%" y="35%" dominant-baseline="middle" text-anchor="middle" fill="black" font-size="20">Total</text>
+        <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="black" font-size="20">
+            @FormatTimeSpan(allTimeData.Sum())
+        </text>
+    </CustomGraphics>
+</MudChart>
+
+@code {
+    [Parameter]
+    public IEnumerable<GetUserOnProjectModel> userOnProjects { get; set; } = Enumerable.Empty<GetUserOnProjectModel>();
+    [Parameter]
+    public IEnumerable<GetTimeSliceModel> timeSlices { get; set; } = Enumerable.Empty<GetTimeSliceModel>();
+    [Parameter]
+    public string? UserId { get; set; }
+    private List<GetProjectModel>? userProjects = Enumerable.Empty<GetProjectModel>().ToList();
+    private GetProjectModel? selectedProject;
+    private double[] allTimeData = Array.Empty<double>();
+    private string[] allTimeLabels = Array.Empty<string>();
+    private Dictionary<string, List<float>> timeSlicesByProject = new();
+    private List<GetTimeSliceModel> availableTimeEntries = new();
+    protected override async Task OnInitializedAsync()
+    {
+        if(UserId is not null){
+
+            await LoadUserProjects();
+            await SetupChartData();
+        }
+    }
+
+    private string FormatTimeSpan(double totalHours)
+    {
+        var span = TimeSpan.FromHours(totalHours);
+        if (span.Hours > 0 && span.Minutes > 0)
+            return $"{span.Hours} hour{(span.Hours == 1 ? "" : "s")} {span.Minutes} minute{(span.Minutes == 1 ? "" : "s")}";
+        if (span.Hours > 0)
+            return $"{span.Hours} hour{(span.Hours == 1 ? "" : "s")}";
+        return $"{span.Minutes} minute{(span.Minutes == 1 ? "" : "s")}";
+    }
+    private async Task SetupChartData()
+    {
+        // All-time data
+        allTimeLabels = timeSlicesByProject.Keys
+            .Select(key => key.Split("-(")[0])
+            .ToArray();
+
+        allTimeData = timeSlicesByProject.Values
+            .Select(list => Math.Round(list.Sum(), 2))
+            .ToArray();
+
+    }
+    private string GetProjectTypeName(byte type) => type switch
+    {
+        0 => "Privatni",
+        1 => "Poslovni",
+        2 => "Edukacijski",
+        _ => "Nepoznat"
+    };
+
+    private async Task LoadUserProjects()
+    {
+
+        availableTimeEntries = timeSlices.Where(ts => ts.ProjectId == null && ts.TypeOfSlice == (byte)TimeSliceType.Work).ToList();
+
+        var projectIds = userOnProjects.Select(uop => uop.Project.Id).Distinct().ToList();
+        userProjects = new List<GetProjectModel>();
+        timeSlicesByProject.Clear();
+
+        foreach (var projectId in projectIds)
+        {
+            var project = await ProjectService.GetById(projectId);
+            if (project != null)
+            {
+                var projectTimeSlices = timeSlices
+                    .Where(ts => ts.ProjectId == projectId && ts.Start.HasValue && ts.End.HasValue)
+                    .ToList();
+
+                var durations = projectTimeSlices
+                    .Select(ts => (float)(ts.End.Value - ts.Start.Value).TotalHours)
+                    .ToList();
+
+                var key = $"{project.Name}-({GetProjectTypeName(project.TypeOfProject)})-{project.Id}";
+                timeSlicesByProject[key] = durations;
+
+                project.TimeSlices = projectTimeSlices;
+                userProjects.Add(project);
+            }
+        }
+
+    }
+
+}

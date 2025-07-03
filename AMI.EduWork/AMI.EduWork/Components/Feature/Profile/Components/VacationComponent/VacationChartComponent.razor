@@ -1,0 +1,39 @@
+﻿@using AMI.EduWork.Domain.Interfaces.Service
+@using AMI.EduWork.Domain.Models.VacationModel
+@inject IAnnualVacationService iannualVacationService
+
+<MudChart ChartType="ChartType.Donut" LegendPosition="@LegendPosition" Width="300px" Height="300px" InputData="@data" InputLabels="@labels">
+    <CustomGraphics>
+        <text class="donut-inner-text" x="50%" y="35%" dominant-baseline="middle" text-anchor="middle" fill="black" font-family="Helvetica" font-size="20">Vacation days</text>
+        <text class="donut-inner-text" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="black" font-family="Helvetica" font-size="50">@data.Sum().ToString()</text>
+    </CustomGraphics>
+</MudChart>
+
+@code {
+    [Parameter]
+    public IEnumerable<AnnualVacationGetModel>? annualVacationGetModel { get; set; }
+    [Parameter]
+    public string UserId { get; set; }
+    public IEnumerable<AnnualVacationGetModel>? AnnualVacations { get; set; }
+    private AnnualVacationGetModel? annualVacation;
+    private Position LegendPosition { get; set; } = Position.Bottom;
+    private double[] data { get; set; } = Array.Empty<double>();
+    private string[] labels { get; set; } = Array.Empty<string>();
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        annualVacation = annualVacationGetModel.ToList().FirstOrDefault();
+        if (annualVacation is not null) FillChart();
+
+    }
+    private void FillChart()
+    {
+        data = new double[] { (double)annualVacation.UsedVacation,
+            (double)annualVacation.PlannedVacation,
+            (double)annualVacation.AvailableVacation };
+        labels = new string[] { nameof(annualVacation.UsedVacation),
+            nameof(annualVacation.PlannedVacation),
+            nameof(annualVacation.AvailableVacation) };
+    }
+}

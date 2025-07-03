@@ -1,9 +1,4 @@
 ﻿using AMI.EduWork.Domain.Models.ContractModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AMI.EduWork.Domain.Interfaces.Service
 {

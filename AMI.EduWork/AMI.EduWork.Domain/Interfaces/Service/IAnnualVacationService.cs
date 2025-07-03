@@ -9,5 +9,10 @@ namespace AMI.EduWork.Domain.Interfaces.Service
         Task<bool> Create(AnnualVacationCreateModel? vacationCreateModel);
         Task<bool> Update(AnnualVacationUpdateModel? vacationUpdateModel);
         Task<bool> Delete(string id);
+        Task<IEnumerable<AnnualVacationGetModel>> GetByYear(int year);
+        Task<IEnumerable<AnnualVacationGetModel>> GetByUser(string userId);
+        Task<IEnumerable<AnnualVacationGetModel>> GetByUserYear(int year, string userId);
+
+
     }
 }

@@ -1,0 +1,74 @@
+﻿@page "/users"
+@using AMI.EduWork.Domain
+@using AMI.EduWork.Domain.Interfaces.Service
+@using AMI.EduWork.Domain.Models.User
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+@inject IUserService iuserService
+@inject UserManager<ApplicationUser> UserManager
+@attribute [Authorize(Roles = "Admin")]
+
+<MudTextField @bind-Value="_searchText"
+              Label="Search users..."
+              Variant="Variant.Outlined"
+              Adornment="Adornment.Start"
+              AdornmentIcon="@Icons.Material.Filled.Search"
+              Immediate="true"
+              Class="mb-4" />
+
+@if (_getUserModels is not null && _getUserModels.Any())
+{
+    var users = GetFilteredUsers();
+    <MudTable Items="@users" Hover="true" SortLabel="Sort By">
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortBy="new Func<GetUserModel, object>(x => x.UserName)">User</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<GetUserModel, object>(x => x.Role)">Project role</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<GetUserModel, object>(x => x.PhoneNumber)">Phone Number</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<GetUserModel, object>(x => x.Email)">Application role</MudTableSortLabel></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Nr">@context.UserName</MudTd>
+            <MudTd DataLabel="Sign">@(string.IsNullOrWhiteSpace(context.Role.ToString()) ? notSet : context.Role)</MudTd>
+            <MudTd DataLabel="Name">@(string.IsNullOrWhiteSpace(context.PhoneNumber) ? notSet : context.PhoneNumber)</MudTd>
+            <MudTd DataLabel="Name">@(_userRoles.TryGetValue(context.Email, out var roles) && roles.Any() ? string.Join(", ", roles) : @notSet)</MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[] { 10, 25, 50, 100 }" />
+        </PagerContent>
+    </MudTable>
+}
+
+
+
+@code {
+    private string _searchText = string.Empty;
+    private readonly string notSet = "not set";
+    private List<GetUserModel>? _getUserModels;
+    private Dictionary<string, IList<string>> _userRoles = new();
+    protected override async Task OnInitializedAsync()
+    {
+        IEnumerable<GetUserModel>? userGetModels = await iuserService.GetAll();
+        _getUserModels = userGetModels.ToList();
+
+        foreach (var user in _getUserModels)
+        {
+            var appUser = await UserManager.FindByEmailAsync(user.Email);
+            if (appUser != null)
+            {
+                var roles = await UserManager.GetRolesAsync(appUser);
+                _userRoles[user.Email] = roles;
+            }
+        }
+    }
+    private List<GetUserModel> GetFilteredUsers()
+    {
+        return _getUserModels?.Where(x =>
+            string.IsNullOrWhiteSpace(_searchText) ||
+            (x.Email?.Contains(_searchText, StringComparison.OrdinalIgnoreCase) ?? false) ||
+            (x.PhoneNumber?.Contains(_searchText, StringComparison.OrdinalIgnoreCase) ?? false) ||
+            (x.Role.ToString()?.Contains(_searchText, StringComparison.OrdinalIgnoreCase) ?? false)
+        ).ToList() ?? new List<GetUserModel>();
+    }
+
+}
+

@@ -1,4 +1,5 @@
 ﻿using AMI.EduWork.Components.Account;
+using AMI.EduWork.Configuration;
 using AMI.EduWork.Data;
 using AMI.EduWork.Data.Migrations;
 using AMI.EduWork.Domain;
@@ -24,15 +25,9 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IdentityRedirectManager>();
         services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
 
-        services.AddAuthentication(options =>
+        var connectionString = configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+        if (builder.Environment.IsProduction())
         {
-            options.DefaultScheme = IdentityConstants.ApplicationScheme;
-            options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
-        })
-            .AddIdentityCookies();
-
-        var connectionString = configuration.GetConnectionString("DefaultConnection");
-        if (builder.Environment.IsProduction()) {
 
             connectionString = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTIONSTRING");
 
@@ -42,10 +37,13 @@ public static class ServiceCollectionExtensions
             options.UseSqlServer(connectionString));
         services.AddDatabaseDeveloperPageExceptionFilter();
 
-        services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
-            .AddEntityFrameworkStores<ApplicationDbContext>()
-            .AddSignInManager()
-            .AddDefaultTokenProviders();
+        services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+        {
+            options.SignIn.RequireConfirmedAccount = true;
+        })
+        .AddEntityFrameworkStores<ApplicationDbContext>()
+        .AddDefaultTokenProviders();
+        services.AddAuthorization();
 
         //AutoMapper
         services.AddAutoMapper(typeof(AutoMapperProfile));

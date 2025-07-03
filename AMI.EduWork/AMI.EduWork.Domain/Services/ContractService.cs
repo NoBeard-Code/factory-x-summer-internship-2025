@@ -5,7 +5,6 @@ using AMI.EduWork.Domain.Models.ContractModel;
 using AMI.EduWork.Domain.Models.User;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
 
 namespace AMI.EduWork.Domain.Services
 {
@@ -27,14 +26,16 @@ namespace AMI.EduWork.Domain.Services
         public async Task<bool> Create(ContractCreateModel? contractCreateModel)
         {
             if (contractCreateModel is null) return false;
-            Entities.Contract contract = new Entities.Contract {
+            Contract contract = new Contract
+            {
                 Id = Guid.NewGuid().ToString(),
                 HourlyRate = contractCreateModel.HourlyRate,
                 IsActive = contractCreateModel.IsActive,
                 WorkingHour = contractCreateModel.WorkingHour,
-                UserId = contractCreateModel.UserId
+                UserId = contractCreateModel.UserId,
+                Created = DateOnly.FromDateTime(DateTime.Now)
             };
-            await _repository.Create(contract);    
+            await _repository.Create(contract);
             return await _repository.SaveChangesAsync();
         }
 
@@ -46,13 +47,16 @@ namespace AMI.EduWork.Domain.Services
 
         public async Task<ContractGetModel> GetById(string id)
         {
-            Entities.Contract contract = await _repository.GetById(id);
-            ContractGetModel contractGetByIdModel = new ContractGetModel {
+            Contract contract = await _repository.GetById(id);
+            ContractGetModel contractGetByIdModel = new ContractGetModel
+            {
                 Id = contract.Id,
                 HourlyRate = contract.HourlyRate,
-                IsActive= contract.IsActive,
-                WorkingHour= contract.WorkingHour,
-                _GetUserModel = new GetUserModel{
+                IsActive = contract.IsActive,
+                Created = DateOnly.FromDateTime(DateTime.Now),
+                WorkingHour = contract.WorkingHour,
+                _GetUserModel = new GetUserModel
+                {
                     Id = contract.UserId,
                     AccessFailedCount = contract.User.AccessFailedCount,
                     Email = contract.User.Email,
@@ -73,14 +77,15 @@ namespace AMI.EduWork.Domain.Services
 
         public async Task<IEnumerable<ContractGetModel>> GetByIsActive()
         {
-            IEnumerable<Entities.Contract> contract = await _repository.GetAll();
+            IEnumerable<Contract> contract = await _repository.GetAll();
             IEnumerable<ContractGetModel> contractGetByIdModel = contract.
                 Where(x => x.IsActive).
                 Select(x => new ContractGetModel
                 {
                     Id = x.Id,
-                    HourlyRate= x.HourlyRate,
+                    HourlyRate = x.HourlyRate,
                     IsActive = x.IsActive,
+                    Created = DateOnly.FromDateTime(DateTime.Now),
                     WorkingHour = x.WorkingHour,
                     _GetUserModel = new GetUserModel
                     {
@@ -105,13 +110,14 @@ namespace AMI.EduWork.Domain.Services
 
         public async Task<IEnumerable<ContractGetModel>> GetByHourlyRate(int hourlyRate)
         {
-            IEnumerable<Entities.Contract> contract = await _repository.GetAll();
+            IEnumerable<Contract> contract = await _repository.GetAll();
             IEnumerable<ContractGetModel> contractGetByIdModel = contract.
                 Where(x => x.HourlyRate.Equals(hourlyRate)).
                 Select(x => new ContractGetModel
                 {
                     Id = x.Id,
                     HourlyRate = x.HourlyRate,
+                    Created = DateOnly.FromDateTime(DateTime.Now),
                     IsActive = x.IsActive,
                     WorkingHour = x.WorkingHour,
                     _GetUserModel = new GetUserModel
@@ -136,7 +142,7 @@ namespace AMI.EduWork.Domain.Services
         }
         public async Task<IEnumerable<ContractGetModel>> GetByWorkingHour(int workingHour)
         {
-            IEnumerable<Entities.Contract> contract = await _repository.GetAll();
+            IEnumerable<Contract> contract = await _repository.GetAll();
             IEnumerable<ContractGetModel> contractGetByIdModel = contract.
                 Where(x => x.WorkingHour.Equals(workingHour)).
                 Select(x => new ContractGetModel
@@ -144,6 +150,7 @@ namespace AMI.EduWork.Domain.Services
                     Id = x.Id,
                     HourlyRate = x.HourlyRate,
                     IsActive = x.IsActive,
+                    Created = DateOnly.FromDateTime(DateTime.Now),
                     WorkingHour = x.WorkingHour,
                     _GetUserModel = new GetUserModel
                     {
@@ -167,29 +174,30 @@ namespace AMI.EduWork.Domain.Services
         }
         public async Task<IEnumerable<ContractGetModel>> GetAll()
         {
-            IEnumerable<Entities.Contract> contract = await _repository.GetAll();
+            IEnumerable<Contract> contract = await _repository.GetAll();
             IEnumerable<ContractGetModel> contractGetByIdModel = contract.Select(x => new ContractGetModel
+            {
+                Id = x.Id,
+                HourlyRate = x.HourlyRate,
+                IsActive = x.IsActive,
+                Created = DateOnly.FromDateTime(DateTime.Now),
+                WorkingHour = x.WorkingHour,
+                _GetUserModel = new GetUserModel
                 {
-                    Id = x.Id,
-                    HourlyRate = x.HourlyRate,
-                    IsActive = x.IsActive,
-                    WorkingHour = x.WorkingHour,
-                    _GetUserModel = new GetUserModel
-                    {
-                        Id = x.UserId,
-                        AccessFailedCount = x.User.AccessFailedCount,
-                        Email = x.User.Email,
-                        Role = x.User.Role,
-                        TwoFactorEnabled = x.User.TwoFactorEnabled,
-                        EmailConfirmed = x.User.EmailConfirmed,
-                        LockoutEnabled = x.User.LockoutEnabled,
-                        LockoutEnd = x.User.LockoutEnd,
-                        NormalizedEmail = x.User.NormalizedEmail,
-                        NormalizedUserName = x.User.NormalizedUserName,
-                        PhoneNumber = x.User.PhoneNumber,
-                        PhoneNumberConfirmed = x.User.PhoneNumberConfirmed,
-                        UserName = x.User.UserName
-                    }
+                    Id = x.UserId,
+                    AccessFailedCount = x.User.AccessFailedCount,
+                    Email = x.User.Email,
+                    Role = x.User.Role,
+                    TwoFactorEnabled = x.User.TwoFactorEnabled,
+                    EmailConfirmed = x.User.EmailConfirmed,
+                    LockoutEnabled = x.User.LockoutEnabled,
+                    LockoutEnd = x.User.LockoutEnd,
+                    NormalizedEmail = x.User.NormalizedEmail,
+                    NormalizedUserName = x.User.NormalizedUserName,
+                    PhoneNumber = x.User.PhoneNumber,
+                    PhoneNumberConfirmed = x.User.PhoneNumberConfirmed,
+                    UserName = x.User.UserName
+                }
             });
 
             return contractGetByIdModel;
@@ -199,11 +207,12 @@ namespace AMI.EduWork.Domain.Services
         {
             if (contractUpdateModel is null) return false;
 
-            Entities.Contract contract = await _repository.GetById(contractUpdateModel.Id);
+            Contract contract = await _repository.GetById(contractUpdateModel.Id);
             contract.HourlyRate = contractUpdateModel.HourlyRate;
             contract.IsActive = contractUpdateModel.IsActive;
             contract.UserId = contractUpdateModel.UserId;
             contract.WorkingHour = contractUpdateModel.WorkingHour;
+            contract.Created = contractUpdateModel.Created;
 
             await _repository.Update(contract);
             return await _repository.SaveChangesAsync();

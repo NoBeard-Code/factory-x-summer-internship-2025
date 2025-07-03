@@ -1,8 +1,10 @@
 ﻿@page "/contracts"
 @using AMI.EduWork.Domain.Interfaces.Service
 @using AMI.EduWork.Domain.Models.ContractModel
+@using Microsoft.AspNetCore.Authorization
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
+@attribute [Authorize]
 
 <PageTitle>Contracts</PageTitle>
 

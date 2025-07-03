@@ -1,12 +1,8 @@
-﻿using AMI.EduWork.Domain.Entities;
-using AMI.EduWork.Domain.Interfaces.Repository;
+﻿using AMI.EduWork.Domain.Interfaces.Repository;
 using AMI.EduWork.Domain.Interfaces.Service;
-using AMI.EduWork.Domain.Models.TimeSlice;
 using AMI.EduWork.Domain.Models.User;
-using AMI.EduWork.Domain.Models.WorkDay;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
-using System.Data;
 
 namespace AMI.EduWork.Domain.Services;
 
