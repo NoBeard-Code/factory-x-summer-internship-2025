@@ -1,4 +1,0 @@
-wwwroot\appsettings.Development.json
-wwwroot\appsettings.json
-C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\AMI.EduWork.Client\wwwroot\appsettings.Development.json
-C:\FactoryXproject\factory-x-summer-internship-2025\AMI.EduWork\AMI.EduWork.Client\wwwroot\appsettings.json

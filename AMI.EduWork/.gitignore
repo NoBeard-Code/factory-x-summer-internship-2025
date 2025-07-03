@@ -3,6 +3,10 @@
 *.db-shm
 *.db-wal
 
+# Ignore all bin/Debug and obj folders recursively
+**/bin/Debug/
+**/obj/
+
 _build/
 _site/
 
