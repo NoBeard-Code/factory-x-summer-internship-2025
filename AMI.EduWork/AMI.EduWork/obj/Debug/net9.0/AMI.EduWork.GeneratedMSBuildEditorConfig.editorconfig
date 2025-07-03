@@ -207,8 +207,16 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xGZWF0dXJlXEVycm9yLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/FactoryXproject/factory-x-summer-internship-2025/AMI.EduWork/AMI.EduWork/Components/Feature/Profile/Components/VacationComponent.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xGZWF0dXJlXFByb2ZpbGVcQ29tcG9uZW50c1xWYWNhdGlvbkNvbXBvbmVudC5yYXpvcg==
+[C:/FactoryXproject/factory-x-summer-internship-2025/AMI.EduWork/AMI.EduWork/Components/Feature/Profile/Components/ProjectComponent/Component.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xGZWF0dXJlXFByb2ZpbGVcQ29tcG9uZW50c1xQcm9qZWN0Q29tcG9uZW50XENvbXBvbmVudC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/FactoryXproject/factory-x-summer-internship-2025/AMI.EduWork/AMI.EduWork/Components/Feature/Profile/Components/ProjectComponent/ProjectChartComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xGZWF0dXJlXFByb2ZpbGVcQ29tcG9uZW50c1xQcm9qZWN0Q29tcG9uZW50XFByb2plY3RDaGFydENvbXBvbmVudC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/FactoryXproject/factory-x-summer-internship-2025/AMI.EduWork/AMI.EduWork/Components/Feature/Profile/Components/VacationComponent/VacationChartComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xGZWF0dXJlXFByb2ZpbGVcQ29tcG9uZW50c1xWYWNhdGlvbkNvbXBvbmVudFxWYWNhdGlvbkNoYXJ0Q29tcG9uZW50LnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/FactoryXproject/factory-x-summer-internship-2025/AMI.EduWork/AMI.EduWork/Components/Feature/Profile/Pages/Profile.razor]

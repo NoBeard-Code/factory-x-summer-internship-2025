@@ -1,31 +1,40 @@
 ﻿@page "/profile"
-@* @using AMI.EduWork.Components.Feature.Profile.Components *@
+@using AMI.EduWork.Components.Feature.Profile.Components
+@using AMI.EduWork.Components.Feature.Profile.Components.ProjectComponent
+@using AMI.EduWork.Components.Feature.Profile.Components.VacationComponent
 @using AMI.EduWork.Domain.Interfaces.Service
+@using AMI.EduWork.Domain.Models.TimeSlice
+@using AMI.EduWork.Domain.Models.UserOnProject
 @using AMI.EduWork.Domain.Models.VacationModel
+@using AMI.EduWork.Domain.Services
+@inject AuthenticationStateProvider AuthStateProvider
 @inject IAnnualVacationService iannualVacationService
+@inject IProjectService ProjectService
+@inject IUserOnProjectService UserOnProjectService
+@inject ITimeSliceService TimeSliceService
 <h3>Profile</h3>
 
 <MudGrid>
     <MudItem xs="6">
-        <MudPaper Class="d-flex align-center justify-center mud-height-full mud-width-full py-8">
+        <MudPaper Class="d-flex flex-column align-center justify-space-around mud-height-full mud-width-full py-8">
             <h4>Projects</h4>
-
+            @if (timeSlices is not null && userOnProjects is not null)
+            {
+                <ProjectChartComponent UserId="@userId" />
+            }
         </MudPaper>
-    </MudItem>
+    </MudItem>  
 
-    @* <VacationComponent AnnualVacations="_annualVacationGetModel"></VacationComponent> *@
-    @*     <MudItem xs="6">
+    <MudItem xs="6">
         <MudPaper Class="d-flex flex-column align-center justify-space-around mud-height-full mud-width-full py-8">
             <h4>Annual Vacation</h4>
-            <MudChart ChartType="ChartType.Donut" LegendPosition="@LegendPosition" Width="300px" Height="300px" InputData="@data" InputLabels="@labels">
-                <CustomGraphics>
-                    <text class="donut-inner-text" x="50%" y="35%" dominant-baseline="middle" text-anchor="middle" fill="black" font-family="Helvetica" font-size="20">Total</text>
-                    <text class="donut-inner-text" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="black" font-family="Helvetica" font-size="50">@data.Sum().ToString()</text>
-                </CustomGraphics>
-            </MudChart>
-            
+            @if (_annualVacationGetModels is not null)
+            {
+                <VacationChartComponent annualVacationGetModel="_annualVacationGetModels" />
+            }
         </MudPaper>
-    </MudItem> *@
+    </MudItem>        
+
     <MudFlexBreak />
     <MudItem xs="6">
         <MudPaper Class="d-flex flex-column align-center justify-center mud-height-full mud-width-full py-8">
@@ -45,24 +54,32 @@
     </MudItem>
 </MudGrid>
 
-
-@* @inject IProjectService iprojectService  *@
-
 @code {
-    public Position LegendPosition { get; set; } = Position.Bottom;
-    private AnnualVacationGetModel? _annualVacationGetModel;
-    public double[] data { get; set; } = Array.Empty<double>();
-    public string[] labels { get; set; } = Array.Empty<string>();
+    public IEnumerable<AnnualVacationGetModel>? _annualVacationGetModels { get; set; }
+    public IEnumerable<GetUserOnProjectModel> userOnProjects { get; set; } = Enumerable.Empty<GetUserOnProjectModel>();
+    public IEnumerable<GetTimeSliceModel> timeSlices { get; set; } = Enumerable.Empty<GetTimeSliceModel>();
+    private bool isLoading = true;
+    private string? userId;
     protected override async Task OnInitializedAsync()
     {
-        IEnumerable<AnnualVacationGetModel>? annualVacationGetModel = await iannualVacationService.GetAll();
-        _annualVacationGetModel = annualVacationGetModel.ToList().FirstOrDefault();
-        data = new double[] { (double)_annualVacationGetModel.UsedVacation,
-            (double)_annualVacationGetModel.PlannedVacation,
-            (double)_annualVacationGetModel.AvailableVacation };
-        labels = new string[] { nameof(_annualVacationGetModel.UsedVacation),
-            nameof(_annualVacationGetModel.PlannedVacation),
-            nameof(_annualVacationGetModel.AvailableVacation) };
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity?.IsAuthenticated ?? false)
+        {
+            userId = user.FindFirst("sub")?.Value
+                  ?? user.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        }
+
+        if (!string.IsNullOrEmpty(userId))
+        {
+            _annualVacationGetModels = await iannualVacationService.GetByUserYear(DateTime.Now.Year, userId);
+            userOnProjects = await UserOnProjectService.GetProjectsByUserId(userId);
+            timeSlices = await TimeSliceService.GetAllUserTimeSlices(userId);
+        }
+        isLoading = false;
+        StateHasChanged();
+
     }
 
 }

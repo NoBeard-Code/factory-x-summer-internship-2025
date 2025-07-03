@@ -92,8 +92,80 @@ public class AnnualVacationService : IAnnualVacationService
     }
     public async Task<IEnumerable<AnnualVacationGetModel>> GetByYear(int year)
     {
-        IEnumerable<AnnualVacation> annualVacations = await _repository.GetAll();
+        IEnumerable<AnnualVacation> annualVacations = await _repository.GetByYear(year);
         IEnumerable<AnnualVacationGetModel> vacationGetModels = annualVacations.Where(x => x.Year == year).Select(x => new AnnualVacationGetModel
+        {
+            Id = x.Id,
+            AvailableVacation = x.AvailableVacation,
+            PlannedVacation = x.PlannedVacation,
+            UsedVacation = x.UsedVacation,
+            Year = x.Year,
+            _GetUserModel = new GetUserModel
+            {
+                AccessFailedCount = x.User.AccessFailedCount,
+                Email = x.User.Email,
+                TwoFactorEnabled = x.User.TwoFactorEnabled,
+                EmailConfirmed = x.User.EmailConfirmed,
+                Id = x.User.Id,
+                LockoutEnabled = x.User.LockoutEnabled,
+                LockoutEnd = x.User.LockoutEnd,
+                NormalizedEmail = x.User.NormalizedEmail,
+                NormalizedUserName = x.User.NormalizedUserName,
+                PhoneNumber = x.User.PhoneNumber,
+                PhoneNumberConfirmed = x.User.PhoneNumberConfirmed,
+                Role = x.User.Role,
+                UserName = x.User.UserName
+            },
+            VacationGetModels = x.Vacations.Select(y => new VacationGetModels
+            {
+                EndDate = y.EndDate,
+                StartDate = y.StartDate,
+                Id = y.Id,
+            }).ToList()
+        });
+
+        return vacationGetModels;
+    }
+    public async Task<IEnumerable<AnnualVacationGetModel>> GetByUser(string userId)
+    {
+        IEnumerable<AnnualVacation> annualVacations = await _repository.GetByUser(userId);
+        IEnumerable<AnnualVacationGetModel> vacationGetModels = annualVacations.Where(x => x.UserId == userId).Select(x => new AnnualVacationGetModel
+        {
+            Id = x.Id,
+            AvailableVacation = x.AvailableVacation,
+            PlannedVacation = x.PlannedVacation,
+            UsedVacation = x.UsedVacation,
+            Year = x.Year,
+            _GetUserModel = new GetUserModel
+            {
+                AccessFailedCount = x.User.AccessFailedCount,
+                Email = x.User.Email,
+                TwoFactorEnabled = x.User.TwoFactorEnabled,
+                EmailConfirmed = x.User.EmailConfirmed,
+                Id = x.User.Id,
+                LockoutEnabled = x.User.LockoutEnabled,
+                LockoutEnd = x.User.LockoutEnd,
+                NormalizedEmail = x.User.NormalizedEmail,
+                NormalizedUserName = x.User.NormalizedUserName,
+                PhoneNumber = x.User.PhoneNumber,
+                PhoneNumberConfirmed = x.User.PhoneNumberConfirmed,
+                Role = x.User.Role,
+                UserName = x.User.UserName
+            },
+            VacationGetModels = x.Vacations.Select(y => new VacationGetModels
+            {
+                EndDate = y.EndDate,
+                StartDate = y.StartDate,
+                Id = y.Id,
+            }).ToList()
+        });
+
+        return vacationGetModels;
+    }
+    public async Task<IEnumerable<AnnualVacationGetModel>> GetByUserYear(int year, string userId)
+    {
+        IEnumerable<AnnualVacation> annualVacations = await _repository.GetByUserYear(year, userId);
+        IEnumerable<AnnualVacationGetModel> vacationGetModels = annualVacations.Where(x => x.UserId == userId).Select(x => new AnnualVacationGetModel
         {
             Id = x.Id,
             AvailableVacation = x.AvailableVacation,
