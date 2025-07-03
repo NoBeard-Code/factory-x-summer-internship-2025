@@ -3,6 +3,7 @@ using AMI.EduWork.Domain.Interfaces.Repository;
 using AMI.EduWork.Domain.Interfaces.Service;
 using AMI.EduWork.Domain.Models.ContractModel;
 using AMI.EduWork.Domain.Models.User;
+using AutoMapper;
 using Microsoft.Extensions.Logging;
 
 namespace AMI.EduWork.Domain.Services
@@ -10,11 +11,17 @@ namespace AMI.EduWork.Domain.Services
     public class ContractService : IContractService
     {
         private readonly IContractRepository _repository;
+        private readonly IUserService _iuserService;
+        private readonly IUserRepository _userRepository;
         private readonly ILogger<ContractService> _logger;
-        public ContractService(IContractRepository repository, ILogger<ContractService> logger)
+        private readonly IMapper _mapper;
+        public ContractService(IContractRepository repository, ILogger<ContractService> logger, IUserService iuserService, IUserRepository userRepository, IMapper mapper)
         {
             _logger = logger;
             _repository = repository;
+            _iuserService = iuserService;
+            _userRepository = userRepository;
+            _mapper = mapper;
         }
         public async Task<bool> Create(ContractCreateModel? contractCreateModel)
         {
@@ -209,6 +216,23 @@ namespace AMI.EduWork.Domain.Services
 
             await _repository.Update(contract);
             return await _repository.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<ContractGetModel>?> GetByUserIsActive(string userId)
+        {
+            if (string.IsNullOrEmpty(userId))
+            {
+                _logger.LogWarning("Attempted to retrieve Contract with null user");
+                return null;
+            }
+            if (!await _userRepository.UserExists(userId))
+            {
+                _logger.LogWarning("User with Id {Id} doesn't exist", userId);
+                return null;
+            }
+            IEnumerable<Contract> entity = await _repository.GetByUserIsActive(userId);
+            IEnumerable<ContractGetModel> contracts = _mapper.Map<IEnumerable<ContractGetModel>>(entity);
+            return contracts;
         }
     }
 }

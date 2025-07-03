@@ -1,4 +1,5 @@
 ﻿using AMI.EduWork.Domain.Entities;
+using AMI.EduWork.Domain.Models.ContractModel;
 using AMI.EduWork.Domain.Models.Project;
 using AMI.EduWork.Domain.Models.TimeSlice;
 using AMI.EduWork.Domain.Models.User;
@@ -55,5 +56,9 @@ public class AutoMapperProfile : Profile
         CreateMap<AnnualVacationGetModel, AnnualVacation>();
         CreateMap<AnnualVacationCreateModel, AnnualVacation>();
         CreateMap<AnnualVacationUpdateModel, AnnualVacation>();
+        //Contract to ContractGetModel
+        CreateMap<Contract, ContractGetModel>()
+            .ForMember(dest => dest._GetUserModel, opt => opt.MapFrom(src => src.User));
+
     }
 }

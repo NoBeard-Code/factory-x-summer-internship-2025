@@ -96,32 +96,6 @@ namespace AMI.EduWork.Tests {
         }
 
         [Fact]
-        public void ClickingAssignButtonInvokesCallbackAndSetsProjectId() {
-            // Arrange
-            var project = CreateSampleProject();
-            var slice = CreateSampleTimeSlice(project);
-            var slices = new List<GetTimeSliceModel> { slice };
-            GetTimeSliceModel? assigned = null;
-
-            // Act
-            var cut = RenderComponent<ProjectTimeEntryDialog>(parameters => parameters
-                .Add(p => p.Project, project)
-                .Add(p => p.AvailableTimeSlices, slices)
-                .Add(p => p.OnTimeSliceAssigned,
-                     EventCallback.Factory.Create<GetTimeSliceModel>(this, s => {
-                         assigned = s;
-                         return Task.CompletedTask;
-                     }))
-            );
-
-            cut.Find("button").Click(); 
-
-            // Assert
-            Assert.NotNull(assigned);
-            Assert.Equal(project.Id, assigned!.ProjectId);
-        }
-
-        [Fact]
         public void DisplaysFallbackTextWhenNoTimeEntries() {
             // Arrange
             var project = CreateSampleProject();

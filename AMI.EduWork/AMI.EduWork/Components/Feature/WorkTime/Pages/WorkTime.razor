@@ -1,4 +1,4 @@
-﻿@page "/worktime"
+﻿@page "/"
 @using AMI.EduWork.Domain.Interfaces.Service
 @using AMI.EduWork.Domain.Models.TimeSlice
 @using AMI.EduWork.Domain.Models.User
@@ -8,32 +8,43 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @using Microsoft.AspNetCore.Authorization
 @using System.Security.Claims
+@implements IDisposable
 
 @attribute [Authorize]
 
 <!-- TOP BAR -->
 <MudPaper Class="d-flex align-center justify-space-between" Style="padding:8px;">
-    <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddDialogAsync">
-        Add slice manually
-    </MudButton>
-    <div class="d-flex align-center">
-        <MudText Typo="Typo.h6" Class="mr-2" Style="font-family:monospace;">
-            00:00:00
+    @if (IsRecording)
+    {
+        <MudText Typo="Typo.h6" Class="ml-2" Style="font-family:monospace;">
+            <b>Time slice recording:</b>
+            <span style="margin-left:16px;">@_elapsed.ToString(@"hh\:mm\:ss")</span>
         </MudText>
-        <MudIconButton Icon="@Icons.Material.Filled.PlayArrow" Color="Color.Primary" Size="Size.Large" OnClick="StartTimer" />
-    </div>
+        <MudIconButton data-testid="stop-button" Icon="@Icons.Material.Filled.Stop" Color="Color.Error" Size="Size.Large" OnClick="StopTimer" />
+    }
+    else
+    {
+        <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddDialogAsync">
+            Add slice manually
+        </MudButton>
+        <div class="d-flex align-center">
+            <MudText Typo="Typo.h6" Class="mr-2" Style="font-family:monospace;">
+                @_elapsed.ToString(@"hh\:mm\:ss")
+            </MudText>
+            <MudIconButton data-testid="play-button" Icon="@Icons.Material.Filled.PlayArrow" Color="Color.Primary" Size="Size.Large" OnClick="StartTimer" />
+        </div>
+    }
 </MudPaper>
-
 
 <!-- DATE NAVIGATION BAR -->
 <MudPaper Class="d-flex align-center justify-space-between" Style="background-color:slategrey; padding:8px;">
     <div style="width: 180px;"></div>
     <div class="d-flex align-center" style="gap: 8px;">
-        <MudIconButton Icon="@Icons.Material.Filled.ChevronLeft" Color="Color.Inherit" OnClick="PreviousDate" />
+        <MudIconButton data-testid="prev-day-button" Icon="@Icons.Material.Filled.ChevronLeft" Color="Color.Inherit" OnClick="PreviousDate" />
         <MudText Typo="Typo.h6" Style="font-weight:bold; color:white;">
             @currentDate?.ToString("dd.MM.yyyy")
         </MudText>
-        <MudIconButton Icon="@Icons.Material.Filled.ChevronRight" Color="Color.Inherit" OnClick="NextDate" />
+        <MudIconButton data-testid="next-day-button" Icon="@Icons.Material.Filled.ChevronRight" Color="Color.Inherit" OnClick="NextDate" />
     </div>
     <div style="flex: 0 0 auto;">
         <MudDatePicker Date="@currentDate"
@@ -50,35 +61,119 @@
             <MudGrid Spacing="2">
                 @if (timeslices != null)
                 {
-                    @foreach (var timeslice in timeslices)
+                    var pagedTimeSlices = timeslices
+                    .Skip((_currentPage - 1) * _pageSize)
+                    .Take(_pageSize);
+
+                    @foreach (var timeslice in pagedTimeSlices)
                     {
                         <MudItem xs="12">
-                            <TimeSliceCard TimeSlice="timeslice" OnEditRequested="OpenUpdateDialog" />
+                            <TimeSliceCard TimeSlice="timeslice"
+                                           OnEditRequested="OpenUpdateDialog"
+                                           OnTimeSlicesChanged="GetAllUserTimeSlicesByDate" />
+                        </MudItem>
+                    }
+
+                    @if (timeslices.Any())
+                    {
+                        <MudItem xs="12" Class="mt-4">
+                            <MudPagination Count="@_totalPages"
+                                           @bind-Selected="_currentPage"
+                                           ShowFirstButton="true"
+                                           ShowLastButton="true" />
                         </MudItem>
                     }
                 }
+
             </MudGrid>
         </MudContainer>
     </MudItem>
     
     <MudItem xs="12" md="4">
-        <MudPaper Class="pa-4" Style="height:100%; background-color:#444444; color:white;">
-            <!-- TODO statistics -->
+
+        <MudPaper Class="pa-4" Outlined="true" Style="height:100%; background:#f8f8f8; color:black; box-shadow:none;">
+            <div style="display:flex; flex-direction:column; align-items:center; justify-content:flex-start; height:100%;">
+                <!-- Work time goal  -->
+                <MudText Style="font-size:2.2rem; font-weight:700; color:black; text-align:center; margin-bottom:12px;">
+                    Goal : @contractWorkingHour h
+                </MudText>
+                <div style="display:flex; flex-direction:row; align-items:stretch; justify-content:center; width:100%; flex:1;">
+                    <!-- Left: text -->
+                    <div style="flex:0 0 50%; max-width:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%;">
+                        <MudText Style="font-size:1.5rem; font-weight:600; color:black; margin-bottom:4px;">
+                            Total
+                        </MudText>
+                        <MudText Style="font-family:monospace; font-size:2.1rem; font-weight:700; color:black;">
+                            @timeWorked.ToString(@"hh\:mm\:ss")
+                        </MudText>
+                        @if (isOvertime)
+                        {
+                            <MudText Style="color:darkred; font-weight:700; font-size:1.1rem; margin-top:6px;">
+                                Overtime: @((timeWorked - TimeSpan.FromHours(contractWorkingHour)).ToString(@"hh\:mm\:ss"))
+                            </MudText>
+                        }
+                    </div>
+                    <!-- Right: bar graph -->
+                    <div style="flex:0 0 50%; max-width:50%; display:flex; align-items:center; justify-content:center; height:100%;">
+                        <div style="height:90%; width:80px; position:relative; border:2px solid #222; background:#fff; box-sizing:border-box; display:flex; align-items:flex-end;">
+                            <!-- Green part: worked time -->
+                            <div style="
+                        position:absolute;
+                        bottom:0;
+                        left:0;
+                        width:100%;
+                        height:@($"{Math.Min(100, progressPercent)}%");
+                        background:#c8ffc8;
+                    ">
+                            </div>
+                            <!-- Red part: overtime -->
+                            @if (isOvertime)
+                            {
+                                <div style="
+                                position:absolute;
+                                top:0;
+                                left:0;
+                                width:100%;
+                                height:@($"{Math.Min(100, overtimePercent)}%");
+                                background:#ffb0b0;
+                            ">
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
         </MudPaper>
     </MudItem>
 </MudGrid>
 
 
 @code {
+    
+    private int _currentPage = 1;
+    private const int _pageSize = 5;
+    private int _totalPages => (int)Math.Ceiling((timeslices?.Count ?? 0) / (double)_pageSize);
+
     private DateTime? currentDate = DateTime.Today;
     public DateTime nonNullableDate => currentDate ?? DateTime.Today;
     private List<GetTimeSliceModel> timeslices;
     private string firstUser;
+    private double contractWorkingHour;
+    private TimeSpan timeWorked;
+    private double timeWorkedHours => timeWorked.TotalHours;
+    private double progressPercent => contractWorkingHour == 0 ? 0 : Math.Min(100, (timeWorkedHours / contractWorkingHour) * 100);
+    private bool isOvertime => timeWorkedHours > contractWorkingHour;
+    private double overtimePercent => contractWorkingHour == 0 ? 0 : Math.Min(100, ((timeWorkedHours - contractWorkingHour) / contractWorkingHour) * 100);
+    //Timer
+    private System.Timers.Timer? _timer;
+    private TimeSpan _elapsed = TimeSpan.Zero;
+    private bool IsRecording = false;
 
     protected override async Task OnInitializedAsync()
     {
         await LoadFirstUser();
         await GetAllUserTimeSlicesByDate();
+        await LoadStatistics();
     }
 
     private async Task LoadFirstUser()
@@ -97,14 +192,41 @@
         var _timeSliceService = scope.ServiceProvider.GetRequiredService<ITimeSliceService>();
         var result = await _timeSliceService.GetAllUserTimeSlicesByDate(firstUser, nonNullableDate);
         timeslices = result?.ToList() ?? new List<GetTimeSliceModel>();
+
+        _currentPage = 1;
+
+        await CalculateWorkTime();
+    }
+
+    protected async Task LoadStatistics()
+    {
+        if (firstUser == null) return;
+        using var scope = ServiceScopeFactory.CreateScope();
+        var _contractService = scope.ServiceProvider.GetRequiredService<IContractService>();
+        var contractResult = await _contractService.GetByUserIsActive(firstUser);
+        contractWorkingHour = contractResult.FirstOrDefault()?.WorkingHour != null ? (double)contractResult.FirstOrDefault()?.WorkingHour : 0;
+
+        await CalculateWorkTime();
+    }
+
+    protected async Task CalculateWorkTime()
+    {
+        using var scope = ServiceScopeFactory.CreateScope();
+        var _timeSliceService = scope.ServiceProvider.GetRequiredService<ITimeSliceService>();
+        var timeSliceResult = await _timeSliceService.CalculateUserWorkTime(timeslices);
+        timeWorked = timeSliceResult.Value;
     }
 
     private Task OpenAddDialogAsync()
     {
         var options = new DialogOptions { CloseOnEscapeKey = true };
 
-        var parameters = new DialogParameters { ["Date"] = nonNullableDate }; 
-        return DialogService.ShowAsync<AddTimeSlice>("Add Time Slice", parameters);
+        var parameters = new DialogParameters 
+        { 
+            ["Date"] = nonNullableDate,
+            ["OnTimeSlicesChanged"] = EventCallback.Factory.Create(this, GetAllUserTimeSlicesByDate)
+        }; 
+        return DialogService.ShowAsync<AddTimeSliceManual>("Add Time Slice", parameters);
     }
 
     private async Task OnDateChanged(DateTime? newDate)
@@ -124,15 +246,64 @@
         currentDate = currentDate?.AddDays(1);
         await GetAllUserTimeSlicesByDate();
     }
+    
 
     private void StartTimer()
     {
-        // TODO
+        if (IsRecording)
+            return;
+
+        IsRecording = true;
+        _timer = new System.Timers.Timer(1000);
+        _timer.Elapsed += OnTimedEvent;
+        _timer.AutoReset = true;
+        _timer.Start();
+    }
+
+    private async void StopTimer()
+    {
+        IsRecording = false;
+        _timer?.Stop();
+        _timer?.Dispose();
+        _timer = null;
+        await InvokeAsync(StateHasChanged);
+        await ShowAddTimeSliceDialogAsync();
+    }
+
+    private void OnTimedEvent(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        _elapsed = _elapsed.Add(TimeSpan.FromSeconds(1));
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        _timer?.Dispose();
+    }
+
+    public void CancelTimer() => _elapsed = TimeSpan.Zero;
+
+    private async Task ShowAddTimeSliceDialogAsync()
+    {
+        var parameters = new DialogParameters
+        {
+            ["TimerElapsed"] = _elapsed,
+            ["OnCancel"] = EventCallback.Factory.Create(this, CancelTimer),
+            ["OnContinue"] = EventCallback.Factory.Create(this, StartTimer),
+            ["Date"] = nonNullableDate,
+            ["OnTimeSlicesChanged"] = EventCallback.Factory.Create(this, GetAllUserTimeSlicesByDate)
+        };
+
+        DialogService.ShowAsync<AddTimeSliceTimer>("Add a Time Slice", parameters);
     }
 
     private async Task OpenUpdateDialog(GetTimeSliceModel timeSlice)
     {
-        var parameters = new DialogParameters { ["TimeSlice"] = timeSlice };
+        var parameters = new DialogParameters 
+        { 
+            ["TimeSlice"] = timeSlice,
+            ["OnTimeSlicesChanged"] = EventCallback.Factory.Create(this, GetAllUserTimeSlicesByDate)
+        };
         await DialogService.ShowAsync<UpdateTimeSlice>("Update Time Slice", parameters);
     }
 }

@@ -2,6 +2,15 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
+/.vs
+/AMI.EduWork.2025/AMI.EduWork.2025.Test/obj
+/AMI.EduWork.2025/AMI.EduWork.2025.Domain/obj
+/AMI.EduWork.2025/.vs/AMI.EduWork.2025
+/AMI.EduWork.2025/AMI.EduWork.2025/obj
+/AMI.EduWork.2025/AMI.EduWork.2025/AMI.EduWork.2025.csproj.user
+/AMI.EduWork.2025/AMI.EduWork.2025.Client/obj
+/AMI.EduWork.2025/AMI.EduWork.2025.Data/obj/Debug/net9.0
+/AMI.EduWork.2025/AMI.EduWork.2025.Data/obj
 # Specific to the EFCore-Blazor sample app
 *.db
 *.db-shm

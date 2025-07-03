@@ -1,0 +1,446 @@
+﻿@using AMI.EduWork.Components.Feature.WorkTime.Components
+@using AMI.EduWork.Components.Feature.WorkTime.Pages
+@using AMI.EduWork.Domain.Interfaces.Service
+@using AMI.EduWork.Domain.Models.ContractModel
+@using AMI.EduWork.Domain.Models.Project
+@using AMI.EduWork.Domain.Models.TimeSlice
+@using AMI.EduWork.Domain.Models.User
+@using AMI.EduWork.Domain.Models.WorkDay
+@using Microsoft.AspNetCore.Components.Authorization
+@using Moq
+@using MudBlazor
+@using MudBlazor.Services;
+@using System.Security.Claims;
+@inherits TestContext
+
+These tests are written entirely in razor and C# syntax.
+
+Learn more at https://bunit.dev/docs/getting-started/writing-tests.html#creating-basic-tests-in-razor-files
+
+@code {
+    // Mocks and helpers
+    private Mock<ITimeSliceService> _mockTimeSliceService;
+    private Mock<IContractService> _mockContractService;
+    private Mock<IDialogService> _mockDialogService;
+    private Mock<AuthenticationStateProvider> _mockAuthProvider;
+    private Mock<IServiceScopeFactory> _mockScopeFactory;
+    private bool _servicesInitialized = false;
+
+    private const string TestUserId = "test-user-id";
+    private readonly List<GetTimeSliceModel> _emptyTimeSlices = new();
+    private readonly ContractGetModel _testContract = new() { WorkingHour = 8 };
+
+
+    // Call this at the start of every test
+    private void EnsureServicesInitialized()
+    {
+        if (_servicesInitialized)
+            return;
+
+        _mockTimeSliceService = new Mock<ITimeSliceService>();
+        _mockDialogService = new Mock<IDialogService>();
+        _mockAuthProvider = new Mock<AuthenticationStateProvider>();
+        _mockScopeFactory = new Mock<IServiceScopeFactory>();
+        _mockContractService = new Mock<IContractService>();
+
+        // Register services
+        Services.AddSingleton(_mockTimeSliceService.Object);
+        Services.AddSingleton(_mockDialogService.Object);
+        Services.AddSingleton(_mockAuthProvider.Object);
+        Services.AddSingleton(_mockScopeFactory.Object);
+        Services.AddSingleton(_mockContractService.Object);
+
+        // Add MudBlazor services with PopoverProvider check DISABLED
+        Services.AddMudServices(options =>
+        {
+            options.PopoverOptions.CheckForPopoverProvider = false;
+        });
+
+        // Set JSInterop to loose mode
+        JSInterop.Mode = JSRuntimeMode.Loose;
+
+        // Set up fake authentication
+        // var authContext = this.AddTestAuthorization();
+        // authContext.SetAuthorized("test-user");
+        var authContext = this.AddTestAuthorization();
+        authContext.SetAuthorized("test-user");
+        authContext.SetClaims(
+            new Claim(ClaimTypes.NameIdentifier, TestUserId)
+        );
+
+        _servicesInitialized = true;
+    }
+
+    // Helper to setup timeslice service with given data
+    private void SetupTimeSlices(List<GetTimeSliceModel> slices)
+    {
+        _mockTimeSliceService
+            .Setup(s => s.GetAllUserTimeSlicesByDate(It.IsAny<string>(), It.IsAny<DateTime>()))
+            .ReturnsAsync(slices);
+    }
+
+    private List<GetTimeSliceModel> CreateTestTimeSlices()
+    {
+        var workDayId = Guid.NewGuid().ToString();
+        var projectId = Guid.NewGuid().ToString();
+        var userId = TestUserId;
+
+        var workDay = new GetWorkDayModel
+        {
+            // Id = workDayId,
+            Date = DateTime.Now.Date
+        };
+        var project = new GetProjectModelNoRefrences
+        {
+            Name = "Test project",
+            Description = "This is test project"
+        };
+        var user = new GetUserModel { };
+
+        return new List<GetTimeSliceModel>
+        {
+            new GetTimeSliceModel
+            {
+                // If Id is readonly/private, do not set it here
+                WorkDayId = workDayId,
+                WorkDay = workDay,
+                Project = project,
+                User = user,
+                UserId = userId,
+                Start = DateTime.Today.AddHours(8),
+                End = DateTime.Today.AddHours(10),
+                Description = "Morning shift"
+            },
+            new GetTimeSliceModel
+            {
+                // If Id is readonly/private, do not set it here
+                WorkDayId = workDayId,
+                WorkDay = workDay,
+                Project = project,
+                User = user,
+                UserId = userId,
+                Start = DateTime.Today.AddHours(11),
+                End = DateTime.Today.AddHours(13),
+                Description = "Midday shift"
+            }
+        };
+    }
+
+
+    private void SetupCommonMocks()
+    {
+        // Setup contract service
+        _mockContractService
+            .Setup(s => s.GetByUserIsActive(It.IsAny<string>()))
+            .ReturnsAsync(new List<ContractGetModel> { _testContract });
+
+        // Setup time calculation
+        _mockTimeSliceService
+            .Setup(s => s.CalculateUserWorkTime(It.IsAny<List<GetTimeSliceModel>>()))
+            .ReturnsAsync(TimeSpan.FromHours(5));
+    }
+
+    [Fact]
+    public void Page_Renders_Correctly()
+    {
+        EnsureServicesInitialized();
+        SetupCommonMocks();
+        SetupTimeSlices(_emptyTimeSlices);
+
+        var component = RenderComponent<WorkTime>();
+
+        Assert.Contains("Add slice manually", component.Markup);
+        Assert.Contains("00:00:00", component.Markup);
+        Assert.Contains(DateTime.Today.ToString("dd.MM.yyyy"), component.Markup);
+    }
+
+    [Fact]
+    public void TimeSlices_Are_Displayed()
+    {
+        EnsureServicesInitialized();
+        SetupCommonMocks();
+
+        ComponentFactories.AddStub<TimeSliceCard>();
+
+        var testTimeSlices = CreateTestTimeSlices();
+        SetupTimeSlices(testTimeSlices);
+
+        var component = RenderComponent<WorkTime>();
+
+        component.WaitForAssertion(() =>
+        {
+            var stubs = component.FindComponents<Stub<TimeSliceCard>>();
+            Assert.Equal(testTimeSlices.Count, stubs.Count);
+        });
+    }
+
+    [Fact]
+    public void NoTimeSlices_NoStubsDisplayed()
+    {
+        EnsureServicesInitialized();
+        SetupCommonMocks();
+
+        ComponentFactories.AddStub<TimeSliceCard>();
+
+        // Provide an empty list of timeslices
+        SetupTimeSlices(new List<GetTimeSliceModel>());
+
+        var component = RenderComponent<WorkTime>();
+
+        component.WaitForAssertion(() =>
+        {
+            // There should be no TimeSliceCard stubs rendered
+            var stubs = component.FindComponents<Stub<TimeSliceCard>>();
+            Assert.Equal(0, stubs.Count);
+        });
+    }
+
+
+    [Fact]
+    public void AddSliceManuallyButton_OpensDialog()
+    {
+        EnsureServicesInitialized();
+        SetupCommonMocks();
+        SetupTimeSlices(_emptyTimeSlices);
+
+        // Render the component
+        var component = RenderComponent<WorkTime>();
+
+        // Find and click the button
+        var button = component.Find("button:contains('Add slice manually')");
+
+        button.Click();
+
+        // Verify that IDialogService.ShowAsync was called
+        _mockDialogService.Verify(
+            x => x.ShowAsync<AddTimeSliceManual>(
+                It.IsAny<string>(),
+                It.IsAny<DialogParameters>()
+            ),
+            Times.Once
+        );
+    }
+
+    [Fact]
+    public void Timer_Is_Initially_Stopped()
+    {
+        EnsureServicesInitialized();
+        SetupCommonMocks();
+        SetupTimeSlices(_emptyTimeSlices);
+
+        var component = RenderComponent<WorkTime>();
+
+        // Should show 00:00:00 and not show "Time slice recording:"
+        Assert.Contains("00:00:00", component.Markup);
+        Assert.DoesNotContain("Time slice recording:", component.Markup);
+    }
+
+    [Fact]
+    public void Timer_Starts_And_Shows_Recording_Mode()
+    {
+        EnsureServicesInitialized();
+        SetupCommonMocks();
+        SetupTimeSlices(_emptyTimeSlices);
+
+        var component = RenderComponent<WorkTime>();
+
+        // Find and click the play button (by icon)
+        var playButton = component.Find("[data-testid='play-button']");
+        Assert.NotNull(playButton);
+
+        playButton.Click();
+
+        // Should now show "Time slice recording:"
+        component.WaitForAssertion(() =>
+        {
+            Assert.Contains("Time slice recording:", component.Markup);
+        });
+    }
+
+    [Fact]
+    public void Timer_Ticks_Up_After_Starting()
+    {
+        EnsureServicesInitialized();
+        SetupCommonMocks();
+        SetupTimeSlices(_emptyTimeSlices);
+
+        var component = RenderComponent<WorkTime>();
+        var playButton = component.Find("[data-testid='play-button']");
+        playButton.Click();
+
+        // Simulate a timer tick
+        var timerTickMethod = component.Instance.GetType().GetMethod("OnTimedEvent", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        timerTickMethod.Invoke(component.Instance, new object[] { null, null });
+
+        component.Render();
+
+        Assert.DoesNotContain(">00:00:00<", component.Markup);
+        Assert.Contains("Time slice recording:", component.Markup);
+    }
+
+    [Fact]
+    public void StopButton_StopsTimer_And_OpensDialog()
+    {
+        EnsureServicesInitialized();
+        SetupCommonMocks();
+        SetupTimeSlices(_emptyTimeSlices);
+
+        var component = RenderComponent<WorkTime>();
+
+        // Start the timer so the stop button appears
+        var playButton = component.Find("[data-testid='play-button']");
+        playButton.Click();
+
+        // Now the stop button should be visible
+        var stopButton = component.Find("[data-testid='stop-button']");
+        Assert.NotNull(stopButton);
+
+        // Click the stop button
+        stopButton.Click();
+
+        // UI should no longer show "Time slice recording:"
+        component.WaitForAssertion(() =>
+        {
+            Assert.DoesNotContain("Time slice recording:", component.Markup);
+        });
+
+        // Verify that the dialog service was called to show the AddTimeSliceTimer dialog
+        _mockDialogService.Verify(
+            x => x.ShowAsync<AddTimeSliceTimer>(
+                It.IsAny<string>(),
+                It.IsAny<DialogParameters>()
+            ),
+            Times.Once
+        );
+    }
+
+    [Fact]
+    public void DatePicker_Shows_Today_On_Init()
+    {
+        EnsureServicesInitialized();
+        SetupCommonMocks();
+        SetupTimeSlices(CreateTestTimeSlices());
+        ComponentFactories.AddStub<TimeSliceCard>();
+
+        var component = RenderComponent<WorkTime>();
+        var todayString = DateTime.Today.ToString("dd.MM.yyyy");
+
+        // Find the date text in the navigation bar
+        var dateText = component.FindAll("div.d-flex.align-center > .mud-typography")
+            .FirstOrDefault(t => t.TextContent.Contains(todayString));
+        Assert.NotNull(dateText);
+        Assert.Contains(todayString, dateText.TextContent);
+    }
+
+    [Fact]
+    public void DatePicker_NextDateButton_Shows_Next_Day()
+    {
+        EnsureServicesInitialized();
+        SetupCommonMocks();
+        SetupTimeSlices(CreateTestTimeSlices());
+        ComponentFactories.AddStub<TimeSliceCard>();
+
+        var component = RenderComponent<WorkTime>();
+        var nextButton = component.Find("[data-testid='next-day-button']");
+        Assert.NotNull(nextButton);
+
+        nextButton.Click();
+
+        var nextDay = DateTime.Today.AddDays(1).ToString("dd.MM.yyyy");
+        component.WaitForAssertion(() =>
+        {
+            var dateText = component.FindAll("div.d-flex.align-center > .mud-typography")
+                .FirstOrDefault(t => t.TextContent.Contains(nextDay));
+            Assert.NotNull(dateText);
+            Assert.Contains(nextDay, dateText.TextContent);
+        });
+    }
+    [Fact]
+    public void DatePicker_PreviousDateButton_Shows_Previous_Day()
+    {
+        EnsureServicesInitialized();
+        SetupCommonMocks();
+        SetupTimeSlices(CreateTestTimeSlices());
+        ComponentFactories.AddStub<TimeSliceCard>();
+
+        var component = RenderComponent<WorkTime>();
+        var prevButton = component.Find("[data-testid='prev-day-button']");
+        Assert.NotNull(prevButton);
+
+        prevButton.Click();
+
+        var prevDay = DateTime.Today.AddDays(-1).ToString("dd.MM.yyyy");
+        component.WaitForAssertion(() =>
+        {
+            var dateText = component.FindAll("div.d-flex.align-center > .mud-typography")
+                .FirstOrDefault(t => t.TextContent.Contains(prevDay));
+            Assert.NotNull(dateText);
+            Assert.Contains(prevDay, dateText.TextContent);
+        });
+    }
+
+    [Fact]
+    public void DatePicker_SelectingDate_Updates_Display()
+    {
+        EnsureServicesInitialized();
+        SetupCommonMocks();
+        SetupTimeSlices(CreateTestTimeSlices());
+        ComponentFactories.AddStub<TimeSliceCard>();
+
+        var component = RenderComponent<WorkTime>();
+        var newDate = DateTime.Today.AddDays(5);
+
+        // Find the MudDatePicker and set its value
+        var datePicker = component.FindComponent<MudDatePicker>();
+        datePicker.SetParametersAndRender(parameters => parameters.Add(p => p.Date, newDate));
+
+        component.WaitForAssertion(() =>
+        {
+            var dateText = component.FindAll("div.d-flex.align-center > .mud-typography")
+                .FirstOrDefault(t => t.TextContent.Contains(newDate.ToString("dd.MM.yyyy")));
+            Assert.NotNull(dateText);
+            Assert.Contains(newDate.ToString("dd.MM.yyyy"), dateText.TextContent);
+        });
+    }
+
+    [Fact]
+    public void DatePicker_Today_Has_Stubs_NextDay_Does_Not()
+    {
+        EnsureServicesInitialized();
+        SetupCommonMocks();
+        ComponentFactories.AddStub<TimeSliceCard>();
+
+        _mockTimeSliceService
+        .Setup(s => s.GetAllUserTimeSlicesByDate(It.IsAny<string>(), It.IsAny<DateTime>()))
+        .ReturnsAsync((string userId, DateTime date) =>
+        {
+            if (date.Date == DateTime.Today)
+                return CreateTestTimeSlices();
+            else
+                return new List<GetTimeSliceModel>();
+        });
+
+        var component = RenderComponent<WorkTime>();
+
+        // On today, should have stubs
+        component.WaitForAssertion(() =>
+        {
+            var stubs = component.FindComponents<Stub<TimeSliceCard>>();
+            Assert.True(stubs.Count > 0);
+        });
+
+        // Move to next day
+        var nextButton = component.Find("[data-testid='next-day-button']");
+        Assert.NotNull(nextButton);
+        nextButton.Click();
+
+        // On next day, should have no stubs
+        component.WaitForAssertion(() =>
+        {
+            var stubs = component.FindComponents<Stub<TimeSliceCard>>();
+            Assert.Equal(0, stubs.Count);
+        });
+    }
+
+}
+
