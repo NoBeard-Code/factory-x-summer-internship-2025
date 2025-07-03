@@ -25,12 +25,16 @@
 @code {
     [Parameter]
     public GetTimeSliceModel TimeSlice { get; set; }
+    [Parameter]
+    public EventCallback OnTimeSlicesChanged { get; set; }
 
     private async Task DeleteTimeSlice()
     {
         using var scope = ServiceScopeFactory.CreateScope();
         var _timeSliceService = scope.ServiceProvider.GetRequiredService<ITimeSliceService>();
         await _timeSliceService.DeleteById(TimeSlice.Id);
+        await OnTimeSlicesChanged.InvokeAsync();
+
     }
 
     [Parameter]
@@ -39,5 +43,6 @@
     private async Task EditClicked()
     {
         await OnEditRequested.InvokeAsync(TimeSlice);
+        await OnTimeSlicesChanged.InvokeAsync();
     }
 }

@@ -26,17 +26,6 @@
                            Required="true"
                            Class="mb-2" />
 
-            <MudSelect T="string"
-                       Label="Project"
-                       @bind-Value="TimeSlice.ProjectId"
-                       Required="true"
-                       Class="mb-2">
-                @foreach (var project in UserProjects)
-                {
-                    <MudSelectItem Value="@project.Id">@project.Name</MudSelectItem>
-                }
-            </MudSelect>
-
             <MudSelect T="TimeSliceType"
                        Label="Type"
                        @bind-Value="SelectedType"
@@ -44,9 +33,23 @@
                        Class="mb-2">
                 @foreach (var type in Enum.GetValues<TimeSliceType>())
                 {
-                    <MudSelectItem Value="@type">@type.ToString()</MudSelectItem>
+                    <MudSelectItem Value="@type">@GetDisplayName(type)</MudSelectItem>
                 }
             </MudSelect>
+
+            @if (SelectedType != TimeSliceType.Break && SelectedType != TimeSliceType.NotAssigned)
+            {
+                <MudSelect T="string"
+                           Label="Project"
+                           @bind-Value="TimeSlice.ProjectId"
+                           Required="false"
+                           Class="mb-2">
+                    @foreach (var project in UserProjects)
+                    {
+                        <MudSelectItem Value="@project.Id">@project.Name</MudSelectItem>
+                    }
+                </MudSelect>
+            }
 
             <MudTextField T="string"
                           Label="Description"
@@ -64,8 +67,11 @@
 @code {
     [CascadingParameter]
     private IMudDialogInstance MudDialog { get; set; }
+    [Parameter]
+    public DateTime Date { get; set; }
+    [Parameter]
+    public EventCallback OnTimeSlicesChanged { get; set; }
 
-    [Parameter] public DateTime Date { get; set; }
 
     private MudForm form;
     private TimeSliceModel TimeSlice { get; set; } = new() { UserId = string.Empty };
@@ -77,6 +83,18 @@
     {
         get => (TimeSliceType)TimeSlice.TypeOfSlice;
         set => TimeSlice.TypeOfSlice = (byte)value;
+    }
+
+    private string GetDisplayName(TimeSliceType type)
+    {
+        return type switch
+        {
+            TimeSliceType.NotAssigned => "Not assigned",
+            TimeSliceType.Work => "Work",
+            TimeSliceType.Break => "Break",
+            TimeSliceType.Meeting => "Meeting",
+            _ => type.ToString()
+        };
     }
 
     protected override async Task OnInitializedAsync()
@@ -110,6 +128,7 @@
         using var scope = ServiceScopeFactory.CreateScope();
         var timeSliceService = scope.ServiceProvider.GetRequiredService<ITimeSliceService>();
         await timeSliceService.Create(TimeSlice);
+        await OnTimeSlicesChanged.InvokeAsync();
 
         MudDialog.Close(DialogResult.Ok(TimeSlice));
     }
