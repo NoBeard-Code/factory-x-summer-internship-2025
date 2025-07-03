@@ -26,6 +26,10 @@
                            Required="true"
                            Class="mb-2" />
 
+            @if (!string.IsNullOrEmpty(TimeError))
+            {
+                <MudText Color="Color.Error" Typo="Typo.caption">@TimeError</MudText>
+            }
             <MudSelect T="TimeSliceType"
                        Label="Type"
                        @bind-Value="SelectedType"
@@ -72,12 +76,13 @@
     [Parameter]
     public EventCallback OnTimeSlicesChanged { get; set; }
 
-
     private MudForm form;
     private TimeSliceModel TimeSlice { get; set; } = new() { UserId = string.Empty };
     private IEnumerable<GetProjectModel> UserProjects { get; set; } = new List<GetProjectModel>();
     private TimeSpan? StartTime { get; set; }
     private TimeSpan? EndTime { get; set; }
+    private string? TimeError;
+
 
     private TimeSliceType SelectedType
     {
@@ -116,6 +121,12 @@
         await form.Validate();
         if (!form.IsValid) return;
 
+        if (EndTime <= StartTime)
+        {
+            TimeError = "End time must be after start time.";
+            return;
+        }
+
         if (StartTime.HasValue && EndTime.HasValue)
         {
             TimeSlice.Start = Date.Date.Add(StartTime.Value);
@@ -125,6 +136,7 @@
         {
             return;
         }
+        
         using var scope = ServiceScopeFactory.CreateScope();
         var timeSliceService = scope.ServiceProvider.GetRequiredService<ITimeSliceService>();
         await timeSliceService.Create(TimeSlice);

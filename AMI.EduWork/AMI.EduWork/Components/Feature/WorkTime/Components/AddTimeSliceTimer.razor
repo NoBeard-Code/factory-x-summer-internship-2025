@@ -27,6 +27,11 @@
                            Required="true"
                            Class="mb-2" />
 
+            @if (!string.IsNullOrEmpty(TimeError))
+            {
+                <MudText Color="Color.Error" Typo="Typo.caption">@TimeError</MudText>
+            }
+
             <MudSelect T="TimeSliceType"
                        Label="Type"
                        @bind-Value="SelectedType"
@@ -84,6 +89,7 @@
     public TimeSpan? EndTime { get; set; }
     public string Project { get; set; } = "";
     public string Type { get; set; } = "";
+    private string? TimeError;
 
     protected override void OnInitialized()
     {
@@ -145,6 +151,12 @@
     {
         await form.Validate();
         if (!form.IsValid) return;
+
+        if (EndTime <= StartTime)
+        {
+            TimeError = "End time must be after start time.";
+            return;
+        }
 
         if (StartTime.HasValue && EndTime.HasValue)
         {
